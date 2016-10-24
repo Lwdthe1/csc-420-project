@@ -4,9 +4,8 @@ import java.awt.Container;
 import java.awt.Dimension;
 
 public class View {
-    private static JLabel imgLabel;
-    private static JComboBox comboBox;
     private static JFrame frame;
+    private static NavBarView navBarView;
 
     public static void main(String[] args) {
         //Schedule a job for the event dispatch thread:
@@ -30,38 +29,19 @@ public class View {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //Set up the content pane.
 
-
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setSize(new Dimension(700,700));
         //frame.setMinimumSize(new Dimension(500,500));
         //frame.setUndecorated(true);
         frame.setVisible(true);
+        navBarView = new NavBarView(frame.getWidth());
+
         addComponentsToPane(frame.getContentPane());
-        new ViewController(comboBox, imgLabel);
+        new ViewController(navBarView);
     }
 
     public static void addComponentsToPane(Container contentPane) {
-        JPanel leftPanel = new JPanel();
-        JPanel rightPanel = new JPanel();
-        contentPane.add(leftPanel, BorderLayout.WEST);
-        contentPane.add(rightPanel, BorderLayout.EAST);
-
-        leftPanel.setSize(new Dimension(100, frame.getHeight()));
-        rightPanel.setSize(frame.getWidth() - leftPanel.getWidth(), frame.getHeight() - 50);
-
-        //setup left panel
-        comboBox = new JComboBox();
-        comboBox.setSize(100, 150);
-        leftPanel.add(comboBox);
-
-        //setup right panel
-        imgLabel = new JLabel();
-        Dimension imgLabelDims = new Dimension(rightPanel.getWidth(), rightPanel.getHeight());
-        imgLabel.setMinimumSize(imgLabelDims);
-        imgLabel.setPreferredSize(imgLabelDims);
-        imgLabel.setMaximumSize(imgLabelDims);
-        imgLabel.setSize(imgLabelDims);
-        rightPanel.add(imgLabel);
-
+        //Add nav bar
+        contentPane.add(navBarView.getNavBarPanel(), BorderLayout.NORTH);
     }
 }
