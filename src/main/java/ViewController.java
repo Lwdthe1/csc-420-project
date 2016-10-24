@@ -3,27 +3,26 @@ import org.apache.http.HttpException;
 import utils.WebService.RestCaller;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Vector;
 
 /**
  * Created by lwdthe1 on 9/5/16.
  */
 public class ViewController {
-    private JLabel imgLabel;
-    private JComboBox comboBox = new JComboBox();
+    private final JTable table;
     private ArrayList<Publication> publications = new ArrayList<>();
 
     private int lastSelectedIndex = -1;
 
-    public ViewController(JComboBox comboBox, JLabel imgLabel) {
-        this.comboBox = comboBox;
-        this.imgLabel = imgLabel;
-        showSuperMeditorLogo();
+    public ViewController(JTable table) {
+        this.table = table;
         populatePublications();
         populateComboBox();
     }
@@ -41,60 +40,18 @@ public class ViewController {
         }
     }
 
-    private void showSuperMeditorLogo() {
-        displayImage(Publication.getSuperMeditorLogoImage());
-    }
 
     private void populateComboBox() {
-        for (Publication euCountry: publications) {
-            comboBox.addItem(euCountry.getName());
+        Publication[] pubs = new Publication[publications.size()];
+
+        for(int i=0; i<publications.size(); i++){
+            pubs[i] = publications.get(i);
         }
 
-        comboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int index = comboBox.getSelectedIndex();
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Publications",pubs);
+        table.setModel(model);
 
-                lastSelectedIndex = index;
-                Publication country = publications.get(index);
-                displayImage(country.getImage());
-            }
-        });
-
-        imgLabel.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                comboBox.showPopup();
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-
-            }
-        });
-    }
-
-    private void displayImage(BufferedImage img) {
-        imgLabel.setIcon(new ImageIcon(img.getScaledInstance(
-                imgLabel.getWidth(),
-                imgLabel.getHeight(),
-                Image.SCALE_SMOOTH)
-        ));
     }
 
 }

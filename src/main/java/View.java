@@ -1,11 +1,10 @@
 import javax.swing.*;
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.Dimension;
+import javax.swing.table.TableCellRenderer;
+import java.awt.*;
 
 public class View {
     private static JLabel imgLabel;
-    private static JComboBox comboBox;
+    private static JTable table;
     private static JFrame frame;
 
     public static void main(String[] args) {
@@ -31,37 +30,30 @@ public class View {
         //Set up the content pane.
 
 
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        frame.setSize(new Dimension(700,700));
+        frame.setSize(new Dimension(900,900));
+        frame.setBackground(Color.white);
         //frame.setMinimumSize(new Dimension(500,500));
         //frame.setUndecorated(true);
         frame.setVisible(true);
         addComponentsToPane(frame.getContentPane());
-        new ViewController(comboBox, imgLabel);
+        new ViewController(table);
     }
 
     public static void addComponentsToPane(Container contentPane) {
-        JPanel leftPanel = new JPanel();
-        JPanel rightPanel = new JPanel();
-        contentPane.add(leftPanel, BorderLayout.WEST);
-        contentPane.add(rightPanel, BorderLayout.EAST);
+        JPanel panel = new JPanel();
+        contentPane.add(panel, BorderLayout.WEST);
 
-        leftPanel.setSize(new Dimension(100, frame.getHeight()));
-        rightPanel.setSize(frame.getWidth() - leftPanel.getWidth(), frame.getHeight() - 50);
+        panel.setSize(new Dimension(frame.getWidth(), frame.getHeight()));
 
-        //setup left panel
-        comboBox = new JComboBox();
-        comboBox.setSize(100, 150);
-        leftPanel.add(comboBox);
+        table = new JTable(){
+            public TableCellRenderer getCellRenderer(int row, int column ) {
+                return new PublicationCellRenderer();
+            }
+        };
 
-        //setup right panel
-        imgLabel = new JLabel();
-        Dimension imgLabelDims = new Dimension(rightPanel.getWidth(), rightPanel.getHeight());
-        imgLabel.setMinimumSize(imgLabelDims);
-        imgLabel.setPreferredSize(imgLabelDims);
-        imgLabel.setMaximumSize(imgLabelDims);
-        imgLabel.setSize(imgLabelDims);
-        rightPanel.add(imgLabel);
-
+        table.setRowHeight(100);
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setPreferredSize(new Dimension(panel.getWidth(), panel.getHeight()));
+        panel.add(scrollPane);
     }
 }

@@ -133,4 +133,5 @@ public class Publication {
         if(superMeditorLogoImage == null) superMeditorLogoImage = loadImage("http://supermeditor.com/img/logo.png");
         return superMeditorLogoImage;
     }
+
 }
