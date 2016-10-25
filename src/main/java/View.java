@@ -1,9 +1,10 @@
 import javax.swing.*;
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.Dimension;
+import javax.swing.table.TableCellRenderer;
+import java.awt.*;
 
 public class View {
+    private static JLabel imgLabel;
+    private static JTable table;
     private static JFrame frame;
     private static NavBarView navBarView;
 
@@ -29,19 +30,35 @@ public class View {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //Set up the content pane.
 
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        frame.setSize(new Dimension(700,700));
+        frame.setSize(new Dimension(900,900));
+        frame.setBackground(Color.white);
+
         //frame.setMinimumSize(new Dimension(500,500));
         //frame.setUndecorated(true);
         frame.setVisible(true);
         navBarView = new NavBarView(frame.getWidth());
 
         addComponentsToPane(frame.getContentPane());
-        new ViewController(navBarView);
+        new ViewController(table,navBarView);
     }
 
     public static void addComponentsToPane(Container contentPane) {
-        //Add nav bar
+        JPanel panel = new JPanel();
+        contentPane.add(panel, BorderLayout.WEST);
+
+        panel.setSize(new Dimension(frame.getWidth(), frame.getHeight()));
+
+        table = new JTable(){
+            public TableCellRenderer getCellRenderer(int row, int column ) {
+                return new PublicationCellRenderer();
+            }
+        };
+
+        table.setRowHeight(100);
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setPreferredSize(new Dimension(panel.getWidth(), panel.getHeight()));
+        panel.add(scrollPane);
         contentPane.add(navBarView.getNavBarPanel(), BorderLayout.NORTH);
     }
+
 }
