@@ -17,14 +17,17 @@ import java.util.Vector;
  */
 public class ViewController {
     private final JTable table;
+    private NavBarView navBarView;
     private ArrayList<Publication> publications = new ArrayList<>();
 
     private int lastSelectedIndex = -1;
 
-    public ViewController(JTable table) {
+    public ViewController(JTable table, NavBarView navBarView) {
         this.table = table;
+        this.navBarView = navBarView;
         populatePublications();
         populateComboBox();
+        setButtonHoverListeners();
     }
 
     private void populatePublications() {
@@ -52,6 +55,28 @@ public class ViewController {
         model.addColumn("Publications",pubs);
         table.setModel(model);
 
+    }
+
+    private void setButtonHoverListeners() {
+        navBarView.getPublicationsTabButton().addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                navBarView.getPublicationsTabButton().setForeground(Color.BLACK);
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                navBarView.getPublicationsTabButton().setForeground(Color.GRAY);
+            }
+        });
+
+        navBarView.getAdvertiseTabButton().addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                navBarView.getAdvertiseTabButton().setForeground(Color.BLACK);
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                navBarView.getAdvertiseTabButton().setForeground(Color.GRAY);
+            }
+        });
     }
 
 }

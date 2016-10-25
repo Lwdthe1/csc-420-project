@@ -6,6 +6,7 @@ public class View {
     private static JLabel imgLabel;
     private static JTable table;
     private static JFrame frame;
+    private static NavBarView navBarView;
 
     public static void main(String[] args) {
         //Schedule a job for the event dispatch thread:
@@ -29,14 +30,16 @@ public class View {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //Set up the content pane.
 
-
         frame.setSize(new Dimension(900,900));
         frame.setBackground(Color.white);
+
         //frame.setMinimumSize(new Dimension(500,500));
         //frame.setUndecorated(true);
         frame.setVisible(true);
+        navBarView = new NavBarView(frame.getWidth());
+
         addComponentsToPane(frame.getContentPane());
-        new ViewController(table);
+        new ViewController(table,navBarView);
     }
 
     public static void addComponentsToPane(Container contentPane) {
@@ -55,5 +58,7 @@ public class View {
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(new Dimension(panel.getWidth(), panel.getHeight()));
         panel.add(scrollPane);
+        contentPane.add(navBarView.getNavBarPanel(), BorderLayout.NORTH);
     }
+
 }
