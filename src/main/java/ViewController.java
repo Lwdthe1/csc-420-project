@@ -67,16 +67,6 @@ public class ViewController {
                 navBarView.getPublicationsTabButton().setForeground(Color.GRAY);
             }
         });
-
-        navBarView.getAdvertiseTabButton().addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                navBarView.getAdvertiseTabButton().setForeground(Color.BLACK);
-            }
-
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                navBarView.getAdvertiseTabButton().setForeground(Color.GRAY);
-            }
-        });
     }
 
 }

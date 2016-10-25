@@ -11,7 +11,6 @@ public class NavBarView {
     private static JLabel mediumIconImgLabel;
     private static JLabel superMeditorLabel;
     private static JButton publicationsTabButton;
-    private static JButton advertiseTabButton;
     private static JButton notificationsButton;
     private static JButton profileButton;
 
@@ -24,8 +23,6 @@ public class NavBarView {
         setSuperMeditorLabel();
         publicationsTabButton = new JButton();
         setPublicationsTabButton();
-        advertiseTabButton = new JButton();
-        setAdvertiseTabButton();
         notificationsButton = new JButton();
         setNotificationsButton();
         profileButton = new JButton();
@@ -58,13 +55,6 @@ public class NavBarView {
         publicationsTabButton.setBorderPainted(false);
     }
 
-    private static void setAdvertiseTabButton() {
-        advertiseTabButton.setSize(new Dimension(100, 100));
-        advertiseTabButton.setText("Advertise Mine");
-        advertiseTabButton.setForeground(Color.gray);
-        advertiseTabButton.setBorderPainted(false);
-    }
-
     private static void setNotificationsButton() {
         notificationsButton.setSize(new Dimension(100, 100));
         notificationsButton.setIcon(new ImageIcon("Images/Notifications.png", null));
@@ -79,7 +69,7 @@ public class NavBarView {
 
     private static void setLayout() {
         navBarPanel.setLayout(new MigLayout("", // Layout Constraints
-                "[][][][][]700[]", // Column constraints with default align
+                "[][][][]460[]", // Column constraints with default align
                 "")); // Row constraints
     }
 
@@ -87,8 +77,7 @@ public class NavBarView {
         navBarPanel.add(mediumIconImgLabel, "cell 0 0");
         navBarPanel.add(superMeditorLabel, "cell 1 0");
         navBarPanel.add(publicationsTabButton, "cell 2 0");
-        navBarPanel.add(advertiseTabButton, "cell 3 0");
-        navBarPanel.add(notificationsButton, "cell 4 0");
+        navBarPanel.add(notificationsButton, "cell 3 0");
         navBarPanel.add(profileButton);
     }
 
@@ -98,9 +87,5 @@ public class NavBarView {
 
     public JButton getPublicationsTabButton() {
         return publicationsTabButton;
-    }
-
-    public JButton getAdvertiseTabButton() {
-        return advertiseTabButton;
     }
 }
