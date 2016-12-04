@@ -1,3 +1,5 @@
+package views;
+
 import models.Publication;
 
 import javax.swing.*;
