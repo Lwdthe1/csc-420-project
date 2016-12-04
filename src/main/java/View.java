@@ -55,6 +55,7 @@ public class View {
         };
 
         table.setRowHeight(100);
+        
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(new Dimension(panel.getWidth(), panel.getHeight()));
         panel.add(scrollPane);

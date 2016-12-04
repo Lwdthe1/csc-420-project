@@ -28,5 +28,6 @@ dependencies {
     compile 'org.apache.httpcomponents:httpclient:4.0-alpha4'
     compile 'org.json:json:20160212'
     compile 'org.jdeferred:jdeferred:1.2.4'
+    compile group: 'com.miglayout', name: 'miglayout', version: '3.7.3.1'
     compile group: 'org.ocpsoft.prettytime', name: 'prettytime', version: '4.0.1.Final'
 }

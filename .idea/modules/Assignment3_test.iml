@@ -12,6 +12,7 @@
     <orderEntry type="module" module-name="Assignment3_main" />
     <orderEntry type="library" name="Gradle: org.apache.httpcomponents:httpclient:4.0-alpha4" level="project" />
     <orderEntry type="library" name="Gradle: org.json:json:20160212" level="project" />
+    <orderEntry type="library" name="Gradle: com.miglayout:miglayout:3.7.3.1" level="project" />
     <orderEntry type="library" name="Gradle: org.ocpsoft.prettytime:prettytime:4.0.1.Final" level="project" />
     <orderEntry type="library" name="Gradle: junit:junit:4.11" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.httpcomponents:httpcore:4.0-beta1" level="project" />
