@@ -1,3 +1,5 @@
+package views;
+
 import javax.swing.*;
 import net.miginfocom.swing.MigLayout;
 import java.awt.*;
