@@ -11,7 +11,6 @@ public class HomeFeedView implements AppView {
     private int height;
     private JPanel contentPane;
     private JTable table;
-    private NavBarView navBarView;
     private RealTimeNotificationView realTimeNotificationView;
 
     public HomeFeedView(int width, int height) {
@@ -21,10 +20,6 @@ public class HomeFeedView implements AppView {
 
     public JTable getTable() {
         return table;
-    }
-
-    public NavBarView getNavBarView() {
-        return navBarView;
     }
 
 
@@ -37,20 +32,18 @@ public class HomeFeedView implements AppView {
         this.contentPane = new JPanel(new BorderLayout());
         this.contentPane.setSize(new Dimension(this.contentPane.getWidth(), this.contentPane.getHeight()));
 
-        navBarView = new NavBarView(contentPane.getWidth());
         realTimeNotificationView = new RealTimeNotificationView(contentPane.getWidth());
         addComponentsToPane();
     }
 
     public void addComponentsToPane() {
         createAndAddScrollableTable();
-        contentPane.add(navBarView.getContainer(), BorderLayout.NORTH);
         contentPane.add(realTimeNotificationView.getContainer(), BorderLayout.SOUTH);
     }
 
     private void createAndAddScrollableTable() {
         JPanel panel = new JPanel();
-        contentPane.add(panel, BorderLayout.CENTER);
+        contentPane.add(panel, BorderLayout.SOUTH);
 
         panel.setSize(new Dimension(width, height));
         table = new JTable(){

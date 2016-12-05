@@ -12,6 +12,8 @@ import views.HomeFeedView;
 import views.NavBarView;
 
 import javax.swing.*;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -64,7 +66,7 @@ public class HomeFeedViewController implements SocketListener, AppViewController
 
     @Override
     public void setAsApplicationVisibleView() {
-        this.application.navigate(this.view.getContentPane());
+        this.application.navigate(null, this.view.getContentPane());
     }
 
     private void loadFeed() {
@@ -103,13 +105,20 @@ public class HomeFeedViewController implements SocketListener, AppViewController
                 @Override
                 public void mousePressed(MouseEvent evt) {
                     System.out.println("table listener");
+                    Component com = view.getContentPane().findComponentAt(evt.getPoint());
                     Component component = view.getTable().findComponentAt(evt.getPoint());
-                    System.out.println(component);
-                    if (component instanceof JLabel) {
-                        System.out.println("JLABEL");
-                        JLabel cellLabel = (JLabel) component;
-                        if (cellLabel.getClientProperty("labelType") == "pubNameLabel") {
-                            System.out.println("Swing is absolute bootycheeks");
+//                    if (component instanceof JLabel) {
+//                        System.out.println("JLABEL");
+//                        JLabel cellLabel = (JLabel) component;
+//                        if (cellLabel.getClientProperty("labelType") == "pubNameLabel") {
+//                            System.out.println("Swing is absolute bootycheeks");
+//                        }
+//                    }
+                    int row = view.getTable().rowAtPoint(evt.getPoint());
+                    int col = view.getTable().columnAtPoint(evt.getPoint());
+                    if (row >= 0 && col >= 0) {
+                        if (view.getTable().getValueAt(row, col) instanceof Publication) {
+                            Publication pub = (Publication) view.getTable().getValueAt(row, col);
                         }
                     }
                 }
@@ -123,7 +132,7 @@ public class HomeFeedViewController implements SocketListener, AppViewController
     }
 
     private void setButtonHoverListeners() {
-        final NavBarView navBarView = view.getNavBarView();
+        final NavBarView navBarView = application.getNavBarView();
         navBarView.getPublicationsTabButton().addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 navBarView.getPublicationsTabButton().setForeground(Color.BLACK);

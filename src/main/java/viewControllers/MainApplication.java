@@ -1,5 +1,7 @@
 package viewControllers;
 
+import views.NavBarView;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -7,7 +9,10 @@ import java.awt.*;
  * Created by lwdthe1 on 12/4/16.
  */
 public class MainApplication {
-    JFrame mainFrame;
+    private JFrame mainFrame;
+    private NavBarView navBarView;
+
+
     public MainApplication() {
         this.mainFrame = new JFrame("SuperSwingMeditor");
         //Create and set up the window.
@@ -21,7 +26,13 @@ public class MainApplication {
         //frame.setUndecorated(true);
         mainFrame.setVisible(true);
 
+        addNavBar();
         addViewControllers();
+    }
+
+    private void addNavBar() {
+        navBarView = new NavBarView(mainFrame.getWidth());
+        mainFrame.getContentPane().add(navBarView.getContainer(), BorderLayout.NORTH);
     }
 
     private void addViewControllers() {
@@ -32,8 +43,12 @@ public class MainApplication {
         return mainFrame;
     }
 
-    public void navigate(JPanel panel) {
-        mainFrame.getContentPane().removeAll();
+    public NavBarView getNavBarView() { return navBarView; }
+
+    public void navigate(JPanel removedPanel, JPanel panel) {
+        if (removedPanel != null) {
+            mainFrame.getContentPane().remove(removedPanel);
+        }
         mainFrame.getContentPane().add(panel);
         panel.setVisible(true);
     }
