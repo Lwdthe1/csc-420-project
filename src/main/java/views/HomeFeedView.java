@@ -1,10 +1,12 @@
 package views;
 
+import viewControllers.AppView;
+
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
-public class HomeFeedView {
+public class HomeFeedView implements AppView {
     private int width;
     private int height;
     private JPanel contentPane;

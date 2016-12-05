@@ -24,7 +24,7 @@ import static java.lang.Thread.sleep;
  * Created by lwdthe1 on 9/5/16.
  */
 public class HomeFeedViewController implements SocketListener, AppViewController {
-    private final HomeFeedView homeFeedView;
+    private final HomeFeedView view;
     private final MainApplication application;
 
     private SocketManager socketManger;
@@ -42,21 +42,26 @@ public class HomeFeedViewController implements SocketListener, AppViewController
 
         publicationsService = PublicationsService.sharedInstance;
         loadFeed();
-        this.homeFeedView = new HomeFeedView(application.getMainFrame().getWidth(), application.getMainFrame().getHeight());
+        this.view = new HomeFeedView(application.getMainFrame().getWidth(), application.getMainFrame().getHeight());
         setupView();
         setupViewWhileLoadingSemaphore.release();
         startSocketIO();
     }
 
+    @Override
+    public AppView getView() {
+        return view;
+    }
+
     public void setupView() {
-        this.homeFeedView.createAndShow();
+        this.view.createAndShow();
         setButtonHoverListeners();
         setAsApplicationVisibleView();
     }
 
     @Override
     public void setAsApplicationVisibleView() {
-        this.application.navigate(this.homeFeedView.getContentPane());
+        this.application.navigate(this.view.getContentPane());
     }
 
     private void loadFeed() {
@@ -90,7 +95,7 @@ public class HomeFeedViewController implements SocketListener, AppViewController
 
             DefaultTableModel model = new DefaultTableModel();
             model.addColumn(format("%d Publications Looking for Writers", pubs.length), pubs);
-            homeFeedView.getTable().setModel(model);
+            view.getTable().setModel(model);
             sendChatMessage(format("Just wanted y'all to know I'm viewing %d publications that are looking for Writers", pubs.length));
         } catch (InterruptedException e) {
             System.out.printf("\nCouldn't show publications because: %s", e.getMessage());
@@ -99,7 +104,7 @@ public class HomeFeedViewController implements SocketListener, AppViewController
     }
 
     private void setButtonHoverListeners() {
-        final NavBarView navBarView = homeFeedView.getNavBarView();
+        final NavBarView navBarView = view.getNavBarView();
         navBarView.getPublicationsTabButton().addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 navBarView.getPublicationsTabButton().setForeground(Color.BLACK);
@@ -133,7 +138,7 @@ public class HomeFeedViewController implements SocketListener, AppViewController
                 Publication chatPub = publicationsService.getById(chatMessage.getPublicationId());
                 if (chatPub == null) break;
 
-                homeFeedView.getRealTimeNotificationView().updateNotification("New Contributor Message",
+                view.getRealTimeNotificationView().updateNotification("New Contributor Message",
                         format("A contributor said: %s", chatMessage.getText()),
                         chatPub.getImage()
                 );
@@ -153,7 +158,7 @@ public class HomeFeedViewController implements SocketListener, AppViewController
                 for(int i = 0; i < 1; i++) { //THIS LOOP IS ONLY HERE FOR TESTING!
                     boolean requestApproved = requestDecisionNotification.getAccepted();
                     String title = requestApproved? "Request Approved" : "Request Denied";
-                    homeFeedView.getRealTimeNotificationView().updateNotification(title,
+                    view.getRealTimeNotificationView().updateNotification(title,
                             format("Your request to contribute to %s was %s",
                                     requestPub.getName(),
                                     requestApproved? "approved." + i : "denied." + i),
