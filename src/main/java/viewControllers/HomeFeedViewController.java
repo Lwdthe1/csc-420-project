@@ -51,6 +51,11 @@ public class HomeFeedViewController implements SocketListener, AppViewController
     public void setupView() {
         this.homeFeedView.createAndShow();
         setButtonHoverListeners();
+        setAsApplicationVisibleView();
+    }
+
+    @Override
+    public void setAsApplicationVisibleView() {
         this.application.navigate(this.homeFeedView.getContentPane());
     }
 

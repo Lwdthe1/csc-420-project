@@ -5,4 +5,5 @@ package viewControllers;
  */
 public interface AppViewController {
     void setupView();
+    void setAsApplicationVisibleView();
 }
