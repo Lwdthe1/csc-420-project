@@ -62,7 +62,12 @@ public class HomeFeedView implements AppView {
             public TableCellRenderer getCellRenderer(int row, int column ) {
                 return new PublicationCellRenderer();
             }
+
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
         };
+        table.enableInputMethods(false);
 
         table.setRowHeight(100);
 

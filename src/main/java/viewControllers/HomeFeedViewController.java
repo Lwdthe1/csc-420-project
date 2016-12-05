@@ -13,6 +13,7 @@ import views.subviews.NavBarView;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
@@ -93,9 +94,35 @@ public class HomeFeedViewController implements SocketListener, AppViewController
                 pubs[i] = publications.get(i);
             }
 
-            DefaultTableModel model = new DefaultTableModel();
-            model.addColumn(format("%d Publications Looking for Writers", pubs.length), pubs);
+
+            // important to set the columns that will have embedded elements as "Editable"
+            DefaultTableModel model = new DefaultTableModel(new String [] {"Publications", "Button" }, 0)
+            {
+                Class[] types = new Class[]
+                        {
+                                java.lang.Integer.class, java.lang.String.class
+                        };
+
+                public Class getColumnClass(int columnIndex)
+                {
+                    return types[columnIndex];
+                }
+
+                boolean[] canEdit = new boolean [] {
+                        true, true
+                };
+
+                public boolean isCellEditable(int rowIndex, int columnIndex) {
+                    return canEdit [columnIndex];
+                }
+            };
+            JTable table = view.getTable();
             view.getTable().setModel(model);
+
+            // sets the table columns to use the button/slider renderer and editor component
+            TableColumn sliderColumn = view.getTable().getColumnModel().getColumn(0);
+            model.addColumn(format("%d Publications Looking for Writers", pubs.length), pubs);
+
             sendChatMessage(format("Just wanted y'all to know I'm viewing %d publications that are looking for Writers", pubs.length));
         } catch (InterruptedException e) {
             System.out.printf("\nCouldn't show publications because: %s", e.getMessage());

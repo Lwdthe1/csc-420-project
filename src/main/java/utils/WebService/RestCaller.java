@@ -44,7 +44,7 @@ public class RestCaller
     public List<Publication> getPublications() throws URISyntaxException, HttpException, IOException {
         // Create a new HttpClient and Get Sequence number
         HttpClient httpClient = new DefaultHttpClient();
-        String restUri = REST_API_URL + "pubs";
+        String restUri = REST_API_URL + "pubs?deliminatePubs=false";
 
         HttpGet httpGet = new HttpGet(restUri);
 

@@ -39,10 +39,10 @@ public class PublicationCellRenderer extends JPanel implements TableCellRenderer
             "    -moz-font-feature-settings: \"liga\" on;\n" +
             "    text-decoration: none !important;\n";
     private static final String META_TEXT_STYLE = "color: #7f7f7f\n" +
-            "    font-size: 8px;\n" +
+            "    font-size: 6px;\n" +
             "    font-family: -apple-system,BlinkMacSystemFont,\"Segoe UI\",Roboto,Oxygen,Ubuntu,Cantarell,\"Open Sans\",\"Helvetica Neue\",sans-serif;\n" +
             "    letter-spacing: 0;\n" +
-            "    font-weight: 300;\n" +
+            "    font-weight: 200;\n" +
             "    font-style: normal;\n" +
             "    text-rendering: optimizeLegibility;\n" +
             "    -webkit-font-smoothing: antialiased;\n" +
@@ -50,9 +50,9 @@ public class PublicationCellRenderer extends JPanel implements TableCellRenderer
             "    -moz-font-feature-settings: \"liga\" on;\n" +
             "    text-decoration: none !important;\n";
 
-    static Insets LEFT_PAD_15 = new Insets(0,15, 0, 0);
-    static Insets RIGHT_PAD_15 = new Insets(0,0, 0, 15);
-    static Insets TOP_5_LEFT_PAD_15 = new Insets(5,15, 0, 0);
+    private static Insets LEFT_PAD_15 = new Insets(0,15, 0, 0);
+    private static Insets RIGHT_PAD_15 = new Insets(0,0, 0, 15);
+    private static Insets TOP_5_LEFT_PAD_15 = new Insets(5,15, 0, 0);
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -63,7 +63,6 @@ public class PublicationCellRenderer extends JPanel implements TableCellRenderer
         constraints.fill = GridBagConstraints.HORIZONTAL;
 
         Publication pub = (Publication) value;
-
         addImageLabel(constraints, pub);
         addNameLabel(constraints, pub);
         addDescriptionLabel(constraints, pub);
@@ -84,6 +83,7 @@ public class PublicationCellRenderer extends JPanel implements TableCellRenderer
                 System.out.println(PublicationsService.sharedInstance.requestToContributeById(pub.getId(), "user1"));
             }
         });
+        this.enableInputMethods(false);
         this.add(contributeButton, constraints);
     }
 
@@ -116,6 +116,7 @@ public class PublicationCellRenderer extends JPanel implements TableCellRenderer
         constraints.gridx = 1;
         constraints.gridy = 2;
         constraints.ipady = 5;
+
         constraints.insets = TOP_5_LEFT_PAD_15;
         this.add(metaInfoLabel, constraints);
     }
@@ -126,9 +127,7 @@ public class PublicationCellRenderer extends JPanel implements TableCellRenderer
         Dimension dimensions = new Dimension(30, 30);
         roundImageButton.setSize(dimensions);
         roundImageButton.setIcon(new ImageIcon(pub.getImage().getScaledInstance(
-                30,
-                30,
-                Image.SCALE_SMOOTH)));
+                30, 30, Image.SCALE_SMOOTH)));
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.insets = LEFT_PAD_15;
