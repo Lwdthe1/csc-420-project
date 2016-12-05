@@ -9,7 +9,8 @@ public enum SocketEvent {
     CONNECTED(Socket.EVENT_CONNECT),
     DISCONNECTED(Socket.EVENT_DISCONNECT),
     NUM_CLIENTS("numClients"),
-    CHAT_MESSAGE("message");
+    CHAT_MESSAGE("message"),
+    NOTIFICATION_REQUEST_TO_CONTRIBUTE_DECISION("notification_requestToContributeDecision");
 
     private String value;
     SocketEvent(String value) {

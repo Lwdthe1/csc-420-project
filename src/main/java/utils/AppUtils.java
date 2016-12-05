@@ -1,5 +1,7 @@
 package utils;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 
 public class AppUtils
@@ -35,6 +37,4 @@ public class AppUtils
         buffer.putInt(x);
         return buffer.array();
     }
-
-
 }
