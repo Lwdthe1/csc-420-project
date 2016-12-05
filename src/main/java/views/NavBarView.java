@@ -9,12 +9,12 @@ import java.awt.*;
  */
 public class NavBarView {
 
-    private static JPanel navBarPanel;
-    private static JLabel mediumIconImgLabel;
-    private static JLabel superMeditorLabel;
-    private static JButton publicationsTabButton;
-    private static JButton notificationsButton;
-    private static JButton profileButton;
+    private  JPanel navBarPanel;
+    private  JLabel mediumIconImgLabel;
+    private  JLabel superMeditorLabel;
+    private  JButton publicationsTabButton;
+    private JButton notificationsButton;
+    private JButton profileButton;
 
     public NavBarView(int frameWidth) {
         navBarPanel = new JPanel();
@@ -33,49 +33,49 @@ public class NavBarView {
         addComponents();
     }
 
-    private static void setNavBarPanel(int frameWidth) {
+    private  void setNavBarPanel(int frameWidth) {
         navBarPanel.setSize(new Dimension(frameWidth, 300));
         navBarPanel.setBackground(Color.white);
     }
 
-    private static void setMediumIconImgLabel() {
+    private void setMediumIconImgLabel() {
         mediumIconImgLabel.setSize(new Dimension(100, 100));
         mediumIconImgLabel.setIcon(new ImageIcon("Images/SuperMeditorLogo.png", null));
     }
 
-    private static void setSuperMeditorLabel() {
+    private void setSuperMeditorLabel() {
         superMeditorLabel.setSize(new Dimension(100, 100));
         superMeditorLabel.setText("SuperMeditor");
         superMeditorLabel.setFont(new Font("Helvetica", Font.BOLD, 20));
         superMeditorLabel.setForeground(Color.black);
     }
 
-    private static void setPublicationsTabButton() {
+    private void setPublicationsTabButton() {
         publicationsTabButton.setSize(new Dimension(100, 100));
         publicationsTabButton.setText("Publications");
         publicationsTabButton.setForeground(Color.gray);
         publicationsTabButton.setBorderPainted(false);
     }
 
-    private static void setNotificationsButton() {
+    private void setNotificationsButton() {
         notificationsButton.setSize(new Dimension(100, 100));
         notificationsButton.setIcon(new ImageIcon("Images/Notifications.png", null));
         notificationsButton.setBorderPainted(false);
     }
 
-    private static void setProfileButton() {
+    private void setProfileButton() {
         profileButton.setSize(new Dimension(100, 100));
         profileButton.setIcon(new ImageIcon("Images/Profile.png", null));
         profileButton.setBorderPainted(false);
     }
 
-    private static void setLayout() {
+    private void setLayout() {
         navBarPanel.setLayout(new MigLayout("", // Layout Constraints
                 "[][][][]460[]", // Column constraints with default align
                 "")); // Row constraints
     }
 
-    private static void addComponents() {
+    private void addComponents() {
         navBarPanel.add(mediumIconImgLabel, "cell 0 0");
         navBarPanel.add(superMeditorLabel, "cell 1 0");
         navBarPanel.add(publicationsTabButton, "cell 2 0");
@@ -83,7 +83,7 @@ public class NavBarView {
         navBarPanel.add(profileButton);
     }
 
-    public JPanel getNavBarPanel() {
+    public JPanel getContainer() {
         return navBarPanel;
     }
 

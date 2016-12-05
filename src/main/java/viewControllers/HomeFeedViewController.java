@@ -2,41 +2,40 @@ package viewControllers;
 
 import models.ChatMessage;
 import models.Publication;
-import org.apache.http.HttpException;
+import models.RequestDecisionNotification;
 import org.json.JSONObject;
-import utils.WebService.RestCaller;
+import utils.PublicationsService;
 import utils.WebService.socketio.SocketEvent;
 import utils.WebService.socketio.SocketListener;
 import utils.WebService.socketio.SocketManager;
 import views.HomeFeedView;
 import views.NavBarView;
-import views.PublicationCell;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 import static java.lang.String.format;
+import static java.lang.Thread.sleep;
 
 /**
  * Created by lwdthe1 on 9/5/16.
  */
-public class HomeFeedViewController implements SocketListener {
-    private final HomeFeedView homeFeedView;
-    private ArrayList<Publication> publications = new ArrayList<>();
+public class HomeFeedViewController implements SocketListener, AppViewController {
+    private final HomeFeedView view;
+    private final MainApplication application;
 
 
     private SocketManager socketManger;
     private Semaphore setupViewWhileLoadingSemaphore = new Semaphore(1);
+    private PublicationsService publicationsService;
 
-    public HomeFeedViewController() {
+    public HomeFeedViewController(MainApplication application) {
+        this.application = application;
         //acquire the lock here before starting load
         try {
             setupViewWhileLoadingSemaphore.acquire();
@@ -44,24 +43,35 @@ public class HomeFeedViewController implements SocketListener {
             e.printStackTrace();
         }
 
+        publicationsService = PublicationsService.sharedInstance;
         loadFeed();
-        this.homeFeedView = new HomeFeedView();
-
+        this.view = new HomeFeedView(application.getMainFrame().getWidth(), application.getMainFrame().getHeight());
         setupView();
         setupViewWhileLoadingSemaphore.release();
         startSocketIO();
     }
 
-    private void setupView() {
-        this.homeFeedView.createAndShow();
+    @Override
+    public AppView getView() {
+        return view;
+    }
+
+    public void setupView() {
+        this.view.createAndShow();
         setButtonHoverListeners();
+        setAsApplicationVisibleView();
+    }
+
+    @Override
+    public void setAsApplicationVisibleView() {
+        this.application.navigate(this.view.getContentPane());
     }
 
     private void loadFeed() {
         SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>() {
             @Override
             protected Boolean doInBackground() throws Exception {
-                fetchPublications();
+                PublicationsService.sharedInstance.loadAll();
                 return true;
             }
 
@@ -73,24 +83,14 @@ public class HomeFeedViewController implements SocketListener {
         worker.execute();
     }
 
-    private void fetchPublications() {
-        try {
-            publications = (ArrayList<Publication>) RestCaller.getPublications();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (HttpException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+
 
 
     private void showPublications() {
         try {
             //acquire the lock to assure the view is ready
             setupViewWhileLoadingSemaphore.acquire();
-
+            ArrayList<Publication> publications = publicationsService.getAll();
             Publication[] pubs = new Publication[publications.size()];
             for(int i=0; i<publications.size(); i++){
                 pubs[i] = publications.get(i);
@@ -98,18 +98,24 @@ public class HomeFeedViewController implements SocketListener {
 
             DefaultTableModel model = new DefaultTableModel();
             model.addColumn(format("%d Publications Looking for Writers", pubs.length), pubs);
-            homeFeedView.getTable().setModel(model);
-            homeFeedView.getTable().addMouseListener(new MouseAdapter() {
+            view.getTable().setModel(model);
+            view.getTable().addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent evt) {
-                    Component component = homeFeedView.getTable().findComponentAt(evt.getPoint());
-                    JLabel cellLabel = (JLabel) component;
-                    if (cellLabel.getClientProperty("labelType") == "pubNameLabel") {
-                        System.out.println("Swing is absolute bootycheeks");
-                        homeFeedView.getFrame().getContentPane().removeAll();
+                    System.out.println("table listener");
+                    Component component = view.getTable().findComponentAt(evt.getPoint());
+                    System.out.println(component);
+                    if (component instanceof JLabel) {
+                        System.out.println("JLABEL");
+                        JLabel cellLabel = (JLabel) component;
+                        if (cellLabel.getClientProperty("labelType") == "pubNameLabel") {
+                            System.out.println("Swing is absolute bootycheeks");
+                        }
                     }
                 }
             });
+            view.getTable().setModel(model);
+            sendChatMessage(format("Just wanted y'all to know I'm viewing %d publications that are looking for Writers", pubs.length));
         } catch (InterruptedException e) {
             System.out.printf("\nCouldn't show publications because: %s", e.getMessage());
             e.printStackTrace();
@@ -117,7 +123,7 @@ public class HomeFeedViewController implements SocketListener {
     }
 
     private void setButtonHoverListeners() {
-        final NavBarView navBarView = homeFeedView.getNavBarView();
+        final NavBarView navBarView = view.getNavBarView();
         navBarView.getPublicationsTabButton().addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 navBarView.getPublicationsTabButton().setForeground(Color.BLACK);
@@ -148,7 +154,36 @@ public class HomeFeedViewController implements SocketListener {
                 break;
             case CHAT_MESSAGE:
                 ChatMessage chatMessage = new ChatMessage(payload);
-                System.out.printf("\nReceived chat message: %s\n", chatMessage.getText());
+                Publication chatPub = publicationsService.getById(chatMessage.getPublicationId());
+                if (chatPub == null) break;
+
+                view.getRealTimeNotificationView().updateNotification("New Contributor Message",
+                        format("A contributor said: %s", chatMessage.getText()),
+                        chatPub.getImage()
+                );
+                try {
+                    sleep(1 * 60 * 1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                sendChatMessage("This is another test realtime message " + Math.random());
+                break;
+            case NOTIFICATION_REQUEST_TO_CONTRIBUTE_DECISION:
+                RequestDecisionNotification requestDecisionNotification = new RequestDecisionNotification(payload);
+                System.out.printf("\nReceived requestDecisionNotification: %s\n", requestDecisionNotification);
+                Publication requestPub = publicationsService.getById(requestDecisionNotification.getPublicationId());
+                if (requestPub == null) break;
+
+                for(int i = 0; i < 1; i++) { //THIS LOOP IS ONLY HERE FOR TESTING!
+                    boolean requestApproved = requestDecisionNotification.getAccepted();
+                    String title = requestApproved? "Request Approved" : "Request Denied";
+                    view.getRealTimeNotificationView().updateNotification(title,
+                            format("Your request to contribute to %s was %s",
+                                    requestPub.getName(),
+                                    requestApproved? "approved." + i : "denied." + i),
+                            requestPub.getImage()
+                    );
+                }
                 break;
         }
     }
@@ -162,10 +197,11 @@ public class HomeFeedViewController implements SocketListener {
     public void registerForEvents() {
         socketManger.listen(SocketEvent.NUM_CLIENTS, this);
         socketManger.listen(SocketEvent.CHAT_MESSAGE, this);
-        sendChatMessage();
+        socketManger.listen(SocketEvent.NOTIFICATION_REQUEST_TO_CONTRIBUTE_DECISION, this);
+        sendChatMessage("Hey, World! I've registered to hear everything you have to say.");
     }
 
-    private void sendChatMessage() {
-        socketManger.emit(SocketEvent.CHAT_MESSAGE, ChatMessage.createJSONPayload("pub1", "user1", "Hello there!"));
+    private void sendChatMessage(String message) {
+        socketManger.emit(SocketEvent.CHAT_MESSAGE, ChatMessage.createJSONPayload("eb297ea1161a", "user1", message));
     }
 }

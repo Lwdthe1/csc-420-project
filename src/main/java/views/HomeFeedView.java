@@ -1,23 +1,26 @@
 package views;
 
+
+import viewControllers.AppView;
 import javax.swing.*;
-import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
-public class HomeFeedView {
-    private JFrame frame;
+public class HomeFeedView implements AppView {
+    private int width;
+    private int height;
+    private JPanel contentPane;
     private JTable table;
     private NavBarView navBarView;
-    private CardLayout cardLayout = new CardLayout();
+    private RealTimeNotificationView realTimeNotificationView;
 
+    public HomeFeedView(int width, int height) {
+        this.width = width;
+        this.height = height;
+    }
 
     public JTable getTable() {
         return table;
-    }
-
-    public JFrame getFrame() {
-        return frame;
     }
 
     public NavBarView getNavBarView() {
@@ -31,41 +34,43 @@ public class HomeFeedView {
      * event dispatch thread.
      */
     public void createAndShow() {
-        //Create and set up the window.
-        frame = new JFrame("SuperSwingMeditor");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //Set up the content pane.
+        this.contentPane = new JPanel(new BorderLayout());
+        this.contentPane.setSize(new Dimension(this.contentPane.getWidth(), this.contentPane.getHeight()));
 
-        frame.setSize(new Dimension(900,900));
-        frame.setBackground(Color.white);
-
-        //frame.setMinimumSize(new Dimension(500,500));
-        //frame.setUndecorated(true);
-        frame.setVisible(true);
-        frame.setLayout(cardLayout);
-
-        navBarView = new NavBarView(frame.getWidth());
-
-        addComponentsToPane(frame.getContentPane());
+        navBarView = new NavBarView(contentPane.getWidth());
+        realTimeNotificationView = new RealTimeNotificationView(contentPane.getWidth());
+        addComponentsToPane();
     }
 
-    public void addComponentsToPane(Container contentPane) {
-        JPanel tablePanel = new JPanel();
+    public void addComponentsToPane() {
+        createAndAddScrollableTable();
+        contentPane.add(navBarView.getContainer(), BorderLayout.NORTH);
+        contentPane.add(realTimeNotificationView.getContainer(), BorderLayout.SOUTH);
+    }
 
-        tablePanel.setSize(new Dimension(frame.getWidth(), frame.getHeight()));
+    private void createAndAddScrollableTable() {
+        JPanel panel = new JPanel();
+        contentPane.add(panel, BorderLayout.CENTER);
 
+        panel.setSize(new Dimension(width, height));
         table = new JTable(){
             public TableCellRenderer getCellRenderer(int row, int column) {
-                return new PublicationCell();
+                return new PublicationCellRenderer();
             }
         };
 
         table.setRowHeight(100);
 
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setPreferredSize(new Dimension(tablePanel.getWidth(), tablePanel.getHeight()));
-        tablePanel.add(navBarView.getNavBarPanel(), BorderLayout.NORTH);
-        tablePanel.add(scrollPane, BorderLayout.SOUTH);
-        contentPane.add("tablePanel", tablePanel);
+        scrollPane.setPreferredSize(new Dimension(panel.getWidth(), panel.getHeight()));
+        panel.add(scrollPane);
+    }
+
+    public RealTimeNotificationView getRealTimeNotificationView() {
+        return realTimeNotificationView;
+    }
+
+    public JPanel getContentPane() {
+        return contentPane;
     }
 }
