@@ -1,6 +1,9 @@
 package views;
 
 import viewControllers.AppView;
+import views.subviews.NavBarView;
+import views.subviews.PublicationCellRenderer;
+import views.subviews.RealTimeNotificationView;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;

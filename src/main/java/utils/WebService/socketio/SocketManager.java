@@ -59,15 +59,15 @@ public class SocketManager {
         }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                normalizeStringPayload(args[0]);
-                System.out.println("SOCKET DISCONNECTED FROM:" + host);
-                notifyListeners(SocketEvent.DISCONNECTED, (JSONObject) args[0]);
+                //normalizeStringPayload(args[0]);
+                System.out.println("SOCKET DISCONNECTED FROM:" + args[0]);
+                //notifyListeners(SocketEvent.DISCONNECTED, (JSONObject) args[0]);
             }
         });
     }
 
     private void normalizeStringPayload(Object arg) {
-        String currentPayload = (String) arg;
+        String currentPayload = (String) ((JSONObject) arg).get("payload");
         JSONObject newPayload = new JSONObject();
         newPayload.put("value", currentPayload);
         ((JSONObject) arg).put("payload", newPayload);

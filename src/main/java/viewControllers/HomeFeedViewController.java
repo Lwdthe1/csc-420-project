@@ -9,7 +9,7 @@ import utils.WebService.socketio.SocketEvent;
 import utils.WebService.socketio.SocketListener;
 import utils.WebService.socketio.SocketManager;
 import views.HomeFeedView;
-import views.NavBarView;
+import views.subviews.NavBarView;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;

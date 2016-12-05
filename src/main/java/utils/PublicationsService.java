@@ -1,14 +1,9 @@
 package utils;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import models.Publication;
-import org.apache.http.HttpException;
 import utils.WebService.RestCaller;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 
 /**
@@ -20,7 +15,8 @@ public class PublicationsService {
     HashMap<String, Publication> publicationIdsMap = new HashMap<>();
     private ArrayList<Publication> publications;
 
-    public PublicationsService() {
+    //prevent others from instantiating
+    private PublicationsService() {
 
     }
 
@@ -30,7 +26,7 @@ public class PublicationsService {
 
     private void fetchPublications() {
         try {
-            publications = (ArrayList<Publication>) RestCaller.getPublications();
+            publications = (ArrayList<Publication>) RestCaller.sharedInstance.getPublications();
             for (Publication publication: publications) {
                 publicationIdsMap.put(publication.getId(), publication);
             }
@@ -56,7 +52,15 @@ public class PublicationsService {
 
     public Boolean checkUserFollowsById(String publicationId, String userId) {
         try {
-            return RestCaller.checkUserFollowsPublicationById(publicationId, userId);
+            return RestCaller.sharedInstance.checkUserFollowsPublicationById(publicationId, userId);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public Boolean requestToContributeById(String publicationId, String userId) {
+        try {
+            return RestCaller.sharedInstance.requestToContributeToPublicationById(publicationId, userId);
         } catch (Exception e) {
             return false;
         }

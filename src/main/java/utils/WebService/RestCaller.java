@@ -4,7 +4,9 @@ import models.Publication;
 import org.apache.http.HttpException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
@@ -15,13 +17,21 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.String.format;
+
 /**
  * Created by lwdthe1 on 3/11/2016.
  */
 public class RestCaller
 {
-    private static final String TAG = "SuperMeditorRestCaller";
-    private static final String REST_API_URL = "http://supermeditor.com/api/i";
+    public static RestCaller sharedInstance = new RestCaller();
+    private final String TAG = "SuperMeditorRestCaller";
+    private final String REST_API_URL = "http://supermeditor.com/api/i/";
+
+    //prevent others from instantiating
+    private RestCaller() {
+
+    }
 
     /**
      * gets all the publications
@@ -31,10 +41,10 @@ public class RestCaller
      * @throws HttpException
      * @throws IOException
      */
-    public static List<Publication> getPublications() throws URISyntaxException, HttpException, IOException {
+    public List<Publication> getPublications() throws URISyntaxException, HttpException, IOException {
         // Create a new HttpClient and Get Sequence number
         HttpClient httpClient = new DefaultHttpClient();
-        String restUri = REST_API_URL + "/pubs";
+        String restUri = REST_API_URL + "pubs";
 
         HttpGet httpGet = new HttpGet(restUri);
 
@@ -59,15 +69,39 @@ public class RestCaller
     }
 
 
-    public static Boolean checkUserFollowsPublicationById(String publicationId, String userId) throws URISyntaxException, IOException, HttpException {
+    public Boolean checkUserFollowsPublicationById(String publicationId, String userId) throws URISyntaxException, IOException, HttpException {
         // Create a new HttpClient and Get Sequence number
         HttpClient httpClient = new DefaultHttpClient();
-        String restUri = REST_API_URL + "/fake/user/:userId/follows/:publicationId";
+        String restUri = REST_API_URL + format("fake/user/%s/follows/%s",userId, publicationId);
 
         HttpGet httpGet = new HttpGet(restUri);
 
         HttpResponse response = httpClient.execute(httpGet);
         String resultJson = EntityUtils.toString(response.getEntity());
         return resultJson == "true";
+    }
+
+    public Boolean requestToContributeToPublicationById(String publicationId, String userId) throws URISyntaxException, IOException, HttpException {
+        // Create a new HttpClient and Get Sequence number
+        HttpClient httpClient = new DefaultHttpClient();
+        String restUri = REST_API_URL + format("fake/user/%s/pub/%s/contribute", userId, publicationId);
+
+        HttpPost httpPost = new HttpPost(restUri);
+
+        HttpResponse response = httpClient.execute(httpPost);
+        EntityUtils.toString(response.getEntity());
+        return true;
+    }
+
+    public Boolean retractRequestToContributeToPublicationById(String publicationId, String userId) throws URISyntaxException, IOException, HttpException {
+        // Create a new HttpClient and Get Sequence number
+        HttpClient httpClient = new DefaultHttpClient();
+        String restUri = REST_API_URL + format("fake/pubs/contribute/:/:userId", publicationId, userId);
+
+        HttpDelete httpDelete = new HttpDelete(restUri);
+
+        HttpResponse response = httpClient.execute(httpDelete);
+        EntityUtils.toString(response.getEntity());
+        return true;
     }
 }
