@@ -2,12 +2,15 @@ package views;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
 public class HomeFeedView {
     private JFrame frame;
     private JTable table;
     private NavBarView navBarView;
+    private CardLayout cardLayout = new CardLayout();
+
 
     public JTable getTable() {
         return table;
@@ -39,19 +42,20 @@ public class HomeFeedView {
         //frame.setMinimumSize(new Dimension(500,500));
         //frame.setUndecorated(true);
         frame.setVisible(true);
+        frame.setLayout(cardLayout);
+
         navBarView = new NavBarView(frame.getWidth());
 
         addComponentsToPane(frame.getContentPane());
     }
 
     public void addComponentsToPane(Container contentPane) {
-        JPanel panel = new JPanel();
-        contentPane.add(panel, BorderLayout.WEST);
+        JPanel tablePanel = new JPanel();
 
-        panel.setSize(new Dimension(frame.getWidth(), frame.getHeight()));
+        tablePanel.setSize(new Dimension(frame.getWidth(), frame.getHeight()));
 
         table = new JTable(){
-            public TableCellEditor getCellEditor(int row, int column) {
+            public TableCellRenderer getCellRenderer(int row, int column) {
                 return new PublicationCell();
             }
         };
@@ -59,9 +63,9 @@ public class HomeFeedView {
         table.setRowHeight(100);
 
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setPreferredSize(new Dimension(panel.getWidth(), panel.getHeight()));
-        panel.add(scrollPane);
-        contentPane.add(navBarView.getNavBarPanel(), BorderLayout.NORTH);
+        scrollPane.setPreferredSize(new Dimension(tablePanel.getWidth(), tablePanel.getHeight()));
+        tablePanel.add(navBarView.getNavBarPanel(), BorderLayout.NORTH);
+        tablePanel.add(scrollPane, BorderLayout.SOUTH);
+        contentPane.add("tablePanel", tablePanel);
     }
-
 }

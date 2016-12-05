@@ -15,6 +15,9 @@ import views.PublicationCell;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -29,6 +32,7 @@ public class HomeFeedViewController implements SocketListener {
     private final HomeFeedView homeFeedView;
     private ArrayList<Publication> publications = new ArrayList<>();
 
+
     private SocketManager socketManger;
     private Semaphore setupViewWhileLoadingSemaphore = new Semaphore(1);
 
@@ -42,6 +46,7 @@ public class HomeFeedViewController implements SocketListener {
 
         loadFeed();
         this.homeFeedView = new HomeFeedView();
+
         setupView();
         setupViewWhileLoadingSemaphore.release();
         startSocketIO();
@@ -94,8 +99,17 @@ public class HomeFeedViewController implements SocketListener {
             DefaultTableModel model = new DefaultTableModel();
             model.addColumn(format("%d Publications Looking for Writers", pubs.length), pubs);
             homeFeedView.getTable().setModel(model);
-            homeFeedView.getTable().setDefaultRenderer(Publication.class, new PublicationCell());
-            homeFeedView.getTable().setDefaultRenderer(Publication.class, new PublicationCell());
+            homeFeedView.getTable().addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent evt) {
+                    Component component = homeFeedView.getTable().findComponentAt(evt.getPoint());
+                    JLabel cellLabel = (JLabel) component;
+                    if (cellLabel.getClientProperty("labelType") == "pubNameLabel") {
+                        System.out.println("Swing is absolute bootycheeks");
+                        homeFeedView.getFrame().getContentPane().removeAll();
+                    }
+                }
+            });
         } catch (InterruptedException e) {
             System.out.printf("\nCouldn't show publications because: %s", e.getMessage());
             e.printStackTrace();
