@@ -10,6 +10,7 @@ import utils.WebService.socketio.SocketListener;
 import utils.WebService.socketio.SocketManager;
 import views.HomeFeedView;
 import views.NavBarView;
+import views.PublicationCell;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -93,6 +94,8 @@ public class HomeFeedViewController implements SocketListener {
             DefaultTableModel model = new DefaultTableModel();
             model.addColumn(format("%d Publications Looking for Writers", pubs.length), pubs);
             homeFeedView.getTable().setModel(model);
+            homeFeedView.getTable().setDefaultRenderer(Publication.class, new PublicationCell());
+            homeFeedView.getTable().setDefaultRenderer(Publication.class, new PublicationCell());
         } catch (InterruptedException e) {
             System.out.printf("\nCouldn't show publications because: %s", e.getMessage());
             e.printStackTrace();

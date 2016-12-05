@@ -1,9 +1,7 @@
 package views;
 
-import views.NavBarView;
-
 import javax.swing.*;
-import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableCellEditor;
 import java.awt.*;
 
 public class HomeFeedView {
@@ -53,8 +51,8 @@ public class HomeFeedView {
         panel.setSize(new Dimension(frame.getWidth(), frame.getHeight()));
 
         table = new JTable(){
-            public TableCellRenderer getCellRenderer(int row, int column ) {
-                return new PublicationCellRenderer();
+            public TableCellEditor getCellEditor(int row, int column) {
+                return new PublicationCell();
             }
         };
 
