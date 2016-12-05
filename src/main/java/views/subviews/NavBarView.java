@@ -1,4 +1,4 @@
-package views;
+package views.subviews;
 
 import javax.swing.*;
 import net.miginfocom.swing.MigLayout;
