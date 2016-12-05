@@ -41,22 +41,36 @@ public class SocketManager {
             @Override
             public void call(Object... args) {
                 normalizeIntPayload(args[0]);
-                System.out.println("RECEIVED NUMCLIENTS EVENT FROM SERVER:" + args[0]);
+                System.out.println("RECEIVED NUM_CLIENTS EVENT FROM SERVER:" + args[0]);
                 notifyListeners(SocketEvent.NUM_CLIENTS, (JSONObject) args[0]);
             }
-        }).on(SocketEvent.CHAT_MESSAGE.getValue() + "-pid-pub1", new Emitter.Listener() {
+        }).on(SocketEvent.CHAT_MESSAGE.getValue(), new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                System.out.println("RECEIVED NUMCLIENTS EVENT FROM SERVER:" + args[0]);
+                System.out.println("RECEIVED CHAT_MESSAGE EVENT FROM SERVER:" + args[0]);
                 notifyListeners(SocketEvent.CHAT_MESSAGE, (JSONObject) args[0]);
+            }
+        }).on(SocketEvent.NOTIFICATION_REQUEST_TO_CONTRIBUTE_DECISION.getValue(), new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                System.out.println("RECEIVED NOTIFICATION_REQUEST_TO_CONTRIBUTE_DECISION EVENT FROM SERVER:" + args[0]);
+                notifyListeners(SocketEvent.NOTIFICATION_REQUEST_TO_CONTRIBUTE_DECISION, (JSONObject) args[0]);
             }
         }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
+                normalizeStringPayload(args[0]);
                 System.out.println("SOCKET DISCONNECTED FROM:" + host);
                 notifyListeners(SocketEvent.DISCONNECTED, (JSONObject) args[0]);
             }
         });
+    }
+
+    private void normalizeStringPayload(Object arg) {
+        String currentPayload = (String) arg;
+        JSONObject newPayload = new JSONObject();
+        newPayload.put("value", currentPayload);
+        ((JSONObject) arg).put("payload", newPayload);
     }
 
     private void normalizeIntPayload(Object arg) {
@@ -65,6 +79,7 @@ public class SocketManager {
         newPayload.put("value", currentPayload);
         ((JSONObject) arg).put("payload", newPayload);
     }
+
 
     public void emit(SocketEvent event, JSONObject obj) {
         socket.emit(event.getValue(), obj);

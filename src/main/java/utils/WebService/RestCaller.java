@@ -59,4 +59,15 @@ public class RestCaller
     }
 
 
+    public static Boolean checkUserFollowsPublicationById(String publicationId, String userId) throws URISyntaxException, IOException, HttpException {
+        // Create a new HttpClient and Get Sequence number
+        HttpClient httpClient = new DefaultHttpClient();
+        String restUri = REST_API_URL + "/fake/user/:userId/follows/:publicationId";
+
+        HttpGet httpGet = new HttpGet(restUri);
+
+        HttpResponse response = httpClient.execute(httpGet);
+        String resultJson = EntityUtils.toString(response.getEntity());
+        return resultJson == "true";
+    }
 }
