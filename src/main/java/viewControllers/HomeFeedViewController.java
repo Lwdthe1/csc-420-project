@@ -23,14 +23,16 @@ import static java.lang.Thread.sleep;
 /**
  * Created by lwdthe1 on 9/5/16.
  */
-public class HomeFeedViewController implements SocketListener {
+public class HomeFeedViewController implements SocketListener, AppViewController {
     private final HomeFeedView homeFeedView;
+    private final MainApplication application;
 
     private SocketManager socketManger;
     private Semaphore setupViewWhileLoadingSemaphore = new Semaphore(1);
     private PublicationsService publicationsService;
 
-    public HomeFeedViewController() {
+    public HomeFeedViewController(MainApplication application) {
+        this.application = application;
         //acquire the lock here before starting load
         try {
             setupViewWhileLoadingSemaphore.acquire();
@@ -40,15 +42,21 @@ public class HomeFeedViewController implements SocketListener {
 
         publicationsService = PublicationsService.sharedInstance;
         loadFeed();
-        this.homeFeedView = new HomeFeedView();
+        this.homeFeedView = new HomeFeedView(application.getMainFrame().getWidth(), application.getMainFrame().getHeight());
         setupView();
         setupViewWhileLoadingSemaphore.release();
         startSocketIO();
     }
 
-    private void setupView() {
+    public void setupView() {
         this.homeFeedView.createAndShow();
         setButtonHoverListeners();
+        setAsApplicationVisibleView();
+    }
+
+    @Override
+    public void setAsApplicationVisibleView() {
+        this.application.navigate(this.homeFeedView.getContentPane());
     }
 
     private void loadFeed() {

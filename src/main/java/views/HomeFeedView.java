@@ -5,17 +5,20 @@ import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
 public class HomeFeedView {
-    private JFrame frame;
+    private int width;
+    private int height;
+    private JPanel contentPane;
     private JTable table;
     private NavBarView navBarView;
     private RealTimeNotificationView realTimeNotificationView;
 
-    public JTable getTable() {
-        return table;
+    public HomeFeedView(int width, int height) {
+        this.width = width;
+        this.height = height;
     }
 
-    public JFrame getFrame() {
-        return frame;
+    public JTable getTable() {
+        return table;
     }
 
     public NavBarView getNavBarView() {
@@ -29,34 +32,26 @@ public class HomeFeedView {
      * event dispatch thread.
      */
     public void createAndShow() {
-        //Create and set up the window.
-        frame = new JFrame("SuperSwingMeditor");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //Set up the content pane.
+        this.contentPane = new JPanel(new BorderLayout());
+        this.contentPane.setSize(new Dimension(this.contentPane.getWidth(), this.contentPane.getHeight()));
 
-        frame.setSize(new Dimension(900,900));
-        frame.setBackground(Color.white);
+        navBarView = new NavBarView(contentPane.getWidth());
+        realTimeNotificationView = new RealTimeNotificationView(contentPane.getWidth());
 
-        //frame.setMinimumSize(new Dimension(500,500));
-        //frame.setUndecorated(true);
-        frame.setVisible(true);
-        navBarView = new NavBarView(frame.getWidth());
-        realTimeNotificationView = new RealTimeNotificationView(frame.getWidth());
-
-        addComponentsToPane(frame.getContentPane());
+        addComponentsToPane();
     }
 
-    public void addComponentsToPane(Container contentPane) {
-        createAndAddScrollableTable(contentPane);
+    public void addComponentsToPane() {
+        createAndAddScrollableTable();
         contentPane.add(navBarView.getContainer(), BorderLayout.NORTH);
         contentPane.add(realTimeNotificationView.getContainer(), BorderLayout.SOUTH);
     }
 
-    private void createAndAddScrollableTable(Container contentPane) {
+    private void createAndAddScrollableTable() {
         JPanel panel = new JPanel();
         contentPane.add(panel, BorderLayout.CENTER);
 
-        panel.setSize(new Dimension(frame.getWidth(), frame.getHeight()));
+        panel.setSize(new Dimension(width, height));
 
         table = new JTable(){
             public TableCellRenderer getCellRenderer(int row, int column ) {
@@ -73,5 +68,9 @@ public class HomeFeedView {
 
     public RealTimeNotificationView getRealTimeNotificationView() {
         return realTimeNotificationView;
+    }
+
+    public JPanel getContentPane() {
+        return contentPane;
     }
 }
