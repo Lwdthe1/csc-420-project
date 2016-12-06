@@ -21,8 +21,14 @@ public class PublicationPageView implements AppView {
     private JLabel relationDescriptionLabel;
     private JLabel relationDetailLabel;
     private JPanel contentPane;
+    private int width;
+    private int height;
 
 
+    public PublicationPageView(int width, int height) {
+        this.width = width;
+        this.height = height;
+    }
 
     /**
      * Create the GUI and show it.  For thread safety,
@@ -41,7 +47,11 @@ public class PublicationPageView implements AppView {
     }
 
     public void setComponents(Publication publication) {
-        
+
+    }
+
+    public JPanel getContentPane() {
+        return contentPane;
     }
 
 
