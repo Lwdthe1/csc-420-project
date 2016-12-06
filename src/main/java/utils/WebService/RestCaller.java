@@ -26,7 +26,7 @@ public class RestCaller
 {
     public static RestCaller sharedInstance = new RestCaller();
     private final String TAG = "SuperMeditorRestCaller";
-    private final String REST_API_URL = "http://supermeditor.com/api/i/";
+    private final String REST_API_URL = "http://lcontacts.herokuapp.com/api/i/";
 
     //prevent others from instantiating
     private RestCaller() {
