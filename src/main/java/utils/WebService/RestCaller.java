@@ -96,7 +96,7 @@ public class RestCaller
     public Boolean retractRequestToContributeToPublicationById(String publicationId, String userId) throws URISyntaxException, IOException, HttpException {
         // Create a new HttpClient and Get Sequence number
         HttpClient httpClient = new DefaultHttpClient();
-        String restUri = REST_API_URL + format("fake/pubs/contribute/:/:userId", publicationId, userId);
+        String restUri = REST_API_URL + format("fake/pubs/contribute/%s/%s", publicationId, userId);
 
         HttpDelete httpDelete = new HttpDelete(restUri);
 

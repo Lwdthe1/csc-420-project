@@ -65,4 +65,12 @@ public class PublicationsService {
             return false;
         }
     }
+
+    public Boolean retractRequestToContributeById(String publicationId, String userId) {
+        try {
+            return RestCaller.sharedInstance.retractRequestToContributeToPublicationById(publicationId, userId);
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }
