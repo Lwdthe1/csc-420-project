@@ -1,9 +1,8 @@
 package viewControllers;
 
-import views.NavBarView;
-
 import javax.swing.*;
 import java.awt.*;
+import views.subviews.NavBarView;
 
 /**
  * Created by lwdthe1 on 12/4/16.
