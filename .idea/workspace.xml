@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="099a89e2-e12a-45e8-94aa-755691fc9021" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/viewControllers/HomeFeedViewController.java" afterPath="$PROJECT_DIR$/src/main/java/viewControllers/HomeFeedViewController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/views/HomeFeedView.java" afterPath="$PROJECT_DIR$/src/main/java/views/HomeFeedView.java" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/classes/main/utils/WebService/RestCaller.class" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/utils/WebService/RestCaller.java" afterPath="$PROJECT_DIR$/src/main/java/utils/WebService/RestCaller.java" />
     </list>
     <ignored path="Assignment3.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -78,15 +79,35 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="HomeFeedViewController.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="HomeFeedViewController.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/viewControllers/HomeFeedViewController.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="515">
-              <caret line="204" column="25" selection-start-line="204" selection-start-column="25" selection-end-line="204" selection-end-column="25" />
+              <caret line="204" column="79" selection-start-line="204" selection-start-column="79" selection-end-line="204" selection-end-column="79" />
               <folding>
                 <element signature="e#2798#3031#0" expanded="true" />
                 <element signature="e#3030#3031#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PublicationsService.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/utils/PublicationsService.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="539">
+              <caret line="62" column="67" selection-start-line="62" selection-start-column="67" selection-end-line="62" selection-end-column="67" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="RestCaller.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/utils/WebService/RestCaller.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="165">
+              <caret line="28" column="71" selection-start-line="28" selection-start-column="71" selection-end-line="28" selection-end-column="71" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -124,33 +145,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AquaButtonUI.class" pinned="false" current-in-tab="false">
-        <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_101.jdk/Contents/Home/jre/lib/rt.jar!/com/apple/laf/AquaButtonUI.class">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="75" column="0" selection-start-line="75" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
-              <folding>
-                <element signature="e#2910#2911#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="AquaUtils.class" pinned="false" current-in-tab="false">
         <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_101.jdk/Contents/Home/jre/lib/rt.jar!/com/apple/laf/AquaUtils.class">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="192">
               <caret line="394" column="0" selection-start-line="394" selection-start-column="0" selection-end-line="394" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="PublicationContributeButtonCellRenderer.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/views/subviews/PublicationContributeButtonCellRenderer.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="568">
-              <caret line="53" column="13" selection-start-line="53" selection-start-column="13" selection-end-line="53" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -558,7 +557,6 @@
         <option value="$PROJECT_DIR$/src/main/java/views/subviews/CircularJLabel.java" />
         <option value="$PROJECT_DIR$/src/main/java/views/PublicationCellRenderer.java" />
         <option value="$PROJECT_DIR$/src/main/java/views/subviews/RoundJButton.java" />
-        <option value="$PROJECT_DIR$/src/main/java/utils/WebService/RestCaller.java" />
         <option value="$PROJECT_DIR$/src/main/java/views/subviews/TableSlider.java" />
         <option value="$PROJECT_DIR$/src/main/java/views/subviews/SwingEmbedding.java" />
         <option value="$PROJECT_DIR$/src/main/java/views/subviews/PublicationCellRenderer.java" />
@@ -569,6 +567,7 @@
         <option value="$PROJECT_DIR$/src/main/java/views/subviews/PublicationImageCellRenderer.java" />
         <option value="$PROJECT_DIR$/src/main/java/views/HomeFeedView.java" />
         <option value="$PROJECT_DIR$/src/main/java/viewControllers/HomeFeedViewController.java" />
+        <option value="$PROJECT_DIR$/src/main/java/utils/WebService/RestCaller.java" />
       </list>
     </option>
   </component>
@@ -1275,12 +1274,12 @@
       <workItem from="1480914868465" duration="284000" />
       <workItem from="1480915384698" duration="3000" />
       <workItem from="1480955462611" duration="8095000" />
-      <workItem from="1480984236097" duration="13548000" />
+      <workItem from="1480984236097" duration="13875000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="48958000" />
+    <option name="totallyTimeSpent" value="49285000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="152" y="-1080" width="1723" height="1080" extended-state="6" />
@@ -1293,7 +1292,7 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33762378" sideWeight="0.5024067" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26039603" sideWeight="0.4915764" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26039603" sideWeight="0.4915764" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1617,14 +1616,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/utils/PublicationsService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-150">
-          <caret line="17" column="39" selection-start-line="17" selection-start-column="39" selection-end-line="17" selection-end-column="39" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/views/subviews/RealTimeNotificationView.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
@@ -1638,13 +1629,6 @@
         <state relative-caret-position="105">
           <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/utils/WebService/RestCaller.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="46" column="66" selection-start-line="46" selection-start-column="66" selection-end-line="46" selection-end-column="66" />
         </state>
       </provider>
     </entry>
@@ -1819,11 +1803,27 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/viewControllers/HomeFeedViewController.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="515">
-          <caret line="204" column="25" selection-start-line="204" selection-start-column="25" selection-end-line="204" selection-end-column="25" />
+          <caret line="204" column="79" selection-start-line="204" selection-start-column="79" selection-end-line="204" selection-end-column="79" />
           <folding>
             <element signature="e#2798#3031#0" expanded="true" />
             <element signature="e#3030#3031#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/utils/PublicationsService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="539">
+          <caret line="62" column="67" selection-start-line="62" selection-start-column="67" selection-end-line="62" selection-end-column="67" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/utils/WebService/RestCaller.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="28" column="71" selection-start-line="28" selection-start-column="71" selection-end-line="28" selection-end-column="71" />
+          <folding />
         </state>
       </provider>
     </entry>
