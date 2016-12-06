@@ -13,9 +13,9 @@ import views.subviews.NavBarView;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.concurrent.Semaphore;
 
 import static java.lang.String.format;
@@ -89,45 +89,31 @@ public class HomeFeedViewController implements SocketListener, AppViewController
             //acquire the lock to assure the view is ready
             setupViewWhileLoadingSemaphore.acquire();
             ArrayList<Publication> publications = publicationsService.getAll();
-            Publication[] pubs = new Publication[publications.size()];
-            for(int i=0; i<publications.size(); i++){
-                pubs[i] = publications.get(i);
-            }
-
-
-            // important to set the columns that will have embedded elements as "Editable"
-            DefaultTableModel model = new DefaultTableModel(new String [] {"Publications", "Button" }, 0)
-            {
-                Class[] types = new Class[]
-                        {
-                                java.lang.Integer.class, java.lang.String.class
-                        };
-
-                public Class getColumnClass(int columnIndex)
-                {
-                    return types[columnIndex];
+            publications.sort(new Comparator<Publication>() {
+                @Override
+                public int compare(Publication o1, Publication o2) {
+                    return o1.getName().compareToIgnoreCase(o2.getName());
                 }
+            });
 
-                boolean[] canEdit = new boolean [] {
-                        true, true
-                };
-
-                public boolean isCellEditable(int rowIndex, int columnIndex) {
-                    return canEdit [columnIndex];
-                }
-            };
-            JTable table = view.getTable();
-            view.getTable().setModel(model);
-
-            // sets the table columns to use the button/slider renderer and editor component
-            TableColumn sliderColumn = view.getTable().getColumnModel().getColumn(0);
-            model.addColumn(format("%d Publications Looking for Writers", pubs.length), pubs);
-
-            sendChatMessage(format("Just wanted y'all to know I'm viewing %d publications that are looking for Writers", pubs.length));
+            setupPublicationsTable(publications);
+            sendChatMessage(format("Just wanted y'all to know I'm viewing %d publications that are looking for Writers", publications.size()));
         } catch (InterruptedException e) {
             System.out.printf("\nCouldn't show publications because: %s", e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    private void setupPublicationsTable(ArrayList<Publication> publications) {
+        DefaultTableModel model = new DefaultTableModel();
+        view.getTable().setModel(model);
+
+        model.addColumn("", publications.toArray());
+        model.addColumn(format("%d Publications Looking for Writers", publications.size()), publications.toArray());
+        model.addColumn("", publications.toArray());
+
+        view.getTable().getColumnModel().getColumn(1).setPreferredWidth(400);
+        view.getTable().setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
     }
 
     private void setButtonHoverListeners() {

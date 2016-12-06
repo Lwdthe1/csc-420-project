@@ -1,9 +1,7 @@
 package views;
 
 import viewControllers.AppView;
-import views.subviews.NavBarView;
-import views.subviews.PublicationCellRenderer;
-import views.subviews.RealTimeNotificationView;
+import views.subviews.*;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -58,16 +56,51 @@ public class HomeFeedView implements AppView {
 
         panel.setSize(new Dimension(width, height));
 
+        final TableButton buttons12 = new TableButton();
+        buttons12.addHandler(new TableButton.TableButtonPressedHandler() {
+
+            @Override
+            public void onButtonPress(int row, int column) {
+                // TODO Auto-generated method stub
+                System.out.println("CLICKED!!!!");
+            }
+        });
+
         table = new JTable(){
             public TableCellRenderer getCellRenderer(int row, int column ) {
-                return new PublicationCellRenderer();
+                switch(column) {
+                    case 0:
+                        return new PublicationImageCellRenderer();
+                    case 1:
+                        return new PublicationTextCellRenderer();
+                    case 2:
+                        buttons12.addHandler(new TableButton.TableButtonPressedHandler() {
+
+                            @Override
+                            public void onButtonPress(int row, int column) {
+                                // TODO Auto-generated method stub
+                                System.out.println("CLICKED!!!!");
+                            }
+                        });
+                        return buttons12;
+                    case 3:
+                        return new EmptyCellRenderer();
+                    default:
+                        return null;
+                }
             }
 
             public boolean isCellEditable(int row, int column) {
-                return false;
+                switch(column) {
+                    case 0:
+                    case 2:
+                        return true;
+                    default:
+                        return false;
+                }
             }
         };
-        table.enableInputMethods(false);
+
 
         table.setRowHeight(100);
 

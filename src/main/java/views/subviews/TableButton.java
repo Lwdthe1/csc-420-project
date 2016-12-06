@@ -1,3 +1,5 @@
+package views.subviews;
+
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -51,7 +53,7 @@ public class TableButton extends AbstractCellEditor implements TableCellEditor, 
     }
 
     /**
-     * Add a slide callback handler
+     * Add a callback handler
      * @param handler
      */
     public void addHandler(TableButtonPressedHandler handler)
@@ -63,7 +65,7 @@ public class TableButton extends AbstractCellEditor implements TableCellEditor, 
     }
 
     /**
-     * Remove a slide callback handler
+     * Remove a callback handler
      * @param handler
      */
     public void removeHandler(TableButtonPressedHandler handler)
@@ -104,25 +106,18 @@ public class TableButton extends AbstractCellEditor implements TableCellEditor, 
     public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focus, final int row, final int column)
     {
         JButton button = null;
-        if(buttons.containsKey(row))
-        {
+        if(buttons.containsKey(row)) {
             button = buttons.get(row);
-        }
-        else
-        {
+        } else {
             button = new JButton();
-            if(value != null && value instanceof String)
-            {
+            value = "Contribute";
+            if(value != null && value instanceof String) {
                 button.setText((String)value);
             }
-            button.addActionListener(new ActionListener()
-            {
-                public void actionPerformed(ActionEvent e)
-                {
-                    if(handlers != null)
-                    {
-                        for(TableButtonPressedHandler handler : handlers)
-                        {
+            button.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    if(handlers != null) {
+                        for(TableButtonPressedHandler handler : handlers) {
                             handler.onButtonPress(row, column);
                         }
                     }

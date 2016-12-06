@@ -1,3 +1,7 @@
+package views.subviews;
+
+import views.subviews.TableButton;
+
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
@@ -31,20 +35,9 @@ public class SwingEmbedding extends JFrame
 		initComponents();
 		
 		// important to set the columns that will have embedded elements as "Editable"
-		DefaultTableModel model = new DefaultTableModel(new String [] {"Slider", "Button" }, 0) 
-		{
-	            Class[] types = new Class[]
-	            {
-	                 java.lang.Integer.class, java.lang.String.class
-	            };
-
-	            public Class getColumnClass(int columnIndex)
-	            {
-	                return types[columnIndex];
-	            }
-
+		DefaultTableModel model = new DefaultTableModel(new String [] {"Image", "Info", "Action" }, 0) {
 	            boolean[] canEdit = new boolean [] {
-	                true, true
+	                true, true, true
 	            };
 
 	            public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -52,44 +45,55 @@ public class SwingEmbedding extends JFrame
 	            }
 		};
 		table.setModel(model);
-		
-		// sets the table columns to use the button/slider renderer and editor component
-        TableColumn sliderColumn = table.getColumnModel().getColumn(0);
-        
-        TableSlider sliders = new TableSlider(50 /*Default Slider Value out of 100*/);
-        sliders.addHandler(new TableSlider.TableSliderMovedHandler() {
-			
+
+		//make first column
+		TableColumn buttonColumn = table.getColumnModel().getColumn(0);
+		TableButton buttons = new TableButton();
+		buttons.addHandler(new TableButton.TableButtonPressedHandler() {
+
 			@Override
-			public void onSlide(int row, int column, int value) 
-			{
-				// handle the slide event
+			public void onButtonPress(int row, int column) {
+				// TODO Auto-generated method stub
+				System.out.println("CLICKED1!!!!");
 			}
 		});
+		buttonColumn.setCellRenderer(buttons);
+		buttonColumn.setCellEditor(buttons);
 
-		// set the column's renderer and editor as the control
-		sliderColumn.setCellRenderer(sliders);
-		sliderColumn.setCellEditor(sliders);
-        
-		TableColumn buttonColumn = table.getColumnModel().getColumn(1);
+		//make second column
+		TableColumn buttonColumn12 = table.getColumnModel().getColumn(1);
+		TableButton buttons12 = new TableButton();
+		buttons12.addHandler(new TableButton.TableButtonPressedHandler() {
 
-        TableButton buttons = new TableButton();
-        buttons.addHandler(new TableButton.TableButtonPressedHandler() {
+			@Override
+			public void onButtonPress(int row, int column) {
+				// TODO Auto-generated method stub
+				System.out.println("CLICKED!!!!");
+			}
+		});
+		buttonColumn12.setCellRenderer(buttons12);
+		buttonColumn12.setCellEditor(buttons12);
+
+		//make third column
+		TableColumn buttonColumn2 = table.getColumnModel().getColumn(2);
+        TableButton buttons2 = new TableButton();
+		buttons2.addHandler(new TableButton.TableButtonPressedHandler() {
 			
 			@Override
 			public void onButtonPress(int row, int column) {
 				// TODO Auto-generated method stub
-				
+				System.out.println("CLICKED2!!!!");
 			}
 		});
-        
-        buttonColumn.setCellRenderer(buttons);
-        buttonColumn.setCellEditor(buttons);
+
+		buttonColumn2.setCellRenderer(buttons2);
+		buttonColumn2.setCellEditor(buttons2);
 	}
 
 	public void addElement()
 	{
 		DefaultTableModel model = (DefaultTableModel) table.getModel();	
-		model.addRow(new Object[] { 0.00, "Hello" });
+		model.addRow(new Object[] { "Hi", "Hello", "OK" });
 	}
 
 	/**
