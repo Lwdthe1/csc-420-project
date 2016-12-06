@@ -46,7 +46,8 @@ public class MainApplication {
 
     public void navigate(JPanel removedPanel, JPanel panel) {
         if (removedPanel != null) {
-            mainFrame.getContentPane().remove(removedPanel);
+            System.out.println("removing panel");
+            mainFrame.getContentPane().removeAll();
         }
         mainFrame.getContentPane().add(panel);
         panel.setVisible(true);

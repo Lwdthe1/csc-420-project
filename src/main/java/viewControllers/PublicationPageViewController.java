@@ -33,22 +33,15 @@ public class PublicationPageViewController implements SocketListener, AppViewCon
     private SocketManager socketManger;
     private Semaphore setupViewWhileLoadingSemaphore = new Semaphore(1);
     private PublicationsService publicationsService;
+    private Publication publication;
 
-    public PublicationPageViewController(MainApplication application) {
+    public PublicationPageViewController(MainApplication application, Publication publication) {
         this.application = application;
-        //acquire the lock here before starting load
-        try {
-            setupViewWhileLoadingSemaphore.acquire();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        this.publication = publication;
 
-        publicationsService = PublicationsService.sharedInstance;
-        loadFeed();
-        this.view = new PublicationPageView(application.getMainFrame().getWidth(), application.getMainFrame().getHeight());
+        this.view = new PublicationPageView(this, application.getMainFrame().getWidth(), application.getMainFrame().getHeight());
         setupView();
-        setupViewWhileLoadingSemaphore.release();
-        startSocketIO();
+        System.out.println("inside pubs");
     }
 
 
@@ -63,29 +56,14 @@ public class PublicationPageViewController implements SocketListener, AppViewCon
         setAsApplicationVisibleView();
     }
 
+    public Publication getPublication() {
+        return publication;
+    }
+
     @Override
     public void setAsApplicationVisibleView() {
-        this.application.navigate(null, this.view.getContentPane());
+
     }
-
-    private void loadFeed() {
-        SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>() {
-            @Override
-            protected Boolean doInBackground() throws Exception {
-                PublicationsService.sharedInstance.loadAll();
-                return true;
-            }
-
-            // Can safely update the GUI from this method.
-            protected void done() {
-                showPublications();
-            }
-        };
-        worker.execute();
-    }
-
-
-
 
     private void showPublications() {
 

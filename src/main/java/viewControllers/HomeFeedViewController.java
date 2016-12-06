@@ -9,6 +9,7 @@ import utils.WebService.socketio.SocketEvent;
 import utils.WebService.socketio.SocketListener;
 import utils.WebService.socketio.SocketManager;
 import views.HomeFeedView;
+import views.PublicationPageView;
 import views.subviews.NavBarView;
 
 import javax.swing.*;
@@ -211,6 +212,9 @@ public class HomeFeedViewController implements SocketListener, AppViewController
 
     public void publicationImageButtonClicked(int index) {
         System.out.printf("%s image button clicked.", publications.get(index).getName());
-        //TODO(keith) move to publication page.
+        //PublicationPageViewController publicationPageViewController = new PublicationPageViewController(application, publications.get(index));
+        //PublicationPageView publicationPageView = (PublicationPageView) publicationPageViewController.getView();
+        JPanel p = new JPanel();
+        application.navigate(view.getContentPane(), p);
     }
 }
