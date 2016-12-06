@@ -1,6 +1,7 @@
 package views;
 
 import viewControllers.AppView;
+import viewControllers.HomeFeedViewController;
 import views.subviews.*;
 
 import javax.swing.*;
@@ -8,6 +9,7 @@ import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
 public class HomeFeedView implements AppView {
+    private final HomeFeedViewController homeFeedViewController;
     private int width;
     private int height;
     private JPanel contentPane;
@@ -15,7 +17,8 @@ public class HomeFeedView implements AppView {
     private NavBarView navBarView;
     private RealTimeNotificationView realTimeNotificationView;
 
-    public HomeFeedView(int width, int height) {
+    public HomeFeedView(HomeFeedViewController homeFeedViewController, int width, int height) {
+        this.homeFeedViewController = homeFeedViewController;
         this.width = width;
         this.height = height;
     }
@@ -56,16 +59,6 @@ public class HomeFeedView implements AppView {
 
         panel.setSize(new Dimension(width, height));
 
-        final TableButton buttons12 = new TableButton();
-        buttons12.addHandler(new TableButton.TableButtonPressedHandler() {
-
-            @Override
-            public void onButtonPress(int row, int column) {
-                // TODO Auto-generated method stub
-                System.out.println("CLICKED!!!!");
-            }
-        });
-
         table = new JTable(){
             public TableCellRenderer getCellRenderer(int row, int column ) {
                 switch(column) {
@@ -74,15 +67,7 @@ public class HomeFeedView implements AppView {
                     case 1:
                         return new PublicationTextCellRenderer();
                     case 2:
-                        buttons12.addHandler(new TableButton.TableButtonPressedHandler() {
-
-                            @Override
-                            public void onButtonPress(int row, int column) {
-                                // TODO Auto-generated method stub
-                                System.out.println("CLICKED!!!!");
-                            }
-                        });
-                        return buttons12;
+                        return new PublicationContributeButtonCellRenderer();
                     case 3:
                         return new EmptyCellRenderer();
                     default:
@@ -93,8 +78,11 @@ public class HomeFeedView implements AppView {
             public boolean isCellEditable(int row, int column) {
                 switch(column) {
                     case 0:
+                        registerPublicationImageButtonClick(row);
+                        return false;
                     case 2:
-                        return true;
+                        registerPublicationContributeCellClicked(row);
+                        return false;
                     default:
                         return false;
                 }
@@ -107,6 +95,14 @@ public class HomeFeedView implements AppView {
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(new Dimension(panel.getWidth(), panel.getHeight()));
         panel.add(scrollPane);
+    }
+
+    private void registerPublicationContributeCellClicked(int row) {
+        homeFeedViewController.publicationContributeCellClicked(row);
+    }
+
+    private void registerPublicationImageButtonClick(int row) {
+        homeFeedViewController.publicationImageButtonClicked(row);
     }
 
     public RealTimeNotificationView getRealTimeNotificationView() {

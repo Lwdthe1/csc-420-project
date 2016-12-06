@@ -31,6 +31,7 @@ public class HomeFeedViewController implements SocketListener, AppViewController
     private SocketManager socketManger;
     private Semaphore setupViewWhileLoadingSemaphore = new Semaphore(1);
     private PublicationsService publicationsService;
+    private ArrayList<Publication> publications;
 
     public HomeFeedViewController(MainApplication application) {
         this.application = application;
@@ -43,7 +44,7 @@ public class HomeFeedViewController implements SocketListener, AppViewController
 
         publicationsService = PublicationsService.sharedInstance;
         loadFeed();
-        this.view = new HomeFeedView(application.getMainFrame().getWidth(), application.getMainFrame().getHeight());
+        this.view = new HomeFeedView(this, application.getMainFrame().getWidth(), application.getMainFrame().getHeight());
         setupView();
         setupViewWhileLoadingSemaphore.release();
         startSocketIO();
@@ -88,7 +89,7 @@ public class HomeFeedViewController implements SocketListener, AppViewController
         try {
             //acquire the lock to assure the view is ready
             setupViewWhileLoadingSemaphore.acquire();
-            ArrayList<Publication> publications = publicationsService.getAll();
+            publications = publicationsService.getAll();
             publications.sort(new Comparator<Publication>() {
                 @Override
                 public int compare(Publication o1, Publication o2) {
@@ -197,5 +198,15 @@ public class HomeFeedViewController implements SocketListener, AppViewController
 
     private void sendChatMessage(String message) {
         socketManger.emit(SocketEvent.CHAT_MESSAGE, ChatMessage.createJSONPayload("eb297ea1161a", "user1", message));
+    }
+
+    public void publicationContributeCellClicked(int index) {
+        System.out.printf("%s contribute cell clicked.", publications.get(index).getName());
+        System.out.println(PublicationsService.sharedInstance.requestToContributeById(publications.get(index).getId(),"user" + index));
+    }
+
+    public void publicationImageButtonClicked(int index) {
+        System.out.printf("%s image button clicked.", publications.get(index).getName());
+        //TODO(keith) move to publication page.
     }
 }
