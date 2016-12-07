@@ -212,9 +212,8 @@ public class HomeFeedViewController implements SocketListener, AppViewController
 
     public void publicationImageButtonClicked(int index) {
         System.out.printf("%s image button clicked.", publications.get(index).getName());
-        //PublicationPageViewController publicationPageViewController = new PublicationPageViewController(application, publications.get(index));
-        //PublicationPageView publicationPageView = (PublicationPageView) publicationPageViewController.getView();
-        JPanel p = new JPanel();
-        application.navigate(view.getContentPane(), p);
+        PublicationPageViewController publicationPageViewController = new PublicationPageViewController(application, publications.get(index));
+        PublicationPageView publicationPageView = (PublicationPageView) publicationPageViewController.getView();
+        application.navigate(view.getContentPane(), publicationPageView.getContentPane());
     }
 }

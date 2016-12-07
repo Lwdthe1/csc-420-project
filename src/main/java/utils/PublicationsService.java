@@ -1,8 +1,12 @@
 package utils;
 
+import models.ChatMessage;
 import models.Publication;
+import org.apache.http.HttpException;
 import utils.WebService.RestCaller;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -64,5 +68,20 @@ public class PublicationsService {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public ArrayList<ChatMessage> getChatMessages(String publicationId) {
+        try {
+            System.out.println("GETTING CHAT MESSAGES");
+            return (ArrayList<ChatMessage>) RestCaller.sharedInstance.getChatMessages(publicationId);
+            //return (ArrayList<ChatMessage>) RestCaller.sharedInstance.getChatMessages();
+        } catch (HttpException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

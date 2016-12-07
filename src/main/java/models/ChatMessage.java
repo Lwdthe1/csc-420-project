@@ -1,6 +1,9 @@
 package models;
 
 import org.json.JSONObject;
+import utils.ImageUtils;
+
+import java.awt.image.BufferedImage;
 
 /**
  * Created by lwdthe1 on 12/4/16.
@@ -9,11 +12,14 @@ public class ChatMessage {
     private final String publicationId;
     private final String userId;
     private final String text;
+    private String imageUrl;
+    private BufferedImage image;
 
     public ChatMessage(JSONObject payload) {
         this.publicationId = payload.getString("publicationId");
         this.userId = payload.getString("userId");
-        this.text = payload.getJSONObject("message").getString("text");
+        this.text = payload.getString("text");
+        this.imageUrl = payload.getString("userImageUrl");
     }
 
     public ChatMessage(String publicationId, String userId, String text) {
@@ -40,5 +46,10 @@ public class ChatMessage {
 
     public String getText() {
         return text;
+    }
+
+    public BufferedImage getImage() {
+        if(image == null) image = ImageUtils.loadImage(imageUrl);
+        return image;
     }
 }

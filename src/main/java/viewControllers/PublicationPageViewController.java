@@ -18,6 +18,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.concurrent.Semaphore;
 
 import static java.lang.String.format;
@@ -32,16 +33,15 @@ public class PublicationPageViewController implements SocketListener, AppViewCon
 
     private SocketManager socketManger;
     private Semaphore setupViewWhileLoadingSemaphore = new Semaphore(1);
-    private PublicationsService publicationsService;
     private Publication publication;
+    private ArrayList<ChatMessage> chatMessages;
 
     public PublicationPageViewController(MainApplication application, Publication publication) {
         this.application = application;
         this.publication = publication;
-
         this.view = new PublicationPageView(this, application.getMainFrame().getWidth(), application.getMainFrame().getHeight());
         setupView();
-        System.out.println("inside pubs");
+        loadChatMessages();
     }
 
 
@@ -65,8 +65,36 @@ public class PublicationPageViewController implements SocketListener, AppViewCon
 
     }
 
-    private void showPublications() {
+    private void loadChatMessages() {
+        SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>() {
+            @Override
+            protected Boolean doInBackground() throws Exception {
+                chatMessages = PublicationsService.sharedInstance.getChatMessages(publication.getId());
+                return true;
+            }
 
+            // Can safely update the GUI from this method.
+            protected void done() {
+                showChatMessages();
+            }
+        };
+        worker.execute();
+    }
+
+    private void showChatMessages() {
+        setupChatMessagesTable(chatMessages);
+    }
+
+    private void setupChatMessagesTable(ArrayList<ChatMessage> chatMessages) {
+        DefaultTableModel model = new DefaultTableModel();
+        view.getTable().setModel(model);
+
+        model.addColumn("", chatMessages.toArray());
+        //model.addColumn(format("%d Publications Looking for Writers", chatMessages.size()), chatMessages.toArray());
+        //model.addColumn("", chatMessages.toArray());
+
+       //view.getTable().getColumnModel().getColumn(1).setPreferredWidth(400);
+        //view.getTable().setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
     }
 
     private void setButtonHoverListeners() {
