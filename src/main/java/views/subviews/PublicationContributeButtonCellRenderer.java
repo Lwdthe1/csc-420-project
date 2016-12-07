@@ -21,6 +21,7 @@ public class PublicationContributeButtonCellRenderer extends JPanel implements T
     private static Insets LEFT_PAD_15 = new Insets(0,15, 0, 0);
     private static Insets RIGHT_PAD_15 = new Insets(0,0, 0, 15);
     private static Insets TOP_5_LEFT_PAD_15 = new Insets(5,15, 0, 0);
+    public JButton contributeButton;
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -33,11 +34,12 @@ public class PublicationContributeButtonCellRenderer extends JPanel implements T
         Publication pub = (Publication) value;
         addContributeButton(constraints, pub);
 
+        pub.setHomeFeedTableCell(this);
         return this;
     }
 
     private void addContributeButton(GridBagConstraints constraints, final Publication pub) {
-        JButton contributeButton = new JButton("Contribute");
+        contributeButton = new JButton();
         constraints.gridx = 2;
         constraints.gridy = 0;
         constraints.insets = RIGHT_PAD_15;
@@ -48,6 +50,18 @@ public class PublicationContributeButtonCellRenderer extends JPanel implements T
             }
         });
         this.enableInputMethods(false);
+
+        if (pub.currentUserIsContributor()) {
+            contributeButton.setText("Contributor");
+            contributeButton.setEnabled(false);
+        } else if (pub.currentUserRequested()) {
+            contributeButton.setText("Retract");
+            contributeButton.setEnabled(true);
+        } else {
+            contributeButton.setText("Contribute");
+            contributeButton.setEnabled(true);
+        }
+
         this.add(contributeButton, constraints);
     }
 

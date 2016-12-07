@@ -1,10 +1,12 @@
 package views;
 
+import models.Publication;
 import viewControllers.AppView;
 import viewControllers.HomeFeedViewController;
 import views.subviews.*;
 
 import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
@@ -78,10 +80,10 @@ public class HomeFeedView implements AppView {
             public boolean isCellEditable(int row, int column) {
                 switch(column) {
                     case 0:
-                        registerPublicationImageButtonClick(row);
+                        registerPublicationImageButtonClick(row, column);
                         return false;
                     case 2:
-                        registerPublicationContributeCellClicked(row);
+                        registerPublicationContributeCellClicked(row, column);
                         return false;
                     default:
                         return false;
@@ -97,12 +99,19 @@ public class HomeFeedView implements AppView {
         panel.add(scrollPane);
     }
 
-    private void registerPublicationContributeCellClicked(int row) {
-        homeFeedViewController.publicationContributeCellClicked(row);
+    private void registerPublicationContributeCellClicked(int row, int column) {
+        Object value = table.getValueAt(row, column);
+        if (value instanceof Publication) {
+            homeFeedViewController.publicationContributeCellClicked((Publication) value, row, column);
+        }
     }
 
-    private void registerPublicationImageButtonClick(int row) {
-        homeFeedViewController.publicationImageButtonClicked(row);
+    private void registerPublicationImageButtonClick(int row, int column) {
+        Object value = table.getValueAt(row, column);
+        if (value instanceof Publication) {
+            homeFeedViewController.publicationImageButtonClicked((Publication) value);
+        }
+
     }
 
     public RealTimeNotificationView getRealTimeNotificationView() {
@@ -111,5 +120,13 @@ public class HomeFeedView implements AppView {
 
     public JPanel getContentPane() {
         return contentPane;
+    }
+
+    public void onContributeRequestSuccess(int row, int column) {
+        ((AbstractTableModel) table.getModel()).fireTableCellUpdated(row, column);
+    }
+
+    public void refreshTable(int row) {
+        table.repaint();// faster than ((AbstractTableModel) table.getModel()).fireTableDataChanged()
     }
 }

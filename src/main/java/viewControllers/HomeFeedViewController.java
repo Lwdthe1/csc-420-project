@@ -175,7 +175,7 @@ public class HomeFeedViewController implements SocketListener, AppViewController
                     view.getRealTimeNotificationView().updateNotification(title,
                             format("Your request to contribute to %s was %s",
                                     requestPub.getName(),
-                                    requestApproved? "approved." + i : "denied." + i),
+                                    requestApproved? "approved." : "denied."),
                             requestPub.getImage()
                     );
                 }
@@ -200,13 +200,21 @@ public class HomeFeedViewController implements SocketListener, AppViewController
         socketManger.emit(SocketEvent.CHAT_MESSAGE, ChatMessage.createJSONPayload("eb297ea1161a", "user1", message));
     }
 
-    public void publicationContributeCellClicked(int index) {
-        System.out.printf("%s contribute cell clicked.", publications.get(index).getName());
-        System.out.println(PublicationsService.sharedInstance.requestToContributeById(publications.get(index).getId(),"user" + index));
+    public void publicationContributeCellClicked(Publication index) {
+
     }
 
-    public void publicationImageButtonClicked(int index) {
-        System.out.printf("%s image button clicked.", publications.get(index).getName());
+    public void publicationImageButtonClicked(Publication publication) {
+        System.out.printf("%s image button clicked.", publication.getName());
         //TODO(keith) move to publication page.
+    }
+
+    public void publicationContributeCellClicked(Publication publication, int row, int column) {
+        if (publication.getHomeFeedTableCell().contributeButton.getText() == "Contribute") {
+            System.out.println("Request to contribute: " + PublicationsService.sharedInstance.requestToContributeById(publication.getId(), "user" + row) + " " + row);
+        } else {
+            System.out.println("Retract request to contribute: " + PublicationsService.sharedInstance.retractRequestToContributeById(publication.getId(), "user" + row) + " " + row + " " + publication.getId());
+        }
+        view.onContributeRequestSuccess(row, column);
     }
 }
