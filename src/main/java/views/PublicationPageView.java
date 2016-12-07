@@ -185,8 +185,8 @@ public class PublicationPageView implements AppView {
     }
 
     private void addChatTable(GridBagConstraints constraints) {
-        this.publicationPageViewController.getApplication().navigate(this.getContentPane(), publicationChatView.getContentPane());
-        //this.contentPane.add(publicationChatView.getContentPane());
+        constraints.insets = new Insets(0, 0, 0, 0);
+        this.contentPane.add(publicationChatView.getContentPane(), constraints);
     }
 
     public JPanel getContentPane() {

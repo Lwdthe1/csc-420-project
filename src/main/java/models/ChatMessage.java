@@ -1,9 +1,14 @@
 package models;
 
 import org.json.JSONObject;
+import org.ocpsoft.prettytime.PrettyTime;
 import utils.ImageUtils;
 
 import java.awt.image.BufferedImage;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by lwdthe1 on 12/4/16.
@@ -16,13 +21,21 @@ public class ChatMessage {
     private String userName;
     private String contributorRole;
     private BufferedImage image;
+    private String timeAgo;
+    private PrettyTime prettyTime = new PrettyTime();
 
     public ChatMessage(JSONObject payload) {
         this.publicationId = payload.getString("publicationId");
         this.userId = payload.getString("userId");
         this.text = payload.getString("text");
         this.userName = payload.getString("username");
-        //this.contributorRole = payload.getString("contributorRole");
+        if (payload.has("contributorRole")) {
+            this.contributorRole = payload.getString("contributorRole").substring(0, 1).toUpperCase() + payload.getString("contributorRole").substring(1);
+        } else {
+            this.contributorRole = "Writer";
+        }
+        String createdDate = payload.getString("createDate");
+        this.timeAgo = createTimeAgoString(createdDate);
         this.imageUrl = payload.getString("userImageUrl");
     }
 
@@ -30,6 +43,20 @@ public class ChatMessage {
         this.publicationId = publicationId;
         this.userId = userId;
         this.text = text;
+    }
+
+    private String createTimeAgoString(String createdDate) {
+        try {
+            createdDate = createdDate.replace("T", " ");
+            createdDate = createdDate.replace("Z", "");
+            String dateStr = createdDate;
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.US);
+            Date createdDateStamp = simpleDateFormat.parse(dateStr);
+            return prettyTime.format(createdDateStamp);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     public static JSONObject createJSONPayload(String publicationId, String userId, String text) {
@@ -55,6 +82,8 @@ public class ChatMessage {
     public String getUserName() { return userName; }
 
     public String getContributorRole() { return contributorRole; }
+
+    public String getTimeAgo() { return timeAgo; }
 
     public BufferedImage getImage() {
         if(image == null) image = ImageUtils.loadImage(imageUrl);

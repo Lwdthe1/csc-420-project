@@ -34,8 +34,8 @@ public class PublicationChatView implements AppView {
      * event dispatch thread.
      */
     public void createAndShow() {
-        this.contentPane = new JPanel(new BorderLayout());
-        this.contentPane.setSize(new Dimension(width, height));
+        this.contentPane = new JPanel();
+        this.contentPane.setMinimumSize(new Dimension(width, height));
 
         addComponentsToPane();
     }
@@ -46,9 +46,9 @@ public class PublicationChatView implements AppView {
 
     private void createAndAddScrollableTable() {
         JPanel panel = new JPanel();
-        contentPane.add(panel, BorderLayout.CENTER);
+        contentPane.add(panel);
 
-        panel.setSize(new Dimension(width, height));
+        panel.setMinimumSize(new Dimension(width, height));
         table = new JTable(){
 
             public TableCellRenderer getCellRenderer(int row, int column ) {
@@ -66,7 +66,7 @@ public class PublicationChatView implements AppView {
         table.setRowHeight(100);
 
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setSize(new Dimension(panel.getWidth(), panel.getHeight()));
+        scrollPane.setMinimumSize(new Dimension(panel.getWidth(), panel.getHeight()));
         panel.add(scrollPane);
     }
 

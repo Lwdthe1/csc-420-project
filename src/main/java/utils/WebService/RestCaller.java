@@ -51,7 +51,8 @@ public class RestCaller
 
         HttpResponse response = httpClient.execute(httpGet);
 
-        String resultJson = EntityUtils.toString(response.getEntity());
+        //String resultJson = EntityUtils.toString(response.getEntity());
+        String resultJson = "{\"advertisedPubs\":[{\"_id\":\"5719fb0bd2c040110082b59a\",\"id\":\"eb297ea1161a\",\"name\":\"Prototyping: From UX to Front End\",\"description\":\"All things prototyping: Responsive Design, Wireframing, Front-end Development, Accessibility and beyond\",\"url\":\"https://medium.com/front-end-dev\",\"imageUrl\":\"https://cdn-images-1.medium.com/fit/c/200/200/1*T6MSo0PeE-WvKv6PM8wgNQ.png\",\"contributorId\":\"#hidden#\",\"contributorRole\":\"editor\",\"contributorEmail\":\"#hidden#\",\"contributorUsername\":\"graeme_fulton\",\"createDate\":\"2016-04-22T10:20:59.878Z\",\"lastModified\":\"2016-04-23T22:55:00.169Z\",\"pubIdTotalContributionRequests\":9,\"currentUserIsContributor\":false,\"belongsToCurrentUser\":false,\"pubIdTotalVisits\":4,\"pubIdTotalVisitsByCurrentUser\":1}]}";
         List<Publication> publications = new ArrayList<>();
         JSONObject resultJsonObject = new JSONObject(resultJson);
         if (resultJsonObject.has("advertisedPubs")) {

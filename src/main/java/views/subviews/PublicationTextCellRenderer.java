@@ -110,8 +110,7 @@ public class PublicationTextCellRenderer extends JPanel implements TableCellRend
         } else if (object instanceof ChatMessage) {
             ChatMessage chatMessage = (ChatMessage) object;
             String text = chatMessage.getText();
-            //String descriptionHTML = format("<html><body><p style='%s'>%s<br>%s</p></body></html>", DESCRIPTIVE_TEXT_STYLE, text);
-
+            //String descriptionHTML = format("<html><body style='width: 100px'></html>", DESCRIPTIVE_TEXT_STYLE, text);
             JLabel textLabel = new JLabel(text);
             constraints.weightx = 0.7;
             constraints.gridx = 0;
@@ -134,7 +133,7 @@ public class PublicationTextCellRenderer extends JPanel implements TableCellRend
             this.add(metaInfoLabel, constraints);
         } else if (object instanceof ChatMessage) {
             ChatMessage chatMessage = (ChatMessage) object;
-            String metaInfo = chatMessage.getContributorRole();
+            String metaInfo = chatMessage.getContributorRole() + " " + chatMessage.getTimeAgo();
             String metaInfoHTML = format("<html><body><p style='%s'>%s</p></body></html>", META_TEXT_STYLE, metaInfo);
 
             JLabel metaInfoLabel = new JLabel(metaInfoHTML);
