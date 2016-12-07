@@ -101,7 +101,7 @@ public class RestCaller
         HttpDelete httpDelete = new HttpDelete(restUri);
 
         HttpResponse response = httpClient.execute(httpDelete);
-        EntityUtils.toString(response.getEntity());
-        return true;
+        //if null, the server ended the request successfully.
+        return response.getEntity() == null;
     }
 }

@@ -60,7 +60,9 @@ public class PublicationsService {
 
     public Boolean requestToContributeById(String publicationId, String userId) {
         try {
-            return RestCaller.sharedInstance.requestToContributeToPublicationById(publicationId, userId);
+            Boolean success = RestCaller.sharedInstance.requestToContributeToPublicationById(publicationId, userId);
+            getById(publicationId).setCurrentUserRequested(success);
+            return success;
         } catch (Exception e) {
             return false;
         }
@@ -68,9 +70,16 @@ public class PublicationsService {
 
     public Boolean retractRequestToContributeById(String publicationId, String userId) {
         try {
-            return RestCaller.sharedInstance.retractRequestToContributeToPublicationById(publicationId, userId);
+            Boolean success = RestCaller.sharedInstance.retractRequestToContributeToPublicationById(publicationId, userId);
+            getById(publicationId).setCurrentUserRetractedRequested(success);
+            return success;
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return false;
         }
+    }
+
+    public Boolean checkUserIsContributor() {
+        return false;
     }
 }
