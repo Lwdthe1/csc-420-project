@@ -1,6 +1,9 @@
 package models;
 
-import com.sun.org.apache.xml.internal.security.encryption.EncryptedType;
+import utils.WebService.RestCaller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by lwdthe1 on 12/6/16.
@@ -8,6 +11,8 @@ import com.sun.org.apache.xml.internal.security.encryption.EncryptedType;
 public class CurrentUser {
     public static CurrentUser sharedInstance = new CurrentUser();
     private User user;
+    private ArrayList<RequestToContribute> originalRequestsToContribute;
+    private HashMap<String, RequestToContribute> publicationRequestsMap = new HashMap<>();
 
     private CurrentUser() {
 
@@ -32,6 +37,22 @@ public class CurrentUser {
     }
 
     public String getUsername() {
-        return user != null ? user.getUsername() : "";
+        //TODO(andres) replace testUser0 with empty string after you implement login.
+        return user != null ? user.getUsername() : "testUser0";
+    }
+
+    public void loadRequestsToContribute() {
+        try {
+            this.originalRequestsToContribute = (ArrayList<RequestToContribute>) RestCaller.sharedInstance.getCurrentUserRequests();
+            for (RequestToContribute request: originalRequestsToContribute) {
+                publicationRequestsMap.put(request.getPublicationId(), request);
+            }
+        } catch (Exception e) {
+            //it's safe to ignore this.
+        }
+    }
+
+    public RequestToContribute getRequestToContributeByPubId(String publicationId) {
+        return publicationRequestsMap.get(publicationId);
     }
 }

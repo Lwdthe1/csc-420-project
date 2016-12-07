@@ -43,18 +43,16 @@ public class PublicationContributeButtonCellRenderer extends JPanel implements T
         constraints.gridx = 2;
         constraints.gridy = 0;
         constraints.insets = RIGHT_PAD_15;
-        contributeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println(PublicationsService.sharedInstance.requestToContributeById(pub.getId(), "user1"));
-            }
-        });
-        this.enableInputMethods(false);
-
+        
         if (pub.currentUserIsContributor()) {
             contributeButton.setText("Contributor");
             contributeButton.setEnabled(false);
-        } else if (pub.currentUserRequested()) {
+            contributeButton.setBorder(BorderFactory.createEmptyBorder());
+        } else if (pub.currentUserRequestWasRejected()) {
+            contributeButton.setText("Rejected");
+            contributeButton.setEnabled(false);
+            contributeButton.setBorder(BorderFactory.createEmptyBorder());
+        }  else if (pub.currentUserRequested()) {
             contributeButton.setText("Retract");
             contributeButton.setEnabled(true);
         } else {

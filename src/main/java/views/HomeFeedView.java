@@ -102,7 +102,11 @@ public class HomeFeedView implements AppView {
     private void registerPublicationContributeCellClicked(int row, int column) {
         Object value = table.getValueAt(row, column);
         if (value instanceof Publication) {
-            homeFeedViewController.publicationContributeCellClicked((Publication) value, row, column);
+            Publication publication = (Publication) value;
+            JButton contributeButton = publication.getHomeFeedTableCell().contributeButton;
+            if (contributeButton.isEnabled()) {
+                homeFeedViewController.publicationContributeCellClicked(publication, row, column);
+            }
         }
     }
 
