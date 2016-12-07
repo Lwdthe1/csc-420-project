@@ -81,6 +81,7 @@ public class RestCaller
         JSONObject resultJsonObject = new JSONObject(resultJson);
         if (resultJsonObject.has("messages")) {
             JSONArray jsonChatMessages = resultJsonObject.getJSONArray("messages");
+            System.out.println(jsonChatMessages);
             for (int i = 0; i < jsonChatMessages.length(); i++)
             {
                 chatMessages.add(new ChatMessage(jsonChatMessages.getJSONObject(i)));

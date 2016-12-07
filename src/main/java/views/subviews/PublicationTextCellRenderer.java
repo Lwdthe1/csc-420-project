@@ -1,5 +1,6 @@
 package views.subviews;
 
+import models.ChatMessage;
 import models.Publication;
 
 import javax.swing.*;
@@ -62,49 +63,86 @@ public class PublicationTextCellRenderer extends JPanel implements TableCellRend
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.HORIZONTAL;
 
-        Publication pub = (Publication) value;
-        addNameLabel(constraints, pub);
-        addDescriptionLabel(constraints, pub);
-        addMetaInfoLabel(constraints, pub);
+        addNameLabel(constraints, value);
+        addDescriptionLabel(constraints, value);
+        addMetaInfoLabel(constraints, value);
         return this;
     }
 
-    private void addNameLabel(GridBagConstraints constraints, Publication pub) {
-        String nameHTML = format("<html><body><p style='%s'>%s</p></body></html>", FEED_PUBLICATION_NAME_STYLE, pub.getName());
-        JLabel pubNameLabel = new JLabel(nameHTML);
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.insets = LEFT_PAD_20;
-        this.add(pubNameLabel, constraints);
-    }
-
-    private void addDescriptionLabel(GridBagConstraints constraints, Publication pub) {
-        String description = pub.getDescription();
-        String description1stLine = description, description2ndLine = "";
-        if (description.split(" ").length > 9) {
-            description1stLine = description.substring(0, description.length()/2);
-            description2ndLine = description.substring(description.length()/2, description.length() - 1);
+    private void addNameLabel(GridBagConstraints constraints, Object object) {
+        if (object instanceof Publication) {
+            Publication pub = (Publication) object;
+            String nameHTML = format("<html><body><p style='%s'>%s</p></body></html>", FEED_PUBLICATION_NAME_STYLE, pub.getName());
+            JLabel pubNameLabel = new JLabel(nameHTML);
+            constraints.gridx = 0;
+            constraints.gridy = 0;
+            constraints.insets = LEFT_PAD_20;
+            this.add(pubNameLabel, constraints);
+        } else if (object instanceof ChatMessage) {
+            ChatMessage chatMessage = (ChatMessage) object;
+            String nameHTML = format("<html><body><p style='%s'>%s</p></body></html>", FEED_PUBLICATION_NAME_STYLE, chatMessage.getUserName());
+            JLabel pubNameLabel = new JLabel(nameHTML);
+            constraints.gridx = 0;
+            constraints.gridy = 0;
+            constraints.insets = LEFT_PAD_20;
+            this.add(pubNameLabel, constraints);
         }
-
-        String descriptionHTML = format("<html><body><p style='%s'>%s<br>%s</p></body></html>", DESCRIPTIVE_TEXT_STYLE, description1stLine, description2ndLine);
-
-        JLabel descriptionLabel = new JLabel(descriptionHTML);
-        constraints.weightx = 0.7;
-        constraints.gridx = 0;
-        constraints.gridy = 1;
-        constraints.insets = LEFT_PAD_20;
-        this.add(descriptionLabel, constraints);
     }
 
-    private void addMetaInfoLabel(GridBagConstraints constraints, Publication pub) {
-        String metaInfo = pub.getContributorUsername() + " · " + "Requested " + pub.getPubIdTotalContributionRequests() + " times" + " · " + "viewed " + pub.getPubIdTotalVisits() + " times";
-        String metaInfoHTML = format("<html><body><p style='%s'>%s</p></body></html>", META_TEXT_STYLE, metaInfo);
+    private void addDescriptionLabel(GridBagConstraints constraints, Object object) {
+        if (object instanceof Publication) {
+            Publication pub = (Publication) object;
+            String description = pub.getDescription();
+            String description1stLine = description, description2ndLine = "";
+            if (description.split(" ").length > 9) {
+                description1stLine = description.substring(0, description.length() / 2);
+                description2ndLine = description.substring(description.length() / 2, description.length() - 1);
+            }
 
-        JLabel metaInfoLabel = new JLabel(metaInfoHTML);
-        constraints.gridx = 0;
-        constraints.gridy = 2;
-        constraints.insets = TOP_5_LEFT_PAD_20;
-        this.add(metaInfoLabel, constraints);
+            String descriptionHTML = format("<html><body><p style='%s'>%s<br>%s</p></body></html>", DESCRIPTIVE_TEXT_STYLE, description1stLine, description2ndLine);
+
+            JLabel descriptionLabel = new JLabel(descriptionHTML);
+            constraints.weightx = 0.7;
+            constraints.gridx = 0;
+            constraints.gridy = 1;
+            constraints.insets = LEFT_PAD_20;
+            this.add(descriptionLabel, constraints);
+        } else if (object instanceof ChatMessage) {
+            ChatMessage chatMessage = (ChatMessage) object;
+            String text = chatMessage.getText();
+            //String descriptionHTML = format("<html><body><p style='%s'>%s<br>%s</p></body></html>", DESCRIPTIVE_TEXT_STYLE, text);
+
+            JLabel textLabel = new JLabel(text);
+            constraints.weightx = 0.7;
+            constraints.gridx = 0;
+            constraints.gridy = 1;
+            constraints.insets = LEFT_PAD_20;
+            this.add(textLabel, constraints);
+        }
+    }
+
+    private void addMetaInfoLabel(GridBagConstraints constraints, Object object) {
+        if (object instanceof Publication) {
+            Publication pub = (Publication) object;
+            String metaInfo = pub.getContributorUsername() + " · " + "Requested " + pub.getPubIdTotalContributionRequests() + " times" + " · " + "viewed " + pub.getPubIdTotalVisits() + " times";
+            //String metaInfoHTML = format("<html><body><p style='%s'>%s</p></body></html>", META_TEXT_STYLE, metaInfo);
+
+            JLabel metaInfoLabel = new JLabel(metaInfo);
+            constraints.gridx = 0;
+            constraints.gridy = 2;
+            constraints.insets = TOP_5_LEFT_PAD_20;
+            this.add(metaInfoLabel, constraints);
+        } else if (object instanceof ChatMessage) {
+            ChatMessage chatMessage = (ChatMessage) object;
+            String metaInfo = chatMessage.getContributorRole();
+            String metaInfoHTML = format("<html><body><p style='%s'>%s</p></body></html>", META_TEXT_STYLE, metaInfo);
+
+            JLabel metaInfoLabel = new JLabel(metaInfoHTML);
+            constraints.gridx = 0;
+            constraints.gridy = 2;
+            constraints.insets = TOP_5_LEFT_PAD_20;
+            this.add(metaInfoLabel, constraints);
+        }
     }
 
 }

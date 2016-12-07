@@ -4,6 +4,7 @@ import models.ChatMessage;
 import models.Publication;
 import models.RequestDecisionNotification;
 import org.json.JSONObject;
+import sun.applet.Main;
 import utils.PublicationsService;
 import utils.WebService.socketio.SocketEvent;
 import utils.WebService.socketio.SocketListener;
@@ -44,6 +45,9 @@ public class PublicationPageViewController implements SocketListener, AppViewCon
         loadChatMessages();
     }
 
+    public MainApplication getApplication() {
+        return application;
+    }
 
     @Override
     public AppView getView() {
@@ -88,13 +92,12 @@ public class PublicationPageViewController implements SocketListener, AppViewCon
     private void setupChatMessagesTable(ArrayList<ChatMessage> chatMessages) {
         DefaultTableModel model = new DefaultTableModel();
         view.getTable().setModel(model);
-
         model.addColumn("", chatMessages.toArray());
-        //model.addColumn(format("%d Publications Looking for Writers", chatMessages.size()), chatMessages.toArray());
+        model.addColumn("", chatMessages.toArray());
         //model.addColumn("", chatMessages.toArray());
 
-       //view.getTable().getColumnModel().getColumn(1).setPreferredWidth(400);
-        //view.getTable().setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+         view.getTable().getColumnModel().getColumn(1).setPreferredWidth(400);
+         view.getTable().setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
     }
 
     private void setButtonHoverListeners() {

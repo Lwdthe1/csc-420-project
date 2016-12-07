@@ -52,6 +52,8 @@ public class PublicationImageCellRenderer extends JPanel implements TableCellRen
             imageLabel.setSize(dimensions);
             imageLabel.setIcon(new ImageIcon(chatMessage.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
             imageLabel.setBorder(BorderFactory.createEmptyBorder());
+
+            this.add(imageLabel, BorderLayout.EAST);
         }
     }
 }

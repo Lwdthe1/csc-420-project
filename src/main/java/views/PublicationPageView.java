@@ -72,7 +72,9 @@ public class PublicationPageView implements AppView {
      */
     public void createAndShow() {
         this.contentPane = new JPanel(new BorderLayout());
-        this.contentPane.setSize(new Dimension(this.contentPane.getWidth(), this.contentPane.getHeight()));
+        System.out.println(width);
+        System.out.println(height);
+        this.contentPane.setSize(new Dimension(width, height));
         GridBagLayout gridbagLayout = new GridBagLayout();
         this.contentPane.setLayout(gridbagLayout);
         this.contentPane.setBackground(Color.white);
@@ -85,17 +87,17 @@ public class PublicationPageView implements AppView {
     }
 
     private void addComponentsToPane(GridBagConstraints constraints, Publication pub) {
-        addNameLabel(constraints, pub);
-        addAboutLabel(constraints);
-        addDescriptionLabel(constraints, pub);
-        addLogoLabel(constraints, pub);
-        addStatsLabel(constraints);
-        addRequestedStatsLabel(constraints, pub);
-        addViewedStatsLabel(constraints, pub);
-        addRelationLabel(constraints);
-        addRelationDescriptionLabel(constraints);
-        addContributerLabel(constraints, pub);
-        addChatTable();
+        //addNameLabel(constraints, pub);
+//        addAboutLabel(constraints);
+//        addDescriptionLabel(constraints, pub);
+//        addLogoLabel(constraints, pub);
+//        addStatsLabel(constraints);
+//        addRequestedStatsLabel(constraints, pub);
+//        addViewedStatsLabel(constraints, pub);
+//        addRelationLabel(constraints);
+//        addRelationDescriptionLabel(constraints);
+//        addContributerLabel(constraints, pub);
+        addChatTable(constraints);
     }
 
     private void addNameLabel(GridBagConstraints constraints, Publication pub) {
@@ -182,8 +184,9 @@ public class PublicationPageView implements AppView {
         this.contentPane.add(contributorLabel, constraints);
     }
 
-    private void addChatTable() {
-        this.contentPane.add(publicationChatView.getContentPane());
+    private void addChatTable(GridBagConstraints constraints) {
+        this.publicationPageViewController.getApplication().navigate(this.getContentPane(), publicationChatView.getContentPane());
+        //this.contentPane.add(publicationChatView.getContentPane());
     }
 
     public JPanel getContentPane() {
