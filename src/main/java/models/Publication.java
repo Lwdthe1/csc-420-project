@@ -39,6 +39,7 @@ public class Publication {
     //store client specific data
     private HashMap<String, Object> virtuals = new HashMap<>();
     private Boolean currentUserRequested;
+    private Boolean currentUserRequestWasRejected;
 
 
     public Publication(JSONObject jsonPublication) {
@@ -113,18 +114,18 @@ public class Publication {
         return image;
     }
 
-    public Boolean currentUserIsContributor() {
-        if (currentUserRetractedRequest()) {
-            return false;
+    public Boolean currentUserRequestWasRejected() {
+        if (virtuals.containsKey("currentUserRequestWasRejected")) {
+            return (Boolean) virtuals.get("currentUserRequestWasRejected");
         }
-        return userIsContributor(CurrentUser.sharedInstance.getId());
+        return false;
     }
 
-    public Boolean userIsContributor(String userId) {
+    public Boolean currentUserIsContributor() {
         if (virtuals.containsKey("currentUserIsContributor")) {
             return (Boolean) virtuals.get("currentUserIsContributor");
         }
-        return PublicationsService.sharedInstance.checkUserIsContributor();
+        return false;
     }
 
     public Boolean currentUserRequested() {
@@ -138,7 +139,16 @@ public class Publication {
         if (virtuals.containsKey("currentUserRetractedRequest")) {
             return (Boolean) virtuals.get("currentUserRetractedRequest");
         }
+        System.out.println("EREHEHEHEHEHH");
         return false;
+    }
+
+    public void setCurrentUserRequestWasRejected(Boolean val) {
+        this.virtuals.put("currentUserRequestWasRejected", val != null? val : false);
+    }
+
+    public void setCurrentUserIsContributor(Boolean val) {
+        this.virtuals.put("currentUserIsContributor", val != null? val : false);
     }
 
     public void setCurrentUserRequested(Boolean val) {

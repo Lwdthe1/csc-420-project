@@ -1,6 +1,8 @@
 package utils;
 
+import models.CurrentUser;
 import models.Publication;
+import models.RequestToContribute;
 import utils.WebService.RestCaller;
 
 import java.util.ArrayList;
@@ -12,7 +14,7 @@ import java.util.HashMap;
 public class PublicationsService {
     public final static PublicationsService sharedInstance = new PublicationsService();
 
-    HashMap<String, Publication> publicationIdsMap = new HashMap<>();
+    private HashMap<String, Publication> publicationIdsMap = new HashMap<>();
     private ArrayList<Publication> publications;
 
     //prevent others from instantiating
@@ -29,6 +31,14 @@ public class PublicationsService {
             publications = (ArrayList<Publication>) RestCaller.sharedInstance.getPublications();
             for (Publication publication: publications) {
                 publicationIdsMap.put(publication.getId(), publication);
+                RequestToContribute currentUserRequestToContribute =
+                        CurrentUser.sharedInstance.getRequestToContributeByPubId(publication.getId());
+                if (currentUserRequestToContribute != null) {
+                    publication.setCurrentUserRequested(true);
+                    publication.setCurrentUserRetractedRequested(currentUserRequestToContribute.getRetracted());
+                    publication.setCurrentUserIsContributor(currentUserRequestToContribute.wasAccepted());
+                    publication.setCurrentUserRequestWasRejected(currentUserRequestToContribute.wasRejected());
+                }
             }
         } catch (Exception e) {
             publications = new ArrayList<>();
@@ -77,9 +87,5 @@ public class PublicationsService {
             System.out.println(e.getMessage());
             return false;
         }
-    }
-
-    public Boolean checkUserIsContributor() {
-        return false;
     }
 }

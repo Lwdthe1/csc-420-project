@@ -1,15 +1,18 @@
 package viewControllers;
 
 import models.ChatMessage;
+import models.CurrentUser;
 import models.Publication;
 import models.RequestDecisionNotification;
 import org.json.JSONObject;
+import org.omg.CORBA.Current;
 import utils.PublicationsService;
 import utils.WebService.socketio.SocketEvent;
 import utils.WebService.socketio.SocketListener;
 import utils.WebService.socketio.SocketManager;
 import views.HomeFeedView;
 import views.subviews.NavBarView;
+import views.subviews.PublicationContributeButtonCellRenderer;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -43,7 +46,7 @@ public class HomeFeedViewController implements SocketListener, AppViewController
         }
 
         publicationsService = PublicationsService.sharedInstance;
-        loadFeed();
+        loadCurrentUserRequestsToContribute();
         this.view = new HomeFeedView(this, application.getMainFrame().getWidth(), application.getMainFrame().getHeight());
         setupView();
         setupViewWhileLoadingSemaphore.release();
@@ -83,6 +86,23 @@ public class HomeFeedViewController implements SocketListener, AppViewController
     }
 
 
+    private void loadCurrentUserRequestsToContribute() {
+        SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>() {
+            @Override
+            protected Boolean doInBackground() throws Exception {
+                CurrentUser.sharedInstance.loadRequestsToContribute();
+                return true;
+            }
+
+            // Can safely update the GUI from this method.
+            protected void done() {
+                loadFeed();
+            }
+        };
+        worker.execute();
+    }
+
+
 
 
     private void showPublications() {
@@ -96,7 +116,6 @@ public class HomeFeedViewController implements SocketListener, AppViewController
                     return o1.getName().compareToIgnoreCase(o2.getName());
                 }
             });
-
             setupPublicationsTable(publications);
             sendChatMessage(format("Just wanted y'all to know I'm viewing %d publications that are looking for Writers", publications.size()));
         } catch (InterruptedException e) {
@@ -210,10 +229,12 @@ public class HomeFeedViewController implements SocketListener, AppViewController
     }
 
     public void publicationContributeCellClicked(Publication publication, int row, int column) {
-        if (publication.getHomeFeedTableCell().contributeButton.getText() == "Contribute") {
-            System.out.println("Request to contribute: " + PublicationsService.sharedInstance.requestToContributeById(publication.getId(), "user" + row) + " " + row);
+        PublicationContributeButtonCellRenderer homeFeedTableCell = publication.getHomeFeedTableCell();
+        JButton contributeButton = homeFeedTableCell.contributeButton;
+        if (contributeButton.getText() == "Contribute") {
+            PublicationsService.sharedInstance.requestToContributeById(publication.getId(), "testUser0");
         } else {
-            System.out.println("Retract request to contribute: " + PublicationsService.sharedInstance.retractRequestToContributeById(publication.getId(), "user" + row) + " " + row + " " + publication.getId());
+            PublicationsService.sharedInstance.retractRequestToContributeById(publication.getId(), "testUser0");
         }
         view.onContributeRequestSuccess(row, column);
     }

@@ -1,6 +1,8 @@
 package utils.WebService;
 
+import models.CurrentUser;
 import models.Publication;
+import models.RequestToContribute;
 import org.apache.http.HttpException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -66,6 +68,32 @@ public class RestCaller
         }
 
         return publications;
+    }
+
+    public List<RequestToContribute> getCurrentUserRequests() throws URISyntaxException, HttpException, IOException {
+        // Create a new HttpClient and Get Sequence number
+        HttpClient httpClient = new DefaultHttpClient();
+        String restUri = REST_API_URL + format("fake/user/%s/requests", CurrentUser.sharedInstance.getId());
+
+        HttpGet httpGet = new HttpGet(restUri);
+
+        HttpResponse response = httpClient.execute(httpGet);
+
+        String resultJson = EntityUtils.toString(response.getEntity());
+        List<RequestToContribute> contributeRequests = new ArrayList<>();
+        JSONObject resultJsonObject = new JSONObject(resultJson);
+
+        if (resultJsonObject.has("requests")) {
+            JSONArray jsonRequests = resultJsonObject.getJSONArray("requests");
+            for (int i = 0; i < jsonRequests.length(); i++)
+            {
+                contributeRequests.add(new RequestToContribute(jsonRequests.getJSONObject(i)));
+            }
+        } else {
+            System.out.println("returned json did not contain contributeRequests JSON: " + resultJsonObject.toString());
+        }
+
+        return contributeRequests;
     }
 
 
