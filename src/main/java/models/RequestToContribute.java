@@ -1,6 +1,11 @@
 package models;
 
 import org.json.JSONObject;
+import utils.PublicationsService;
+import views.subviews.PublicationContributeButtonCellRenderer;
+import views.subviews.RequestStatusButtonCellRenderer;
+
+import java.util.HashMap;
 
 /**
  * Created by lwdthe1 on 12/7/16.
@@ -8,6 +13,8 @@ import org.json.JSONObject;
 public class RequestToContribute {
     private String userId, username, publicationId;
     private Boolean accepted, rejected, retracted;
+
+    private HashMap<String, Object> virtuals = new HashMap<>();
 
     public RequestToContribute(JSONObject obj) {
         this.userId = obj.getString("userId");
@@ -31,5 +38,23 @@ public class RequestToContribute {
 
     public Boolean wasRejected() {
         return rejected;
+    }
+
+    public Publication getPublication() {
+        return PublicationsService.sharedInstance.getById(publicationId);
+    }
+
+    public void setFeedTableCell(RequestStatusButtonCellRenderer homeFeedTableCell) {
+        this.virtuals.put("feedTableCell", homeFeedTableCell);
+    }
+
+    public RequestStatusButtonCellRenderer getFeedTableCell() {
+        Object value = this.virtuals.get("feedTableCell");
+        return value instanceof RequestStatusButtonCellRenderer?
+                (RequestStatusButtonCellRenderer) value : null;
+    }
+
+    public boolean isPending() {
+        return !wasAccepted() && !wasRejected();
     }
 }

@@ -1,5 +1,7 @@
 package viewControllers;
 
+import viewControllers.interfaces.AppView;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -8,6 +10,8 @@ import java.awt.*;
  */
 public class MainApplication {
     JFrame mainFrame;
+    private JPanel currentVisibleView;
+
     public MainApplication() {
         this.mainFrame = new JFrame("SuperSwingMeditor");
         //Create and set up the window.
@@ -25,16 +29,24 @@ public class MainApplication {
     }
 
     private void addViewControllers() {
-        new HomeFeedViewController(this);
+        setVisibleView(new HomeFeedViewController(this).getView());
+
     }
 
     public JFrame getMainFrame() {
         return mainFrame;
     }
 
-    public void navigate(JPanel panel) {
-        mainFrame.getContentPane().removeAll();
-        mainFrame.getContentPane().add(panel);
-        panel.setVisible(true);
+    public void setVisibleView(AppView panel) {
+        if (currentVisibleView != null) {
+            mainFrame.getContentPane().remove(currentVisibleView);
+        }
+        JPanel contentPane = panel.getContentPane();
+        mainFrame.getContentPane().add(contentPane);
+        contentPane.setVisible(true);
+
+        mainFrame.getContentPane().revalidate();
+        mainFrame.getContentPane().repaint();   // This is required in some cases
+        currentVisibleView = contentPane;
     }
 }

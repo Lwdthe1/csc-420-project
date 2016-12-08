@@ -1,6 +1,7 @@
 package views.subviews;
 
 import models.Publication;
+import models.RequestToContribute;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -62,10 +63,19 @@ public class PublicationTextCellRenderer extends JPanel implements TableCellRend
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.HORIZONTAL;
 
-        Publication pub = (Publication) value;
-        addNameLabel(constraints, pub);
-        addDescriptionLabel(constraints, pub);
-        addMetaInfoLabel(constraints, pub);
+        Publication pub = null;
+        if (value instanceof Publication) {
+            pub = (Publication) value;
+        } else if (value instanceof RequestToContribute) {
+            pub = ((RequestToContribute) value).getPublication();
+        }
+
+        if (pub != null) {
+            addNameLabel(constraints, pub);
+            addDescriptionLabel(constraints, pub);
+            addMetaInfoLabel(constraints, pub);
+        }
+
         return this;
     }
 

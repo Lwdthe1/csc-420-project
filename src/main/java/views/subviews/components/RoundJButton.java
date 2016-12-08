@@ -1,4 +1,4 @@
-package views.subviews;
+package views.subviews.components;
 
 import javax.swing.*;
 import java.awt.*;
