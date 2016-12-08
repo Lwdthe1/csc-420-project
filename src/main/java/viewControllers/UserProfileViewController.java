@@ -112,7 +112,9 @@ public class UserProfileViewController implements AuthListener, SocketListener, 
             case DISCONNECTED:
                 break;
             case CHAT_MESSAGE:
-                updateRealtimeNotificationWithNewChatMessage(payload);
+                if(CurrentUser.sharedInstance.getInstantNotificationsSetting()){
+                    updateRealtimeNotificationWithNewChatMessage(payload);
+                }
                 break;
             case NOTIFICATION_REQUEST_TO_CONTRIBUTE_DECISION:
                 updateRealtimeNotificationWithRequestDecision(payload);
@@ -146,17 +148,19 @@ public class UserProfileViewController implements AuthListener, SocketListener, 
         CurrentUser.sharedInstance.getRequestToContributeByPubId(requestPub.getId()).updateAccepted(requestApproved);
         showPublicationRequests();
         String title = requestApproved? "Request Approved" : "Request Denied";
-        view.getRealTimeNotificationView().updateNotification(title,
-                format("Your request to contribute to %s was %s",
-                        requestPub.getName(),
-                        requestApproved? "approved." : "denied."),
-                requestPub.getImage(), new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        //TODO(keith) move to publication's page
+        if(CurrentUser.sharedInstance.getRequestDecisionSetting()){
+            view.getRealTimeNotificationView().updateNotification(title,
+                    format("Your request to contribute to %s was %s",
+                            requestPub.getName(),
+                            requestApproved? "approved." : "denied."),
+                    requestPub.getImage(), new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            //TODO(keith) move to publication's page
+                        }
                     }
-                }
-        );
+            );
+        }
     }
 
     @Override
