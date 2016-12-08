@@ -1,5 +1,6 @@
 package views.subviews;
 
+import models.CurrentUser;
 import models.Publication;
 import utils.PublicationsService;
 
@@ -43,8 +44,12 @@ public class PublicationContributeButtonCellRenderer extends JPanel implements T
         constraints.gridx = 2;
         constraints.gridy = 0;
         constraints.insets = RIGHT_PAD_15;
-        
-        if (pub.currentUserIsContributor()) {
+
+        if (pub.getContributorUsername().equals(CurrentUser.sharedInstance.getUsername())) {
+            contributeButton.setText("Editor");
+            contributeButton.setEnabled(false);
+            contributeButton.setBorder(BorderFactory.createEmptyBorder());
+        } else if (pub.currentUserIsContributor()) {
             contributeButton.setText("Contributor");
             contributeButton.setEnabled(false);
             contributeButton.setBorder(BorderFactory.createEmptyBorder());
