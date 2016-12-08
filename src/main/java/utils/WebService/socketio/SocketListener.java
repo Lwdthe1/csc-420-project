@@ -7,6 +7,5 @@ import org.json.JSONObject;
  */
 public interface SocketListener {
     void onEvent(SocketEvent event, JSONObject obj);
-    void onEvent(String event, JSONObject obj);
     void registerForEvents();
 }
