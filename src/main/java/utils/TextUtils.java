@@ -27,17 +27,17 @@ public class TextUtils {
             "    -moz-osx-font-smoothing: grayscale;\n" +
             "    -moz-font-feature-settings: \"liga\" on;\n" +
             "    text-decoration: none !important;\n word-wrap: break-word; ";
-    public static final String DESCRIPTIVE_PUB_TEXT_STYLE = "color: #a8a7a7\n" +
-            "    font-size: 10px;\n" +
-            "    font-family: -apple-system,BlinkMacSystemFont,\"Segoe UI\",Roboto,Oxygen,Ubuntu,Cantarell,\"Open Sans\",\"Helvetica Neue\",sans-serif;\n" +
-            "    letter-spacing: 0;\n" +
-            "    font-weight: 500;\n" +
-            "    font-style: normal;\n" +
-            "    text-rendering: optimizeLegibility;\n" +
-            "    -webkit-font-smoothing: antialiased;\n" +
-            "    -moz-osx-font-smoothing: grayscale;\n" +
-            "    -moz-font-feature-settings: \"liga\" on;\n" +
-            "    text-decoration: none !important;\n word-wrap: break-word; ";
+    public static final String DESCRIPTIVE_TEXT_GREY_STYLE = "color: #7f7f7f\n" +
+            " font-size: 9px;\n" +
+            " font-family: -apple-system,BlinkMacSystemFont,\"Segoe UI\",Roboto,Oxygen,Ubuntu,Cantarell,\"Open Sans\",\"Helvetica Neue\",sans-serif;\n" +
+            " letter-spacing: 0;\n" +
+            " font-weight: 300;\n" +
+            " font-style: normal;\n" +
+            " text-rendering: optimizeLegibility;\n" +
+            " -webkit-font-smoothing: antialiased;\n" +
+            " -moz-osx-font-smoothing: grayscale;\n" +
+            " -moz-font-feature-settings: \"liga\" on;\n" +
+            " text-decoration: none !important;\n word-wrap: break-word; ";
     public static final String DESCRIPTIVE_TEXT_STYLE = "color: #4c4c4c\n" +
             "    font-size: 9px;\n" +
             "    font-family: -apple-system,BlinkMacSystemFont,\"Segoe UI\",Roboto,Oxygen,Ubuntu,Cantarell,\"Open Sans\",\"Helvetica Neue\",sans-serif;\n" +

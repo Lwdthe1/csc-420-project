@@ -72,6 +72,7 @@ public class PublicationChatView  {
 
         scrollPane = new JScrollPane(table);
         scrollPane.getVerticalScrollBar().setUnitIncrement(100);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
         table.addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
                 int lastIndex = table.getRowCount() - 1;

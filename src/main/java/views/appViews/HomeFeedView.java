@@ -3,13 +3,17 @@ package views.appViews;
 import models.Publication;
 import viewControllers.interfaces.AppView;
 import viewControllers.HomeFeedViewController;
+import viewControllers.interfaces.AppViewController;
 import viewControllers.interfaces.TableView;
+import viewControllers.interfaces.ViewController;
 import views.subviews.*;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 public class HomeFeedView implements AppView, TableView {
     private final HomeFeedViewController appViewController;
@@ -53,7 +57,7 @@ public class HomeFeedView implements AppView, TableView {
     }
 
     @Override
-    public viewControllers.interfaces.AppViewController getViewController() {
+    public AppViewController getViewController() {
         return appViewController;
     }
 
@@ -65,11 +69,11 @@ public class HomeFeedView implements AppView, TableView {
 
     private void createAndAddScrollableTable() {
         JPanel panel = new JPanel();
-        contentPane.add(panel, BorderLayout.SOUTH);
+        contentPane.add(panel, BorderLayout.CENTER);
 
         panel.setSize(new Dimension(width, height));
-        table = new JTable(){
 
+        table = new JTable(){
             public TableCellRenderer getCellRenderer(int row, int column ) {
                 switch(column) {
                     case 0:

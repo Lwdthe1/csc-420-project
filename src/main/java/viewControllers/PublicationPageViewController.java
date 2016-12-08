@@ -1,6 +1,7 @@
 package viewControllers;
 
 import models.ChatMessage;
+import models.CurrentUser;
 import models.Publication;
 import models.RequestDecisionNotification;
 import org.json.JSONObject;
@@ -132,8 +133,8 @@ public class PublicationPageViewController implements SocketListener, viewContro
                 view.getSendMessageButton().addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        System.out.println("SENDING MESSAGE: " + view.getChatTextArea().getText());
                         sendChatMessage(view.getChatTextArea().getText());
+                        view.getChatTextArea().setText("");
                     }
                 });
             //}
@@ -144,13 +145,12 @@ public class PublicationPageViewController implements SocketListener, viewContro
 
     private void setupChatMessagesTable(ArrayList<ChatMessage> chatMessages) {
         DefaultTableModel model = new DefaultTableModel();
+        view.getScrollPane().setMinimumSize(new Dimension(500, 500));
         view.getTable().setModel(model);
         model.addColumn("", chatMessages.toArray());
         model.addColumn("", chatMessages.toArray());
-        view.getTable().getColumnModel().getColumn(0).setPreferredWidth(100);
-        view.getTable().getColumnModel().getColumn(1).setPreferredWidth(400);
-        view.getScrollPane().setPreferredSize(new Dimension(view.getTable().getSize()));
-        view.getTable().setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+        view.getTable().getColumnModel().getColumn(0).setPreferredWidth(32);
+        view.getTable().getColumnModel().getColumn(1).setPreferredWidth(1000);
     }
 
     private void startSocketIO() {
@@ -231,6 +231,6 @@ public class PublicationPageViewController implements SocketListener, viewContro
     }
 
     private void sendChatMessage(String message) {
-        socketManger.emit(SocketEvent.CHAT_MESSAGE, ChatMessage.createJSONPayload(publication.getId(), "LincolnWDaniel", message));
+        socketManger.emit(SocketEvent.CHAT_MESSAGE, ChatMessage.createJSONPayload(publication.getId(), CurrentUser.sharedInstance.getUsername(), message));
     }
 }

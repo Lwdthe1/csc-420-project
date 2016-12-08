@@ -73,7 +73,7 @@ public class RestCaller
     public List<ChatMessage> getChatMessages(String publicationId) throws URISyntaxException, HttpException, IOException {
         // Create a new HttpClient and Get Sequence number
         HttpClient httpClient = new DefaultHttpClient();
-        String restUri = REST_API_URL + "chat/" + "39d9b4950757" + "/VanhishikhaB";
+        String restUri = REST_API_URL + "chat/" + publicationId + "/" +CurrentUser.sharedInstance.getUsername();
 
         HttpGet httpGet = new HttpGet(restUri);
         HttpResponse response = httpClient.execute(httpGet);

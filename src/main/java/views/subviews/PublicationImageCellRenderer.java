@@ -23,6 +23,7 @@ public class PublicationImageCellRenderer extends JPanel implements TableCellRen
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         this.setLayout(new BorderLayout());
         this.setBackground(Color.white);
+        boolean east = true;
 
         Image buttonImage = null;
         if (value instanceof Publication) {
@@ -30,16 +31,17 @@ public class PublicationImageCellRenderer extends JPanel implements TableCellRen
         } else if (value instanceof RequestToContribute) {
             buttonImage = ((RequestToContribute) value).getPublication().getImage();
         } else if (value instanceof ChatMessage) {
+            east = false;
             buttonImage = ((ChatMessage) value).getImage();
         }
 
         if (buttonImage != null) {
-            addImageButton(buttonImage);
+            addImageButton(buttonImage, east);
         }
         return this;
     }
 
-    private void addImageButton(Image buttonImage) {
+    private void addImageButton(Image buttonImage, boolean east) {
         JButton imageButton = new JButton();
         Dimension dimensions = new Dimension(60, 60);
         imageButton.setSize(dimensions);
@@ -47,6 +49,10 @@ public class PublicationImageCellRenderer extends JPanel implements TableCellRen
         imageButton.setBorder(BorderFactory.createEmptyBorder());
 
         this.enableInputMethods(true);
-        this.add(imageButton, BorderLayout.EAST);
+        if (east) {
+            this.add(imageButton, BorderLayout.EAST);
+        } else {
+            this.add(imageButton, BorderLayout.WEST);
+        }
     }
 }

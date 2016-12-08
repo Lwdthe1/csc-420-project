@@ -37,7 +37,7 @@ public class ChatMessage {
             this.contributorRole = "Writer";
         }
         String createdDate = payload.getString("createDate");
-        this.timeAgo = createTimeAgoString(createdDate);
+        //this.timeAgo = createTimeAgoString(createdDate);
         this.imageUrl = payload.getString("userImageUrl");
     }
 
