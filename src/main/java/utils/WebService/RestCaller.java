@@ -1,7 +1,9 @@
 package utils.WebService;
 
 import models.ChatMessage;
+import models.CurrentUser;
 import models.Publication;
+import models.RequestToContribute;
 import org.apache.http.HttpException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -83,16 +85,40 @@ public class RestCaller
         if (resultJsonObject.has("messages")) {
             JSONArray jsonChatMessages = resultJsonObject.getJSONArray("messages");
             System.out.println(jsonChatMessages);
-            for (int i = 0; i < jsonChatMessages.length(); i++)
-            {
+            for (int i = 0; i < jsonChatMessages.length(); i++) {
                 chatMessages.add(new ChatMessage(jsonChatMessages.getJSONObject(i)));
             }
-        }
-        else {
+        } else {
             System.out.println("returned json did not contain publications JSON: " + resultJsonObject.toString());
         }
         System.out.println(chatMessages.size());
         return chatMessages;
+    }
+
+    public List<RequestToContribute> getCurrentUserRequests() throws URISyntaxException, HttpException, IOException {
+        // Create a new HttpClient and Get Sequence number
+        HttpClient httpClient = new DefaultHttpClient();
+        String restUri = REST_API_URL + format("fake/user/%s/requests", CurrentUser.sharedInstance.getId());
+
+        HttpGet httpGet = new HttpGet(restUri);
+
+        HttpResponse response = httpClient.execute(httpGet);
+
+        String resultJson = EntityUtils.toString(response.getEntity());
+        List<RequestToContribute> contributeRequests = new ArrayList<>();
+        JSONObject resultJsonObject = new JSONObject(resultJson);
+
+        if (resultJsonObject.has("requests")) {
+            JSONArray jsonRequests = resultJsonObject.getJSONArray("requests");
+            for (int i = 0; i < jsonRequests.length(); i++)
+            {
+                contributeRequests.add(new RequestToContribute(jsonRequests.getJSONObject(i)));
+            }
+        } else {
+            System.out.println("returned json did not contain contributeRequests JSON: " + resultJsonObject.toString());
+        }
+
+        return contributeRequests;
     }
 
 
@@ -123,12 +149,12 @@ public class RestCaller
     public Boolean retractRequestToContributeToPublicationById(String publicationId, String userId) throws URISyntaxException, IOException, HttpException {
         // Create a new HttpClient and Get Sequence number
         HttpClient httpClient = new DefaultHttpClient();
-        String restUri = REST_API_URL + format("fake/pubs/contribute/:/:userId", publicationId, userId);
+        String restUri = REST_API_URL + format("fake/pubs/contribute/%s/%s", publicationId, userId);
 
         HttpDelete httpDelete = new HttpDelete(restUri);
 
         HttpResponse response = httpClient.execute(httpDelete);
-        EntityUtils.toString(response.getEntity());
-        return true;
+        //if null, the server ended the request successfully.
+        return response.getEntity() == null;
     }
 }

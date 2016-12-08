@@ -1,24 +1,28 @@
-package views;
+package views.appViews;
 
-import viewControllers.AppView;
+import models.Publication;
+import viewControllers.interfaces.AppView;
 import viewControllers.HomeFeedViewController;
+import viewControllers.interfaces.AppViewController;
+import viewControllers.interfaces.ViewController;
 import views.subviews.*;
 
-import viewControllers.AppView;
+import viewControllers.interfaces.AppView;
 import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
 public class HomeFeedView implements AppView {
-    private final HomeFeedViewController homeFeedViewController;
+    private final HomeFeedViewController appViewController;
     private int width;
     private int height;
     private JPanel contentPane;
     private JTable table;
     private RealTimeNotificationView realTimeNotificationView;
 
-    public HomeFeedView(HomeFeedViewController homeFeedViewController, int width, int height) {
-        this.homeFeedViewController = homeFeedViewController;
+    public HomeFeedView(HomeFeedViewController appViewController, int width, int height) {
+        this.appViewController = appViewController;
         this.width = width;
         this.height = height;
     }
@@ -27,6 +31,15 @@ public class HomeFeedView implements AppView {
         return table;
     }
 
+    @Override
+    public int getWidth() {
+        return this.width;
+    }
+
+    @Override
+    public int getHeight() {
+        return this.height;
+    }
 
     /**
      * Create the GUI and show it.  For thread safety,
@@ -35,14 +48,20 @@ public class HomeFeedView implements AppView {
      */
     public void createAndShow() {
         this.contentPane = new JPanel(new BorderLayout());
-        this.contentPane.setSize(new Dimension(this.contentPane.getWidth(), this.contentPane.getHeight()));
+        this.contentPane.setSize(new Dimension(this.contentPane.getWidth(), this.getWidth()));
+        realTimeNotificationView = new RealTimeNotificationView(this.getWidth());
 
-        realTimeNotificationView = new RealTimeNotificationView(contentPane.getWidth());
         addComponentsToPane();
+    }
+
+    @Override
+    public AppViewController getViewController() {
+        return appViewController;
     }
 
     public void addComponentsToPane() {
         createAndAddScrollableTable();
+        contentPane.add(appViewController.getNavigationController().getView().getContentPane(), BorderLayout.NORTH);
         contentPane.add(realTimeNotificationView.getContainer(), BorderLayout.SOUTH);
     }
 
@@ -71,10 +90,10 @@ public class HomeFeedView implements AppView {
             public boolean isCellEditable(int row, int column) {
                 switch(column) {
                     case 0:
-                        registerPublicationImageButtonClick(row);
+                        handlePublicationImageButtonClick(row, column);
                         return false;
                     case 2:
-                        registerPublicationContributeCellClicked(row);
+                        handleActionButtonCellClicked(row, column);
                         return false;
                     default:
                         return false;
@@ -90,12 +109,23 @@ public class HomeFeedView implements AppView {
         panel.add(scrollPane);
     }
 
-    private void registerPublicationContributeCellClicked(int row) {
-        homeFeedViewController.publicationContributeCellClicked(row);
+    private void handleActionButtonCellClicked(int row, int column) {
+        Object value = table.getValueAt(row, column);
+        if (value instanceof Publication) {
+            Publication publication = (Publication) value;
+            JButton contributeButton = publication.getHomeFeedTableCell().contributeButton;
+            if (contributeButton.isEnabled()) {
+                appViewController.publicationContributeCellClicked(publication, row, column);
+            }
+        }
     }
 
-    private void registerPublicationImageButtonClick(int row) {
-        homeFeedViewController.publicationImageButtonClicked(row);
+    private void handlePublicationImageButtonClick(int row, int column) {
+        Object value = table.getValueAt(row, column);
+        if (value instanceof Publication) {
+            appViewController.publicationImageButtonClicked((Publication) value);
+        }
+
     }
 
     public RealTimeNotificationView getRealTimeNotificationView() {
@@ -104,5 +134,13 @@ public class HomeFeedView implements AppView {
 
     public JPanel getContentPane() {
         return contentPane;
+    }
+
+    public void onContributeRequestSuccess(int row, int column) {
+        ((AbstractTableModel) table.getModel()).fireTableCellUpdated(row, column);
+    }
+
+    public void refreshTable(int row) {
+        table.repaint();// faster than ((AbstractTableModel) table.getModel()).fireTableDataChanged()
     }
 }

@@ -3,6 +3,9 @@ package utils;
 import models.ChatMessage;
 import models.Publication;
 import org.apache.http.HttpException;
+import models.CurrentUser;
+import models.Publication;
+import models.RequestToContribute;
 import utils.WebService.RestCaller;
 
 import java.io.IOException;
@@ -16,7 +19,7 @@ import java.util.HashMap;
 public class PublicationsService {
     public final static PublicationsService sharedInstance = new PublicationsService();
 
-    HashMap<String, Publication> publicationIdsMap = new HashMap<>();
+    private HashMap<String, Publication> publicationIdsMap = new HashMap<>();
     private ArrayList<Publication> publications;
 
     //prevent others from instantiating
@@ -33,6 +36,14 @@ public class PublicationsService {
             publications = (ArrayList<Publication>) RestCaller.sharedInstance.getPublications();
             for (Publication publication: publications) {
                 publicationIdsMap.put(publication.getId(), publication);
+                RequestToContribute currentUserRequestToContribute =
+                        CurrentUser.sharedInstance.getRequestToContributeByPubId(publication.getId());
+                if (currentUserRequestToContribute != null) {
+                    publication.setCurrentUserRequested(true);
+                    publication.setCurrentUserRetractedRequested(currentUserRequestToContribute.getRetracted());
+                    publication.setCurrentUserIsContributor(currentUserRequestToContribute.wasAccepted());
+                    publication.setCurrentUserRequestWasRejected(currentUserRequestToContribute.wasRejected());
+                }
             }
         } catch (Exception e) {
             publications = new ArrayList<>();
@@ -64,7 +75,9 @@ public class PublicationsService {
 
     public Boolean requestToContributeById(String publicationId, String userId) {
         try {
-            return RestCaller.sharedInstance.requestToContributeToPublicationById(publicationId, userId);
+            Boolean success = RestCaller.sharedInstance.requestToContributeToPublicationById(publicationId, userId);
+            getById(publicationId).setCurrentUserRequested(success);
+            return success;
         } catch (Exception e) {
             return false;
         }
@@ -82,5 +95,16 @@ public class PublicationsService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public Boolean retractRequestToContributeById(String publicationId, String userId) {
+        try {
+            Boolean success = RestCaller.sharedInstance.retractRequestToContributeToPublicationById(publicationId, userId);
+            getById(publicationId).setCurrentUserRetractedRequested(success);
+            return success;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
     }
 }

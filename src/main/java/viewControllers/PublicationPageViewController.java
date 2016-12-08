@@ -9,7 +9,9 @@ import utils.PublicationsService;
 import utils.WebService.socketio.SocketEvent;
 import utils.WebService.socketio.SocketListener;
 import utils.WebService.socketio.SocketManager;
-import views.HomeFeedView;
+import viewControllers.interfaces.AppView;
+import viewControllers.interfaces.AppViewController;
+import views.appViews.HomeFeedView;
 import views.subviews.NavBarView;
 import views.PublicationPageView;
 
@@ -30,23 +32,24 @@ import static java.lang.Thread.sleep;
  */
 public class PublicationPageViewController implements SocketListener, AppViewController {
     private final PublicationPageView view;
-    private final MainApplication application;
+    private final HomeFeedViewController homeFeedViewController;
 
     private SocketManager socketManger;
     private Semaphore setupViewWhileLoadingSemaphore = new Semaphore(1);
     private Publication publication;
     private ArrayList<ChatMessage> chatMessages;
 
-    public PublicationPageViewController(MainApplication application, Publication publication) {
-        this.application = application;
+    public PublicationPageViewController(HomeFeedViewController homeFeedViewController, Publication publication) {
+        this.homeFeedViewController = homeFeedViewController;
         this.publication = publication;
-        this.view = new PublicationPageView(this, application.getMainFrame().getWidth(), application.getMainFrame().getHeight());
+        this.view = new PublicationPageView(this, homeFeedViewController.getView().getWidth(), homeFeedViewController.getView().getHeight());
         setupView();
         loadChatMessages();
     }
 
-    public MainApplication getApplication() {
-        return application;
+    @Override
+    public NavigationController getNavigationController() {
+        return homeFeedViewController.getNavigationController();
     }
 
     @Override
@@ -56,15 +59,18 @@ public class PublicationPageViewController implements SocketListener, AppViewCon
 
     public void setupView() {
         this.view.createAndShow();
-        setButtonHoverListeners();
         setAsApplicationVisibleView();
+    }
+
+    @Override
+    public void transitionTo(AppViewController appViewController) {
+
     }
 
     public Publication getPublication() {
         return publication;
     }
 
-    @Override
     public void setAsApplicationVisibleView() {
 
     }
@@ -98,19 +104,6 @@ public class PublicationPageViewController implements SocketListener, AppViewCon
 
         view.getTable().getColumnModel().getColumn(1).setPreferredWidth(400);
         view.getTable().setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
-    }
-
-    private void setButtonHoverListeners() {
-        final NavBarView navBarView = application.getNavBarView();
-        navBarView.getPublicationsTabButton().addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                navBarView.getPublicationsTabButton().setForeground(Color.BLACK);
-            }
-
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                navBarView.getPublicationsTabButton().setForeground(Color.GRAY);
-            }
-        });
     }
 
     private void startSocketIO() {

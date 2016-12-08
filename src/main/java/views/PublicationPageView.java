@@ -2,8 +2,9 @@ package views;
 
 import models.Publication;
 import models.User;
-import viewControllers.AppView;
+import viewControllers.interfaces.AppView;
 import viewControllers.PublicationPageViewController;
+import viewControllers.interfaces.AppViewController;
 import views.subviews.PublicationChatView;
 
 import javax.swing.*;
@@ -63,6 +64,16 @@ public class PublicationPageView implements AppView {
         this.height = height;
         this.publicationPageViewController = publicationPageViewController;
         this.publicationChatView = new PublicationChatView(width, height);
+    }
+
+    @Override
+    public int getWidth() {
+        return width;
+    }
+
+    @Override
+    public int getHeight() {
+        return height;
     }
 
     /**
@@ -189,6 +200,11 @@ public class PublicationPageView implements AppView {
         constraints.fill = GridBagConstraints.BOTH;
         //constraints.gridy = 8;
         this.contentPane.add(publicationChatView.getContentPane(), constraints);
+    }
+
+    @Override
+    public AppViewController getViewController() {
+        return publicationPageViewController;
     }
 
     public JPanel getContentPane() {

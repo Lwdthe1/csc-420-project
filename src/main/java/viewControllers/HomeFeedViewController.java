@@ -1,6 +1,7 @@
 package viewControllers;
 
 import models.ChatMessage;
+import models.CurrentUser;
 import models.Publication;
 import models.RequestDecisionNotification;
 import org.json.JSONObject;
@@ -8,9 +9,12 @@ import utils.PublicationsService;
 import utils.WebService.socketio.SocketEvent;
 import utils.WebService.socketio.SocketListener;
 import utils.WebService.socketio.SocketManager;
-import views.HomeFeedView;
 import views.PublicationPageView;
+import viewControllers.interfaces.AppView;
+import viewControllers.interfaces.AppViewController;
+import views.appViews.HomeFeedView;
 import views.subviews.NavBarView;
+import views.subviews.PublicationContributeButtonCellRenderer;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
@@ -32,6 +36,7 @@ import static java.lang.Thread.sleep;
 public class HomeFeedViewController implements SocketListener, AppViewController {
     private final HomeFeedView view;
     private final MainApplication application;
+    private final NavigationController navigationController;
 
 
     private SocketManager socketManger;
@@ -41,6 +46,7 @@ public class HomeFeedViewController implements SocketListener, AppViewController
 
     public HomeFeedViewController(MainApplication application) {
         this.application = application;
+        this.navigationController = new NavigationController(application);
         //acquire the lock here before starting load
         try {
             setupViewWhileLoadingSemaphore.acquire();
@@ -49,11 +55,16 @@ public class HomeFeedViewController implements SocketListener, AppViewController
         }
 
         publicationsService = PublicationsService.sharedInstance;
-        loadFeed();
+        loadCurrentUserRequestsToContribute();
         this.view = new HomeFeedView(this, application.getMainFrame().getWidth(), application.getMainFrame().getHeight());
         setupView();
         setupViewWhileLoadingSemaphore.release();
         startSocketIO();
+    }
+
+    @Override
+    public NavigationController getNavigationController() {
+        return this.navigationController;
     }
 
     @Override
@@ -63,13 +74,10 @@ public class HomeFeedViewController implements SocketListener, AppViewController
 
     public void setupView() {
         this.view.createAndShow();
-        setButtonHoverListeners();
-        setAsApplicationVisibleView();
     }
 
-    @Override
-    public void setAsApplicationVisibleView() {
-        this.application.navigate(null, this.view.getContentPane());
+    public void transitionTo(AppViewController appViewController) {
+        this.getNavigationController().moveTo(appViewController);
     }
 
     private void loadFeed() {
@@ -83,6 +91,23 @@ public class HomeFeedViewController implements SocketListener, AppViewController
             // Can safely update the GUI from this method.
             protected void done() {
                 showPublications();
+            }
+        };
+        worker.execute();
+    }
+
+
+    private void loadCurrentUserRequestsToContribute() {
+        SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>() {
+            @Override
+            protected Boolean doInBackground() throws Exception {
+                PublicationsService.sharedInstance.loadAll();
+                return true;
+            }
+
+            // Can safely update the GUI from this method.
+            protected void done() {
+                loadFeed();
             }
         };
         worker.execute();
@@ -120,19 +145,6 @@ public class HomeFeedViewController implements SocketListener, AppViewController
 
         view.getTable().getColumnModel().getColumn(1).setPreferredWidth(400);
         view.getTable().setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
-    }
-
-    private void setButtonHoverListeners() {
-        final NavBarView navBarView = application.getNavBarView();
-        navBarView.getPublicationsTabButton().addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                navBarView.getPublicationsTabButton().setForeground(Color.BLACK);
-            }
-
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                navBarView.getPublicationsTabButton().setForeground(Color.GRAY);
-            }
-        });
     }
 
     private void startSocketIO() {
@@ -180,7 +192,7 @@ public class HomeFeedViewController implements SocketListener, AppViewController
                     view.getRealTimeNotificationView().updateNotification(title,
                             format("Your request to contribute to %s was %s",
                                     requestPub.getName(),
-                                    requestApproved? "approved." + i : "denied." + i),
+                                    requestApproved? "approved." : "denied."),
                             requestPub.getImage()
                     );
                 }
@@ -202,18 +214,26 @@ public class HomeFeedViewController implements SocketListener, AppViewController
     }
 
     private void sendChatMessage(String message) {
-        socketManger.emit(SocketEvent.CHAT_MESSAGE, ChatMessage.createJSONPayload("eb297ea1161a", "user1", message));
+        socketManger.emit(SocketEvent.CHAT_MESSAGE, ChatMessage.createJSONPayload("eb297ea1161a", "LincolnWDaniel", message));
     }
 
-    public void publicationContributeCellClicked(int index) {
-        System.out.printf("%s contribute cell clicked.", publications.get(index).getName());
-        System.out.println(PublicationsService.sharedInstance.requestToContributeById(publications.get(index).getId(),"user" + index));
+    public void publicationContributeCellClicked(Publication index) {
+
     }
 
-    public void publicationImageButtonClicked(int index) {
-        System.out.printf("%s image button clicked.", publications.get(index).getName());
-        PublicationPageViewController publicationPageViewController = new PublicationPageViewController(application, publications.get(index));
-        PublicationPageView publicationPageView = (PublicationPageView) publicationPageViewController.getView();
-        application.navigate(view.getContentPane(), publicationPageView.getContentPane());
+    public void publicationImageButtonClicked(Publication publication) {
+        PublicationPageViewController publicationPageViewController = new PublicationPageViewController(this, publication);
+        navigationController.moveTo(publicationPageViewController);
+    }
+
+    public void publicationContributeCellClicked(Publication publication, int row, int column) {
+        PublicationContributeButtonCellRenderer homeFeedTableCell = publication.getHomeFeedTableCell();
+        JButton contributeButton = homeFeedTableCell.contributeButton;
+        if (contributeButton.getText() == "Contribute") {
+            PublicationsService.sharedInstance.requestToContributeById(publication.getId(), "LincolnWDaniel");
+        } else {
+            PublicationsService.sharedInstance.retractRequestToContributeById(publication.getId(), "LincolnWDaniel");
+        }
+        view.onContributeRequestSuccess(row, column);
     }
 }

@@ -2,16 +2,14 @@ package models;
 
 import org.json.JSONObject;
 import org.ocpsoft.prettytime.PrettyTime;
-import utils.AppUtils;
 import utils.ImageUtils;
+import utils.PublicationsService;
+import views.subviews.PublicationContributeButtonCellRenderer;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
+import java.util.HashMap;
+import java.util.Objects;
 
 /**
  * Created by lwdthe1 on 9/26/16.
@@ -38,6 +36,10 @@ public class Publication {
     private int pubIdTotalContributionRequests;
 
     private BufferedImage image;
+    //store client specific data
+    private HashMap<String, Object> virtuals = new HashMap<>();
+    private Boolean currentUserRequested;
+    private Boolean currentUserRequestWasRejected;
 
 
     public Publication(JSONObject jsonPublication) {
@@ -110,5 +112,63 @@ public class Publication {
     public BufferedImage getImage() {
         if(image == null) image = ImageUtils.loadImage(imageUrl);
         return image;
+    }
+
+    public Boolean currentUserRequestWasRejected() {
+        if (virtuals.containsKey("currentUserRequestWasRejected")) {
+            return (Boolean) virtuals.get("currentUserRequestWasRejected");
+        }
+        return false;
+    }
+
+    public Boolean currentUserIsContributor() {
+        if (virtuals.containsKey("currentUserIsContributor")) {
+            return (Boolean) virtuals.get("currentUserIsContributor");
+        }
+        return false;
+    }
+
+    public Boolean currentUserRequested() {
+        if (virtuals.containsKey("currentUserRequested")) {
+            return (Boolean) virtuals.get("currentUserRequested");
+        }
+        return false;
+    }
+
+    public Boolean currentUserRetractedRequest() {
+        if (virtuals.containsKey("currentUserRetractedRequest")) {
+            return (Boolean) virtuals.get("currentUserRetractedRequest");
+        }
+        System.out.println("EREHEHEHEHEHH");
+        return false;
+    }
+
+    public void setCurrentUserRequestWasRejected(Boolean val) {
+        this.virtuals.put("currentUserRequestWasRejected", val != null? val : false);
+    }
+
+    public void setCurrentUserIsContributor(Boolean val) {
+        this.virtuals.put("currentUserIsContributor", val != null? val : false);
+    }
+
+    public void setCurrentUserRequested(Boolean val) {
+        this.virtuals.put("currentUserRequested", val != null? val : false);
+    }
+
+    public void setCurrentUserRetractedRequested(Boolean val) {
+        System.out.println("setCurrentUserRetractedRequested:" + val);
+        if (val != null) {
+            this.setCurrentUserRequested(!val);
+        }
+    }
+
+    public void setHomeFeedTableCell(PublicationContributeButtonCellRenderer homeFeedTableCell) {
+        this.virtuals.put("homeFeedTableCell", homeFeedTableCell);
+    }
+
+    public PublicationContributeButtonCellRenderer getHomeFeedTableCell() {
+        Object value = this.virtuals.get("homeFeedTableCell");
+        return value instanceof PublicationContributeButtonCellRenderer?
+                (PublicationContributeButtonCellRenderer) value : null;
     }
 }

@@ -1,16 +1,16 @@
 package viewControllers;
 
+import viewControllers.interfaces.AppView;
+
 import javax.swing.*;
 import java.awt.*;
-import views.subviews.NavBarView;
 
 /**
  * Created by lwdthe1 on 12/4/16.
  */
 public class MainApplication {
-    private JFrame mainFrame;
-    private NavBarView navBarView;
-
+    JFrame mainFrame;
+    private JPanel currentVisibleView;
 
     public MainApplication() {
         this.mainFrame = new JFrame("SuperSwingMeditor");
@@ -25,32 +25,28 @@ public class MainApplication {
         //frame.setUndecorated(true);
         mainFrame.setVisible(true);
 
-        addNavBar();
         addViewControllers();
     }
 
-    private void addNavBar() {
-        navBarView = new NavBarView(mainFrame.getWidth());
-        mainFrame.getContentPane().add(navBarView.getContainer(), BorderLayout.NORTH);
-    }
-
     private void addViewControllers() {
-        new HomeFeedViewController(this);
+        setVisibleView(new HomeFeedViewController(this).getView());
+
     }
 
     public JFrame getMainFrame() {
         return mainFrame;
     }
 
-    public NavBarView getNavBarView() { return navBarView; }
-
-    public void navigate(JPanel removedPanel, JPanel panel) {
-        if (removedPanel != null) {
-            mainFrame.getContentPane().remove(removedPanel);
+    public void setVisibleView(AppView panel) {
+        if (currentVisibleView != null) {
+            mainFrame.getContentPane().remove(currentVisibleView);
         }
-        mainFrame.getContentPane().add(panel);
-        panel.setVisible(true);
+        JPanel contentPane = panel.getContentPane();
+        mainFrame.getContentPane().add(contentPane);
+        contentPane.setVisible(true);
+
         mainFrame.getContentPane().revalidate();
         mainFrame.getContentPane().repaint();   // This is required in some cases
+        currentVisibleView = contentPane;
     }
 }
