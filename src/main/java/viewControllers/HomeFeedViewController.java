@@ -9,20 +9,14 @@ import utils.PublicationsService;
 import utils.WebService.socketio.SocketEvent;
 import utils.WebService.socketio.SocketListener;
 import utils.WebService.socketio.SocketManager;
-import views.PublicationPageView;
 import viewControllers.interfaces.AppView;
-import viewControllers.interfaces.AppViewController;
 import views.appViews.HomeFeedView;
-import views.subviews.NavBarView;
 import views.subviews.PublicationContributeButtonCellRenderer;
 
 import javax.swing.*;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.concurrent.Semaphore;
@@ -33,7 +27,7 @@ import static java.lang.Thread.sleep;
 /**
  * Created by lwdthe1 on 9/5/16.
  */
-public class HomeFeedViewController implements SocketListener, AppViewController {
+public class HomeFeedViewController implements SocketListener, viewControllers.interfaces.AppViewController {
     private final HomeFeedView view;
     private final MainApplication application;
     private final NavigationController navigationController;
@@ -76,7 +70,7 @@ public class HomeFeedViewController implements SocketListener, AppViewController
         this.view.createAndShow();
     }
 
-    public void transitionTo(AppViewController appViewController) {
+    public void transitionTo(viewControllers.interfaces.AppViewController appViewController) {
         this.getNavigationController().moveTo(appViewController);
     }
 
@@ -151,56 +145,70 @@ public class HomeFeedViewController implements SocketListener, AppViewController
     }
 
     private void startSocketIO() {
-        //this.socketManger = new SocketManager();
-        //socketManger.listen(SocketEvent.CONNECTED, this);
-        //socketManger.setupAndConnect();
+        this.socketManger = SocketManager.sharedInstance;
+        socketManger.listen(SocketEvent.CONNECTED, this);
+        socketManger.setupAndConnect();
+        registerForEvents();
     }
 
     @Override
     public void onEvent(SocketEvent event, JSONObject payload) {
         switch(event) {
-            case CONNECTED:
-                registerForEvents();
-                break;
-            case DISCONNECTED:
-                break;
             case NUM_CLIENTS:
                 System.out.printf("\nNumber of active clients: %d\n", payload.get("value"));
                 break;
             case CHAT_MESSAGE:
-                ChatMessage chatMessage = new ChatMessage(payload);
-                Publication chatPub = publicationsService.getById(chatMessage.getPublicationId());
-                if (chatPub == null) break;
-
-                view.getRealTimeNotificationView().updateNotification("New Contributor Message",
-                        format("A contributor said: %s", chatMessage.getText()),
-                        chatPub.getImage()
-                );
-                try {
-                    sleep(1 * 60 * 1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                sendChatMessage("This is another test realtime message " + Math.random());
+                updateRealtimeNotificationWithNewChatMessage(payload);
                 break;
             case NOTIFICATION_REQUEST_TO_CONTRIBUTE_DECISION:
-                RequestDecisionNotification requestDecisionNotification = new RequestDecisionNotification(payload);
-                System.out.printf("\nReceived requestDecisionNotification: %s\n", requestDecisionNotification);
-                Publication requestPub = publicationsService.getById(requestDecisionNotification.getPublicationId());
-                if (requestPub == null) break;
-
-                for(int i = 0; i < 1; i++) { //THIS LOOP IS ONLY HERE FOR TESTING!
-                    boolean requestApproved = requestDecisionNotification.getAccepted();
-                    String title = requestApproved? "Request Approved" : "Request Denied";
-                    view.getRealTimeNotificationView().updateNotification(title,
-                            format("Your request to contribute to %s was %s",
-                                    requestPub.getName(),
-                                    requestApproved? "approved." : "denied."),
-                            requestPub.getImage()
-                    );
-                }
+                updateRealtimeNotificationWithNewRequestDecision(payload);
                 break;
         }
+    }
+
+    private void updateRealtimeNotificationWithNewChatMessage(JSONObject payload) {
+        ChatMessage chatMessage = new ChatMessage(payload);
+        final Publication chatPub = publicationsService.getById(chatMessage.getPublicationId());
+        if (chatPub == null) return;
+
+        view.getRealTimeNotificationView().updateNotification("New Contributor Message",
+                format("A contributor said: %s", chatMessage.getText()),
+                chatPub.getImage(), new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        PublicationPageViewController publicationPageViewController = new PublicationPageViewController(getSelf(), chatPub);
+                        navigationController.moveTo(publicationPageViewController);
+                    }
+                }
+        );
+    }
+
+    private void updateRealtimeNotificationWithNewRequestDecision(JSONObject payload) {
+        RequestDecisionNotification requestDecisionNotification = new RequestDecisionNotification(payload);
+        System.out.printf("\nReceived requestDecisionNotification: %s\n", requestDecisionNotification);
+        final Publication requestPub = publicationsService.getById(requestDecisionNotification.getPublicationId());
+        if (requestPub == null) return;
+
+
+        boolean requestApproved = requestDecisionNotification.getAccepted();
+        CurrentUser.sharedInstance.getRequestToContributeByPubId(requestPub.getId()).updateAccepted(requestApproved);
+        requestPub.setCurrentUserIsContributor(requestApproved);
+        requestPub.setCurrentUserRequestWasRejected(!requestApproved);
+        view.refreshTable();
+
+        String title = requestApproved? "Request Approved" : "Request Denied";
+        view.getRealTimeNotificationView().updateNotification(title,
+                format("Your request to contribute to %s was %s",
+                        requestPub.getName(),
+                        requestApproved ? "approved." : "denied."),
+                requestPub.getImage(), new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        PublicationPageViewController publicationPageViewController = new PublicationPageViewController(getSelf(), requestPub);
+                        navigationController.moveTo(publicationPageViewController);
+                    }
+                }
+        );
     }
 
     @Override
@@ -243,4 +251,10 @@ public class HomeFeedViewController implements SocketListener, AppViewController
     public PublicationsService getPublicationsService() {
         return publicationsService;
     }
+
+    public SocketManager getSocketManger() {
+        return socketManger;
+    }
+
+    public HomeFeedViewController getSelf() { return this; }
 }

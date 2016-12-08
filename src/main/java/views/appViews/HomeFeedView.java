@@ -3,17 +3,15 @@ package views.appViews;
 import models.Publication;
 import viewControllers.interfaces.AppView;
 import viewControllers.HomeFeedViewController;
-import viewControllers.interfaces.AppViewController;
-import viewControllers.interfaces.ViewController;
+import viewControllers.interfaces.TableView;
 import views.subviews.*;
 
-import viewControllers.interfaces.AppView;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
-public class HomeFeedView implements AppView {
+public class HomeFeedView implements AppView, TableView {
     private final HomeFeedViewController appViewController;
     private int width;
     private int height;
@@ -49,13 +47,13 @@ public class HomeFeedView implements AppView {
     public void createAndShow() {
         this.contentPane = new JPanel(new BorderLayout());
         this.contentPane.setSize(new Dimension(this.contentPane.getWidth(), this.getWidth()));
-        realTimeNotificationView = new RealTimeNotificationView(this.getWidth());
+        realTimeNotificationView = new RealTimeNotificationView(this.appViewController);
 
         addComponentsToPane();
     }
 
     @Override
-    public AppViewController getViewController() {
+    public viewControllers.interfaces.AppViewController getViewController() {
         return appViewController;
     }
 
@@ -125,7 +123,6 @@ public class HomeFeedView implements AppView {
         if (value instanceof Publication) {
             appViewController.publicationImageButtonClicked((Publication) value);
         }
-
     }
 
     public RealTimeNotificationView getRealTimeNotificationView() {
@@ -137,10 +134,19 @@ public class HomeFeedView implements AppView {
     }
 
     public void onContributeRequestSuccess(int row, int column) {
+        refreshTableCell(row, column);
+    }
+
+    public void refreshTableCell(int row, int column) {
         ((AbstractTableModel) table.getModel()).fireTableCellUpdated(row, column);
     }
 
     public void refreshTable() {
         table.repaint();// faster than ((AbstractTableModel) table.getModel()).fireTableDataChanged()
+    }
+
+    @Override
+    public Boolean isVisibleView() {
+        return this.contentPane.isVisible();
     }
 }

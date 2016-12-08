@@ -1,29 +1,21 @@
 package viewControllers;
 
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import models.ChatMessage;
-import models.CurrentUser;
 import models.Publication;
 import models.RequestDecisionNotification;
 import org.json.JSONObject;
-import sun.applet.Main;
 import utils.PublicationsService;
 import utils.WebService.socketio.SocketEvent;
 import utils.WebService.socketio.SocketListener;
 import utils.WebService.socketio.SocketManager;
 import viewControllers.interfaces.AppView;
 import viewControllers.interfaces.AppViewController;
-import views.appViews.HomeFeedView;
-import views.subviews.NavBarView;
 import views.PublicationPageView;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.xml.bind.SchemaOutputResolver;
-import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.concurrent.Semaphore;
 
 import static java.lang.String.format;
@@ -32,9 +24,10 @@ import static java.lang.Thread.sleep;
 /**
  * Created by keithmartin on 12/5/16.
  */
-public class PublicationPageViewController implements SocketListener, AppViewController {
+public class PublicationPageViewController implements SocketListener, viewControllers.interfaces.AppViewController {
     private final PublicationPageView view;
-    private final HomeFeedViewController homeFeedViewController;
+    private final AppViewController appViewController;
+    private final NavigationController navigationController;
 
     private SocketManager socketManger;
     private Semaphore setupViewWhileLoadingSemaphore = new Semaphore(1);
@@ -42,10 +35,19 @@ public class PublicationPageViewController implements SocketListener, AppViewCon
     private ArrayList<ChatMessage> chatMessages;
     private PublicationsService publicationsService;
 
-    public PublicationPageViewController(HomeFeedViewController homeFeedViewController, Publication publication) {
-        this.homeFeedViewController = homeFeedViewController;
+    public PublicationPageViewController(AppViewController appViewController, Publication publication) {
+        this.appViewController = appViewController;
+        this.navigationController = appViewController.getNavigationController();
         this.publication = publication;
-        this.publicationsService = homeFeedViewController.getPublicationsService();
+        if (appViewController instanceof HomeFeedViewController) {
+            HomeFeedViewController homeFeedViewController = (HomeFeedViewController) appViewController;
+            this.publicationsService = homeFeedViewController.getPublicationsService();
+            this.socketManger = homeFeedViewController.getSocketManger();
+        } else {
+            UserProfileViewController userProfileViewController = (UserProfileViewController) appViewController;
+            this.publicationsService = userProfileViewController.getPublicationsService();
+            this.socketManger = userProfileViewController.getSocketManger();
+        }
 
         //acquire the lock here before starting load
         try {
@@ -56,7 +58,7 @@ public class PublicationPageViewController implements SocketListener, AppViewCon
 
         publicationsService = PublicationsService.sharedInstance;
         loadChatMessages();
-        this.view = new PublicationPageView(this, homeFeedViewController.getView().getWidth(), homeFeedViewController.getView().getHeight());
+        this.view = new PublicationPageView(this, appViewController.getView().getWidth(), appViewController.getView().getHeight());
         setupView();
         setupViewWhileLoadingSemaphore.release();
         System.out.println();
@@ -65,7 +67,7 @@ public class PublicationPageViewController implements SocketListener, AppViewCon
 
     @Override
     public NavigationController getNavigationController() {
-        return homeFeedViewController.getNavigationController();
+        return appViewController.getNavigationController();
     }
 
     @Override
@@ -80,7 +82,7 @@ public class PublicationPageViewController implements SocketListener, AppViewCon
     }
 
     @Override
-    public void transitionTo(AppViewController appViewController) {
+    public void transitionTo(viewControllers.interfaces.AppViewController appViewController) {
 
     }
 
@@ -139,16 +141,14 @@ public class PublicationPageViewController implements SocketListener, AppViewCon
         view.getTable().setModel(model);
         model.addColumn("", chatMessages.toArray());
         model.addColumn("", chatMessages.toArray());
-        //model.addColumn("", chatMessages.toArray());
 
         view.getTable().getColumnModel().getColumn(1).setPreferredWidth(400);
         view.getTable().setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
     }
 
     private void startSocketIO() {
-        this.socketManger = new SocketManager();
         socketManger.listen(SocketEvent.CONNECTED, this);
-        socketManger.setupAndConnect();
+        registerForEvents();
     }
 
     @Override
@@ -164,24 +164,30 @@ public class PublicationPageViewController implements SocketListener, AppViewCon
                 break;
             case CHAT_MESSAGE:
                 ChatMessage chatMessage = new ChatMessage(payload);
-                Publication chatPub = publicationsService.getById(chatMessage.getPublicationId());
+                final Publication chatPub = publicationsService.getById(chatMessage.getPublicationId());
                 if (chatPub == null) {
                     break;
                 } else if (chatPub.getId() == publication.getId()) {
                     DefaultTableModel model = (DefaultTableModel) view.getTable().getModel();
-                    model.addRow(new Object[] {chatMessage, chatMessage});
+                    model.addRow(new Object[]{chatMessage, chatMessage});
                     view.refreshTable();
+                } else {
+                    view.getRealTimeNotificationView().updateNotification("New Contributor Message",
+                            format("A contributor said: %s", chatMessage.getText()),
+                            chatPub.getImage(), new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    PublicationPageViewController publicationPageViewController = new PublicationPageViewController(appViewController, chatPub);
+                                    navigationController.moveTo(publicationPageViewController);
+                                }
+                            }
+                    );
                 }
-
-                view.getRealTimeNotificationView().updateNotification("New Contributor Message",
-                        format("A contributor said: %s", chatMessage.getText()),
-                        chatPub.getImage()
-                );
                 break;
             case NOTIFICATION_REQUEST_TO_CONTRIBUTE_DECISION:
                 RequestDecisionNotification requestDecisionNotification = new RequestDecisionNotification(payload);
                 System.out.printf("\nReceived requestDecisionNotification: %s\n", requestDecisionNotification);
-                Publication requestPub = publicationsService.getById(requestDecisionNotification.getPublicationId());
+                final Publication requestPub = publicationsService.getById(requestDecisionNotification.getPublicationId());
                 if (requestPub == null) break;
 
                 for(int i = 0; i < 1; i++) { //THIS LOOP IS ONLY HERE FOR TESTING!
@@ -191,7 +197,13 @@ public class PublicationPageViewController implements SocketListener, AppViewCon
                             format("Your request to contribute to %s was %s",
                                     requestPub.getName(),
                                     requestApproved? "approved." : "denied."),
-                            requestPub.getImage()
+                            requestPub.getImage(), new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    PublicationPageViewController publicationPageViewController = new PublicationPageViewController(appViewController, requestPub);
+                                    navigationController.moveTo(publicationPageViewController);
+                                }
+                            }
                     );
                 }
                 break;

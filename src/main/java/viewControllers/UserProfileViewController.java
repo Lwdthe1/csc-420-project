@@ -8,14 +8,15 @@ import utils.WebService.socketio.SocketListener;
 import utils.WebService.socketio.SocketManager;
 import viewControllers.interfaces.AppView;
 import viewControllers.interfaces.AppViewController;
-import views.appViews.UserRequestsFeedView;
+import views.appViews.UserProfileView;
 import views.subviews.RequestStatusButtonCellRenderer;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Currency;
 
 import static java.lang.String.format;
 import static java.lang.Thread.sleep;
@@ -26,7 +27,7 @@ import static java.lang.Thread.sleep;
 public class UserProfileViewController implements SocketListener, AppViewController {
     private final MainApplication application;
     private NavigationController navigationController;
-    private final UserRequestsFeedView view;
+    private final UserProfileView view;
 
     private SocketManager socketManger;
     private PublicationsService publicationsService;
@@ -38,10 +39,11 @@ public class UserProfileViewController implements SocketListener, AppViewControl
 
         publicationsService = PublicationsService.sharedInstance;
 
-        this.view = new UserRequestsFeedView(this, application.getMainFrame().getWidth(), application.getMainFrame().getHeight());
+        this.view = new UserProfileView(this, application.getMainFrame().getWidth(), application.getMainFrame().getHeight());
         setupView();
         showPublicationRequests();
         startSocketIO();
+        registerForEvents();
     }
 
     @Override
@@ -66,8 +68,7 @@ public class UserProfileViewController implements SocketListener, AppViewControl
     @Override
     public void viewWillAppear() {
         if (CurrentUser.sharedInstance.hasRequestsToContribute()) {
-            setupPublicationsTable(CurrentUser.sharedInstance.getRequestsToContribute());
-            view.refreshTable();
+            showPublicationRequests();
         }
     }
 
@@ -81,10 +82,10 @@ public class UserProfileViewController implements SocketListener, AppViewControl
             }
         });
 
-        setupPublicationsTable(publicationRequests);
+        setupPublicationsTable();
     }
 
-    private void setupPublicationsTable(ArrayList<RequestToContribute> publicationRequests) {
+    private void setupPublicationsTable() {
         DefaultTableModel model = new DefaultTableModel();
         view.getTable().setModel(model);
 
@@ -97,52 +98,64 @@ public class UserProfileViewController implements SocketListener, AppViewControl
     }
 
     private void startSocketIO() {
-        this.socketManger = new SocketManager();
+        this.socketManger = SocketManager.sharedInstance;
         socketManger.listen(SocketEvent.CONNECTED, this);
         socketManger.setupAndConnect();
+        registerForEvents();
     }
 
     @Override
     public void onEvent(SocketEvent event, JSONObject payload) {
         switch(event) {
-            case CONNECTED:
-                registerForEvents();
-                break;
             case DISCONNECTED:
                 break;
             case CHAT_MESSAGE:
-                ChatMessage chatMessage = new ChatMessage(payload);
-                Publication chatPub = publicationsService.getById(chatMessage.getPublicationId());
-                if (chatPub == null) break;
-
-                view.getRealTimeNotificationView().updateNotification("New Contributor Message",
-                        format("A contributor said: %s", chatMessage.getText()),
-                        chatPub.getImage()
-                );
-                try {
-                    sleep(1 * 60 * 1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                updateRealtimeNotificationWithNewChatMessage(payload);
                 break;
             case NOTIFICATION_REQUEST_TO_CONTRIBUTE_DECISION:
-                RequestDecisionNotification requestDecisionNotification = new RequestDecisionNotification(payload);
-                System.out.printf("\nReceived requestDecisionNotification: %s\n", requestDecisionNotification);
-                Publication requestPub = publicationsService.getById(requestDecisionNotification.getPublicationId());
-                if (requestPub == null) break;
-
-                for(int i = 0; i < 1; i++) { //THIS LOOP IS ONLY HERE FOR TESTING!
-                    boolean requestApproved = requestDecisionNotification.getAccepted();
-                    String title = requestApproved? "Request Approved" : "Request Denied";
-                    view.getRealTimeNotificationView().updateNotification(title,
-                            format("Your request to contribute to %s was %s",
-                                    requestPub.getName(),
-                                    requestApproved? "approved." : "denied."),
-                            requestPub.getImage()
-                    );
-                }
+                updateRealtimeNotificationWithRequestDecision(payload);
                 break;
         }
+    }
+
+    private void updateRealtimeNotificationWithNewChatMessage(JSONObject payload) {
+        ChatMessage chatMessage = new ChatMessage(payload);
+        final Publication chatPub = publicationsService.getById(chatMessage.getPublicationId());
+        if (chatPub == null) return;
+
+        view.getRealTimeNotificationView().updateNotification("New Contributor Message",
+                format("A contributor said: %s", chatMessage.getText()),
+                chatPub.getImage(), new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        PublicationPageViewController publicationPageViewController = new PublicationPageViewController(getSelf(), chatPub);
+                        navigationController.moveTo(publicationPageViewController);
+                    }
+                }
+        );
+    }
+
+    private void updateRealtimeNotificationWithRequestDecision(JSONObject payload) {
+        RequestDecisionNotification requestDecisionNotification = new RequestDecisionNotification(payload);
+        System.out.printf("\nReceived requestDecisionNotification: %s\n", requestDecisionNotification);
+        final Publication requestPub = publicationsService.getById(requestDecisionNotification.getPublicationId());
+        if (requestPub == null) return;
+
+        boolean requestApproved = requestDecisionNotification.getAccepted();
+        CurrentUser.sharedInstance.getRequestToContributeByPubId(requestPub.getId()).updateAccepted(requestApproved);
+        showPublicationRequests();
+        String title = requestApproved? "Request Approved" : "Request Denied";
+        view.getRealTimeNotificationView().updateNotification(title,
+                format("Your request to contribute to %s was %s",
+                        requestPub.getName(),
+                        requestApproved? "approved." : "denied."),
+                requestPub.getImage(), new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        PublicationPageViewController publicationPageViewController = new PublicationPageViewController(getSelf(), requestPub);
+                        navigationController.moveTo(publicationPageViewController);}
+                }
+        );
     }
 
     @Override
@@ -156,13 +169,10 @@ public class UserProfileViewController implements SocketListener, AppViewControl
         socketManger.listen(SocketEvent.NOTIFICATION_REQUEST_TO_CONTRIBUTE_DECISION, this);
     }
 
-    public void publicationContributeCellClicked(Publication index) {
-
-    }
-
     public void publicationImageButtonClicked(Publication publication) {
         System.out.printf("%s image button clicked.", publication.getName());
-        //TODO(keith) move to publication page.
+        PublicationPageViewController publicationPageViewController = new PublicationPageViewController(this, publication);
+        navigationController.moveTo(publicationPageViewController);
     }
 
     public void publicationContributeCellClicked(RequestToContribute requestToContribute, int row, int column) {
@@ -175,4 +185,17 @@ public class UserProfileViewController implements SocketListener, AppViewControl
         }
         view.onContributeRequestSuccess(row, column);
     }
+
+    public PublicationsService getPublicationsService() {
+        return publicationsService;
+    }
+
+    public SocketManager getSocketManger() {
+        return socketManger;
+    }
+
+    public UserProfileViewController getSelf() {
+        return this;
+    }
+
 }

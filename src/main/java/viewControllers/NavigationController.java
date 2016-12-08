@@ -1,7 +1,6 @@
 package viewControllers;
 
 import utils.WebService.socketio.SocketManager;
-import viewControllers.interfaces.AppViewController;
 import viewControllers.interfaces.View;
 import viewControllers.interfaces.ViewController;
 import views.subviews.NavBarView;
@@ -19,7 +18,7 @@ import static java.lang.Thread.sleep;
 public class NavigationController implements ViewController {
     private final NavBarView view;
     private final MainApplication application;
-    private HashMap<String, AppViewController> viewControllersMap = new HashMap<>();
+    private HashMap<String, viewControllers.interfaces.AppViewController> viewControllersMap = new HashMap<>();
 
     private SocketManager socketManger;
 
@@ -57,7 +56,7 @@ public class NavigationController implements ViewController {
         });
     }
 
-    public void moveTo(AppViewController viewController) {
+    public void moveTo(viewControllers.interfaces.AppViewController viewController) {
         this.application.setVisibleView(viewController);
     }
 
@@ -74,7 +73,7 @@ public class NavigationController implements ViewController {
         }
     }
 
-    private AppViewController getViewController(ViewControllerKey key) {
+    private viewControllers.interfaces.AppViewController getViewController(ViewControllerKey key) {
         if (!viewControllersMap.containsKey(key.getValue())) {
             switch (key) {
                 case PUBLICATIONS:

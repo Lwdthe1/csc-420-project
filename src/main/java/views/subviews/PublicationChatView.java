@@ -69,6 +69,13 @@ public class PublicationChatView  {
         table.setRowHeight(100);
 
         scrollPane = new JScrollPane(table);
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+                                                   public void run() {
+                                                       JScrollBar bar = scrollPane.getVerticalScrollBar();
+                                                       bar.setValue(bar.getMaximum());
+                                                   }
+                                               }
+        );
 //        scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
 //            public void adjustmentValueChanged(AdjustmentEvent e) {
 //                e.getAdjustable().setValue(e.getAdjustable().getMaximum());

@@ -39,7 +39,7 @@ public class CurrentUser {
 
     public String getUsername() {
         //TODO(andres) replace testUser0 with empty string after you implement login.
-        return user != null ? user.getUsername() : "testUser0";
+        return user != null ? user.getUsername() : "LincolnWDaniel";
     }
 
     private void loadRequestsToContribute() {

@@ -94,7 +94,7 @@ public class PublicationPageView implements AppView {
         constraints.fill = GridBagConstraints.HORIZONTAL;
 
         Publication pub = publicationPageViewController.getPublication();
-        realTimeNotificationView = new RealTimeNotificationView(this.getWidth());
+        realTimeNotificationView = new RealTimeNotificationView(publicationPageViewController);
 
         addComponentsToPane(constraints, pub);
     }
@@ -229,6 +229,11 @@ public class PublicationPageView implements AppView {
 
     public RealTimeNotificationView getRealTimeNotificationView() {
         return realTimeNotificationView;
+    }
+
+    @Override
+    public Boolean isVisibleView() {
+        return this.getContentPane().isVisible();
     }
 
 }

@@ -12,7 +12,7 @@ import java.util.HashMap;
  */
 public class RequestToContribute {
     private String publicationId;
-    private Boolean accepted, rejected, retracted;
+    private Boolean accepted = false, rejected = false, retracted = false;
 
     private HashMap<String, Object> virtuals = new HashMap<>();
 
@@ -59,5 +59,10 @@ public class RequestToContribute {
 
     public boolean isPending() {
         return !wasAccepted() && !wasRejected();
+    }
+
+    public void updateAccepted(boolean accepted) {
+        this.accepted = accepted;
+        this.rejected = !accepted;
     }
 }
