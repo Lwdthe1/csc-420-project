@@ -53,7 +53,6 @@ public class RequestStatusButtonCellRenderer extends JPanel implements TableCell
                 contributeButton.setText("Contribute");
                 contributeButton.setEnabled(true);
             }
-            contributeButton.setForeground(Color.GRAY);
             this.add(contributeButton, constraints);
         }
     }

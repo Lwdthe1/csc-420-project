@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Semaphore;
 
 /**
  * Created by lwdthe1 on 12/6/16.
@@ -21,6 +22,7 @@ public class CurrentUser {
     private User user;
     private ArrayList<RequestToContribute> originalRequestsToContribute;
     private HashMap<String, RequestToContribute> publicationRequestsMap = new HashMap<>();
+    private Semaphore loadRequestsToContributeLock = new Semaphore(1);
 
     private ConcurrentHashMap<AuthEvent, LinkedList<AuthListener>> eventListenersMap = new ConcurrentHashMap<>();
 
@@ -80,6 +82,7 @@ public class CurrentUser {
 
     private void loadRequestsToContribute() {
         try {
+            loadRequestsToContributeLock.acquire();
             this.originalRequestsToContribute = (ArrayList<RequestToContribute>) RestCaller.sharedInstance.getCurrentUserRequests();
             for (RequestToContribute request: originalRequestsToContribute) {
                 publicationRequestsMap.put(request.getPublicationId(), request);
@@ -87,6 +90,7 @@ public class CurrentUser {
         } catch (Exception e) {
             //it's safe to ignore this.
         }
+        loadRequestsToContributeLock.release();
     }
 
     public ArrayList<RequestToContribute> getRequestsToContribute() {
@@ -114,13 +118,15 @@ public class CurrentUser {
     }
 
     public void removeRequestToContribute(String publicationId) {
-        int i = 0;
+        int indexToRemoveAt = 0;
         for (RequestToContribute request: originalRequestsToContribute) {
             if (request.getPublicationId() == publicationId) {
-                originalRequestsToContribute.remove(i);
-                i++;
+                break;
             }
+            indexToRemoveAt++;
         }
+        //remove after to avoid concurrent modification exception
+        originalRequestsToContribute.remove(indexToRemoveAt);
         publicationRequestsMap.remove(publicationId);
         Publication publication = PublicationsService.sharedInstance.getById(publicationId);
         publication.setCurrentUserRequested(false);

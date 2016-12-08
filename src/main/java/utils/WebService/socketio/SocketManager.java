@@ -37,34 +37,28 @@ public class SocketManager {
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                socket.emit("foo", "hi");
                 notifyListeners(SocketEvent.CONNECTED, new JSONObject());
             }
         }).on(SocketEvent.NUM_CLIENTS.getValue(), new Emitter.Listener() {
             @Override
             public void call(Object... args) {
                 normalizeIntPayload(args[0]);
-                System.out.println("RECEIVED NUM_CLIENTS EVENT FROM SERVER:" + args[0]);
                 notifyListeners(SocketEvent.NUM_CLIENTS, (JSONObject) args[0]);
             }
         }).on(SocketEvent.CHAT_MESSAGE.getValue(), new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                System.out.println("RECEIVED CHAT_MESSAGE EVENT FROM SERVER:" + args[0]);
                 notifyListeners(SocketEvent.CHAT_MESSAGE, (JSONObject) args[0]);
             }
         }).on(SocketEvent.NOTIFICATION_REQUEST_TO_CONTRIBUTE_DECISION.getValue(), new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                System.out.println("RECEIVED NOTIFICATION_REQUEST_TO_CONTRIBUTE_DECISION EVENT FROM SERVER:" + args[0]);
                 notifyListeners(SocketEvent.NOTIFICATION_REQUEST_TO_CONTRIBUTE_DECISION, (JSONObject) args[0]);
             }
         }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                //normalizeStringPayload(args[0]);
                 System.out.println("SOCKET DISCONNECTED FROM:" + args[0]);
-                //notifyListeners(SocketEvent.DISCONNECTED, (JSONObject) args[0]);
             }
         });
     }
@@ -98,8 +92,9 @@ public class SocketManager {
         JSONObject payload = obj.has("payload") && obj.get("payload") instanceof JSONObject ? (JSONObject) obj.get("payload") : null;
         try {
             notifyListenersLock.acquire();
-            LinkedList<SocketListener> eventListeners = (LinkedList<SocketListener>) eventListenersMap.get(event.getValue()).clone();
+            LinkedList<SocketListener> eventListeners = eventListenersMap.get(event.getValue());
             if (eventListeners != null) {
+                eventListeners = (LinkedList<SocketListener>) eventListeners.clone();
                 for (SocketListener listener: eventListeners) {
                     listener.onEvent(event, payload);
                 }

@@ -54,18 +54,14 @@ public class RestCaller
         String resultJson = EntityUtils.toString(response.getEntity());
         List<Publication> publications = new ArrayList<>();
         JSONObject resultJsonObject = new JSONObject(resultJson);
-
         if (resultJsonObject.has("advertisedPubs")) {
             JSONArray jsonPublications = resultJsonObject.getJSONArray("advertisedPubs");
-            for (int i = 0; i < jsonPublications.length(); i++)
-            {
+            for (int i = 0; i < jsonPublications.length(); i++) {
                 publications.add(new Publication(jsonPublications.getJSONObject(i)));
             }
-        }
-        else {
+        } else {
             System.out.println("returned json did not contain publications JSON: " + resultJsonObject.toString());
         }
-
         return publications;
     }
 

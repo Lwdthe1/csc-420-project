@@ -14,11 +14,9 @@ import static java.lang.String.format;
  * Created by Andres on 10/23/16.
  */
 public class PublicationTextCellRenderer extends JPanel implements TableCellRenderer {
-    private static Insets LEFT_PAD_15 = new Insets(0,15, 0, 0);
     private static Insets LEFT_PAD_20 = new Insets(0,20, 0, 0);
-    private static Insets RIGHT_PAD_15 = new Insets(0,0, 0, 15);
     private static Insets TOP_5_LEFT_PAD_20 = new Insets(5,20, 0, 0);
-    private static final Insets TOP_PAD_5 = new Insets(5, 0, 0, 0);
+
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -56,15 +54,10 @@ public class PublicationTextCellRenderer extends JPanel implements TableCellRend
 
     private void addDescriptionLabel(GridBagConstraints constraints, Publication pub) {
         String description = pub.getDescription();
-        String description1stLine = description, description2ndLine = "";
-        if (description.split(" ").length > 9) {
-            description1stLine = description.substring(0, description.length()/2);
-            description2ndLine = description.substring(description.length()/2, description.length() - 1);
-        }
-
-        String descriptionHTML = format("<html><body><p style='%s'>%s<br>%s</p></body></html>", TextUtils.DESCRIPTIVE_TEXT_STYLE, description1stLine, description2ndLine);
+        String descriptionHTML = format("<html><body><p style='%s'>%s</p></body></html>", TextUtils.DESCRIPTIVE_TEXT_STYLE, description);
 
         JLabel descriptionLabel = new JLabel(descriptionHTML);
+        //descriptionLabel.setMinimumSize(new Dimension(100, 45));
         constraints.weightx = 0.7;
         constraints.gridx = 0;
         constraints.gridy = 1;
