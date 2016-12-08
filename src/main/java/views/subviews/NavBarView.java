@@ -21,7 +21,6 @@ public class NavBarView implements View {
     private  JLabel mediumIconImgLabel;
     private  JLabel superMeditorLabel;
     private  JButton publicationsTabButton;
-    private JButton notificationsButton;
 
     private JButton profileButton;
     private int width;
@@ -60,13 +59,6 @@ public class NavBarView implements View {
         publicationsTabButton.setBorderPainted(false);
     }
 
-    private void setNotificationsButton() {
-        notificationsButton = new JButton();
-        notificationsButton.setSize(new Dimension(100, 100));
-        notificationsButton.setIcon(new ImageIcon("Images/Notifications.png", null));
-        notificationsButton.setBorderPainted(false);
-    }
-
     private void setProfileButton() {
         profileButton = new JButton();
         profileButton.setSize(new Dimension(100, 100));
@@ -84,8 +76,7 @@ public class NavBarView implements View {
         contentPane.add(mediumIconImgLabel, "cell 0 0");
         contentPane.add(superMeditorLabel, "cell 1 0");
         contentPane.add(publicationsTabButton, "cell 2 0");
-        contentPane.add(notificationsButton, "cell 3 0");
-        contentPane.add(profileButton);
+        contentPane.add(profileButton, "cell 3 0");
     }
 
     public JButton getPublicationsTabButton() {
@@ -112,7 +103,6 @@ public class NavBarView implements View {
         setMediumIconImgLabel();
         setSuperMeditorLabel();
         setPublicationsTabButton();
-        setNotificationsButton();
         setProfileButton();
         setLayout();
         addComponents();

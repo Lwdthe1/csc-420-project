@@ -53,6 +53,7 @@ public class RequestStatusButtonCellRenderer extends JPanel implements TableCell
                 contributeButton.setText("Contribute");
                 contributeButton.setEnabled(true);
             }
+            contributeButton.setForeground(Color.GRAY);
             this.add(contributeButton, constraints);
         }
     }
@@ -67,8 +68,6 @@ public class RequestStatusButtonCellRenderer extends JPanel implements TableCell
             text = "Accepted";
         } else if (requestToContribute.wasRejected()) {
             text = "Rejected";
-        } else {
-            text = "Pending";
         }
         String descriptionHTML = format("<html><body><p style='%s'>%s</p></body></html>", TextUtils.META_TEXT_STYLE, text);
         statusLabel = new JLabel(descriptionHTML);

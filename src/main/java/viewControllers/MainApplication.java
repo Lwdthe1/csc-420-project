@@ -1,6 +1,7 @@
 package viewControllers;
 
 import viewControllers.interfaces.AppView;
+import viewControllers.interfaces.AppViewController;
 import viewControllers.interfaces.ViewController;
 
 import javax.swing.*;
@@ -36,13 +37,14 @@ public class MainApplication {
         return mainFrame;
     }
 
-    public void setVisibleView(ViewController viewController) {
+    public void setVisibleView(AppViewController viewController) {
         if (currentVisibleView != null) {
             mainFrame.getContentPane().remove(currentVisibleView);
+            currentVisibleView.setVisible(false);
         }
         JPanel contentPane = viewController.getView().getContentPane();
         mainFrame.getContentPane().add(contentPane);
-        homeFeedViewController.viewWillAppear();
+        viewController.viewWillAppear();
         contentPane.setVisible(true);
 
         mainFrame.getContentPane().revalidate();
@@ -59,5 +61,9 @@ public class MainApplication {
             userProfileController = new UserProfileViewController(this);
         }
         return userProfileController;
+    }
+
+    public Boolean isCurrentView(AppView appView) {
+        return appView.getContentPane() == currentVisibleView;
     }
 }
