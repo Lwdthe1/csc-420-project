@@ -2,23 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="099a89e2-e12a-45e8-94aa-755691fc9021" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/utils/TextUtils.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/classes/main/utils/WebService/RestCaller.class" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/viewControllers/UserRequestsFeedViewController.java" afterPath="$PROJECT_DIR$/src/main/java/viewControllers/UserProfileViewController.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/viewControllers/interfaces/TableView.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/views/appViews/UserRequestsFeedView.java" afterPath="$PROJECT_DIR$/src/main/java/views/appViews/UserProfileView.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/models/CurrentUser.java" afterPath="$PROJECT_DIR$/src/main/java/models/CurrentUser.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/models/Publication.java" afterPath="$PROJECT_DIR$/src/main/java/models/Publication.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/models/RequestToContribute.java" afterPath="$PROJECT_DIR$/src/main/java/models/RequestToContribute.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/utils/PublicationsService.java" afterPath="$PROJECT_DIR$/src/main/java/utils/PublicationsService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/utils/WebService/RestCaller.java" afterPath="$PROJECT_DIR$/src/main/java/utils/WebService/RestCaller.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/utils/WebService/socketio/SocketManager.java" afterPath="$PROJECT_DIR$/src/main/java/utils/WebService/socketio/SocketManager.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/viewControllers/HomeFeedViewController.java" afterPath="$PROJECT_DIR$/src/main/java/viewControllers/HomeFeedViewController.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/viewControllers/MainApplication.java" afterPath="$PROJECT_DIR$/src/main/java/viewControllers/MainApplication.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/viewControllers/NavigationController.java" afterPath="$PROJECT_DIR$/src/main/java/viewControllers/NavigationController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/viewControllers/interfaces/AppViewController.java" afterPath="$PROJECT_DIR$/src/main/java/viewControllers/interfaces/AppViewController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/viewControllers/UserProfileViewController.java" afterPath="$PROJECT_DIR$/src/main/java/viewControllers/UserProfileViewController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/viewControllers/interfaces/AppView.java" afterPath="$PROJECT_DIR$/src/main/java/viewControllers/interfaces/AppView.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/views/appViews/HomeFeedView.java" afterPath="$PROJECT_DIR$/src/main/java/views/appViews/HomeFeedView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/views/appViews/UserRequestsFeedView.java" afterPath="$PROJECT_DIR$/src/main/java/views/appViews/UserRequestsFeedView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/views/subviews/PublicationImageCellRenderer.java" afterPath="$PROJECT_DIR$/src/main/java/views/subviews/PublicationImageCellRenderer.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/views/subviews/PublicationTextCellRenderer.java" afterPath="$PROJECT_DIR$/src/main/java/views/subviews/PublicationTextCellRenderer.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/views/subviews/NavBarView.java" afterPath="$PROJECT_DIR$/src/main/java/views/subviews/NavBarView.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/views/subviews/RealTimeNotificationView.java" afterPath="$PROJECT_DIR$/src/main/java/views/subviews/RealTimeNotificationView.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/views/subviews/RequestStatusButtonCellRenderer.java" afterPath="$PROJECT_DIR$/src/main/java/views/subviews/RequestStatusButtonCellRenderer.java" />
     </list>
     <ignored path="Assignment3.iws" />
@@ -47,26 +43,25 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="PublicationsService.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/utils/PublicationsService.java">
+      <file leaf-file-name="MainApplication.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/viewControllers/MainApplication.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="373">
-              <caret line="74" column="86" selection-start-line="74" selection-start-column="86" selection-end-line="74" selection-end-column="86" />
-              <folding />
+            <state relative-caret-position="855">
+              <caret line="66" column="62" selection-start-line="66" selection-start-column="62" selection-end-line="66" selection-end-column="62" />
+              <folding>
+                <element signature="e#2120#2121#0" expanded="true" />
+                <element signature="e#2189#2190#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="RequestToContribute.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/models/RequestToContribute.java">
+      <file leaf-file-name="RealTimeNotificationView.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/views/subviews/RealTimeNotificationView.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="450">
-              <caret line="32" column="0" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#844#845#0" expanded="true" />
-                <element signature="e#894#895#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="379">
+              <caret line="127" column="58" selection-start-line="127" selection-start-column="58" selection-end-line="127" selection-end-column="58" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -74,19 +69,14 @@
       <file leaf-file-name="HomeFeedViewController.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/viewControllers/HomeFeedViewController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1039">
-              <caret line="235" column="28" selection-start-line="235" selection-start-column="28" selection-end-line="235" selection-end-column="28" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="HomeFeedView.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/views/appViews/HomeFeedView.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-56">
-              <caret line="71" column="0" selection-start-line="71" selection-start-column="0" selection-end-line="71" selection-end-column="0" />
-              <folding />
+            <state relative-caret-position="210">
+              <caret line="176" column="36" selection-start-line="176" selection-start-column="36" selection-end-line="181" selection-end-column="17" />
+              <folding>
+                <element signature="e#6317#6566#0" expanded="true" />
+                <element signature="e#6565#6566#0" expanded="true" />
+                <element signature="e#7765#7987#0" expanded="true" />
+                <element signature="e#7986#7987#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -94,62 +84,13 @@
       <file leaf-file-name="UserProfileViewController.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/viewControllers/UserProfileViewController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="454">
-              <caret line="87" column="8" selection-start-line="87" selection-start-column="8" selection-end-line="88" selection-end-column="40" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="UserRequestsFeedView.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/views/appViews/UserRequestsFeedView.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="304">
-              <caret line="122" column="53" selection-start-line="122" selection-start-column="53" selection-end-line="122" selection-end-column="53" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="NavigationController.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/viewControllers/NavigationController.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="493">
-              <caret line="59" column="58" selection-start-line="59" selection-start-column="58" selection-end-line="59" selection-end-column="58" />
+            <state relative-caret-position="649">
+              <caret line="153" column="26" selection-start-line="153" selection-start-column="26" selection-end-line="153" selection-end-column="37" />
               <folding>
-                <element signature="e#2001#2002#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MainApplication.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/viewControllers/MainApplication.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="199">
-              <caret line="30" column="49" selection-start-line="30" selection-start-column="49" selection-end-line="30" selection-end-column="49" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RestCaller.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/utils/WebService/RestCaller.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="239">
-              <caret line="120" column="20" selection-start-line="120" selection-start-column="20" selection-end-line="120" selection-end-column="20" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CurrentUser.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/models/CurrentUser.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="814">
-              <caret line="89" column="27" selection-start-line="89" selection-start-column="27" selection-end-line="89" selection-end-column="27" />
-              <folding>
-                <element signature="imports" expanded="true" />
+                <element signature="e#4406#4655#0" expanded="true" />
+                <element signature="e#4654#4655#0" expanded="true" />
+                <element signature="e#5718#5940#0" expanded="true" />
+                <element signature="e#5939#5940#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -521,9 +462,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/views/NavBarView.java" />
-        <option value="$PROJECT_DIR$/src/main/java/models/RequestDecisionNotification.java" />
-        <option value="$PROJECT_DIR$/src/main/java/utils/TimeUtils.java" />
         <option value="$PROJECT_DIR$/src/main/java/utils/AppUtils.java" />
         <option value="$PROJECT_DIR$/src/main/java/utils/ImageUtils.java" />
         <option value="$PROJECT_DIR$/src/main/java/models/User.java" />
@@ -533,8 +471,6 @@
         <option value="$PROJECT_DIR$/src/main/java/Main.java" />
         <option value="$PROJECT_DIR$/src/main/java/viewControllers/AppViewController.java" />
         <option value="$PROJECT_DIR$/src/main/java/viewControllers/AppView.java" />
-        <option value="$PROJECT_DIR$/src/main/java/utils/WebService/socketio/SocketManager.java" />
-        <option value="$PROJECT_DIR$/src/main/java/views/subviews/RealTimeNotificationView.java" />
         <option value="$PROJECT_DIR$/src/main/java/views/subviews/CircularJLabel.java" />
         <option value="$PROJECT_DIR$/src/main/java/views/PublicationCellRenderer.java" />
         <option value="$PROJECT_DIR$/src/main/java/views/subviews/RoundJButton.java" />
@@ -545,7 +481,6 @@
         <option value="$PROJECT_DIR$/src/main/java/views/subviews/TableButton.java" />
         <option value="$PROJECT_DIR$/src/main/java/models/RestCallResult.java" />
         <option value="$PROJECT_DIR$/src/main/java/views/HomeFeedView.java" />
-        <option value="$PROJECT_DIR$/src/main/java/views/subviews/PublicationContributeButtonCellRenderer.java" />
         <option value="$PROJECT_DIR$/src/main/java/views/UserRequestsFeedView.java" />
         <option value="$PROJECT_DIR$/src/main/java/views/subviews/components/RoundJButton.java" />
         <option value="$PROJECT_DIR$/src/main/java/viewControllers/interfaces/SubViewController.java" />
@@ -553,24 +488,30 @@
         <option value="$PROJECT_DIR$/src/main/java/viewControllers/interfaces/ViewController.java" />
         <option value="$PROJECT_DIR$/src/main/java/viewControllers/interfaces/View.java" />
         <option value="$PROJECT_DIR$/src/main/java/viewControllers/NavigationBarController.java" />
-        <option value="$PROJECT_DIR$/src/main/java/viewControllers/interfaces/AppView.java" />
-        <option value="$PROJECT_DIR$/src/main/java/views/subviews/NavBarView.java" />
         <option value="$PROJECT_DIR$/src/main/java/viewControllers/UserRequestsFeedViewController.java" />
         <option value="$PROJECT_DIR$/src/main/java/views/subviews/PublicationImageCellRenderer.java" />
         <option value="$PROJECT_DIR$/src/main/java/utils/TextUtils.java" />
         <option value="$PROJECT_DIR$/src/main/java/views/subviews/PublicationTextCellRenderer.java" />
-        <option value="$PROJECT_DIR$/src/main/java/views/subviews/RequestStatusButtonCellRenderer.java" />
-        <option value="$PROJECT_DIR$/src/main/java/models/Publication.java" />
         <option value="$PROJECT_DIR$/src/main/java/utils/WebService/RestCaller.java" />
         <option value="$PROJECT_DIR$/src/main/java/utils/PublicationsService.java" />
-        <option value="$PROJECT_DIR$/src/main/java/models/RequestToContribute.java" />
-        <option value="$PROJECT_DIR$/src/main/java/viewControllers/MainApplication.java" />
         <option value="$PROJECT_DIR$/src/main/java/viewControllers/interfaces/AppViewController.java" />
-        <option value="$PROJECT_DIR$/src/main/java/viewControllers/NavigationController.java" />
-        <option value="$PROJECT_DIR$/src/main/java/viewControllers/HomeFeedViewController.java" />
+        <option value="$PROJECT_DIR$/src/main/java/viewControllers/interfaces/TableView.java" />
+        <option value="$PROJECT_DIR$/src/main/java/views/subviews/NavBarView.java" />
+        <option value="$PROJECT_DIR$/src/main/java/models/RequestToContribute.java" />
         <option value="$PROJECT_DIR$/src/main/java/views/appViews/UserRequestsFeedView.java" />
-        <option value="$PROJECT_DIR$/src/main/java/views/appViews/HomeFeedView.java" />
+        <option value="$PROJECT_DIR$/src/main/java/utils/WebService/socketio/SocketManager.java" />
         <option value="$PROJECT_DIR$/src/main/java/models/CurrentUser.java" />
+        <option value="$PROJECT_DIR$/src/main/java/models/Publication.java" />
+        <option value="$PROJECT_DIR$/src/main/java/viewControllers/NavigationController.java" />
+        <option value="$PROJECT_DIR$/src/main/java/viewControllers/RealtimeNotificationController.java" />
+        <option value="$PROJECT_DIR$/src/main/java/viewControllers/MainApplication.java" />
+        <option value="$PROJECT_DIR$/src/main/java/viewControllers/interfaces/AppView.java" />
+        <option value="$PROJECT_DIR$/src/main/java/views/subviews/RequestStatusButtonCellRenderer.java" />
+        <option value="$PROJECT_DIR$/src/main/java/views/subviews/PublicationContributeButtonCellRenderer.java" />
+        <option value="$PROJECT_DIR$/src/main/java/views/appViews/HomeFeedView.java" />
+        <option value="$PROJECT_DIR$/src/main/java/views/appViews/UserProfileView.java" />
+        <option value="$PROJECT_DIR$/src/main/java/views/subviews/RealTimeNotificationView.java" />
+        <option value="$PROJECT_DIR$/src/main/java/viewControllers/HomeFeedViewController.java" />
         <option value="$PROJECT_DIR$/src/main/java/viewControllers/UserProfileViewController.java" />
       </list>
     </option>
@@ -821,36 +762,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="viewControllers" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="interfaces" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Assignment3" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="csc-420-project" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="org.jetbrains.plugins.gradle.projectView.GradleTreeStructureProvider$GradleSourceSetDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="utils" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -919,8 +830,8 @@
       <recent name="views" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="viewControllers.interfaces" />
       <recent name="viewControllers" />
+      <recent name="viewControllers.interfaces" />
       <recent name="views.subviews" />
       <recent name="views" />
     </key>
@@ -1431,12 +1342,12 @@
       <workItem from="1480955462611" duration="8095000" />
       <workItem from="1480984236097" duration="14742000" />
       <workItem from="1481067747605" duration="11645000" />
-      <workItem from="1481144805957" duration="16937000" />
+      <workItem from="1481144805957" duration="23877000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="78734000" />
+    <option name="totallyTimeSpent" value="85674000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="310" y="-1080" width="1565" height="1080" extended-state="6" />
@@ -1486,7 +1397,7 @@
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="48" />
+      <option name="time" value="52" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -1495,20 +1406,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="525">
-          <caret line="35" column="5" selection-start-line="35" selection-start-column="5" selection-end-line="35" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.socket/socket.io-client/0.8.2/327acefa23b65204fe3160c40a059cda9906be9/socket.io-client-0.8.2-sources.jar!/io/socket/client/Socket.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="112">
-          <caret line="25" column="55" selection-start-line="25" selection-start-column="48" selection-end-line="25" selection-end-column="55" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_101.jdk/Contents/Home/jre/lib/rt.jar!/com/sun/xml/internal/fastinfoset/alphabet/BuiltInRestrictedAlphabets.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
@@ -1570,26 +1467,6 @@
           <folding>
             <element signature="imports" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/utils/WebService/socketio/SocketManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="417">
-          <caret line="61" column="50" selection-start-line="61" selection-start-column="50" selection-end-line="61" selection-end-column="50" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#1551#1839#0" expanded="false" />
-            <element signature="e#1838#1839#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/views/subviews/RealTimeNotificationView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="19" column="13" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1702,45 +1579,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/viewControllers/interfaces/ViewController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="7" selection-start-line="6" selection-start-column="7" selection-end-line="6" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/viewControllers/interfaces/View.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
           <caret line="7" column="17" selection-start-line="7" selection-start-column="17" selection-end-line="7" selection-end-column="17" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/utils/WebService/socketio/SocketEvent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="21" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/viewControllers/interfaces/AppView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="11" selection-start-line="9" selection-start-column="11" selection-end-line="9" selection-end-column="11" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/views/subviews/NavBarView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="382">
-          <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1752,14 +1595,6 @@
             <element signature="e#1459#1693#0" expanded="true" />
             <element signature="e#1692#1693#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/views/subviews/PublicationContributeButtonCellRenderer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1080">
-          <caret line="98" column="0" selection-start-line="98" selection-start-column="0" selection-end-line="98" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1779,60 +1614,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/views/subviews/RequestStatusButtonCellRenderer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="583">
-          <caret line="58" column="0" selection-start-line="58" selection-start-column="0" selection-end-line="58" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/models/Publication.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
-          <caret line="57" column="70" selection-start-line="57" selection-start-column="70" selection-end-line="57" selection-end-column="70" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/utils/WebService/RestCaller.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="239">
           <caret line="120" column="20" selection-start-line="120" selection-start-column="20" selection-end-line="120" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/viewControllers/interfaces/AppViewController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="13" column="26" selection-start-line="13" selection-start-column="26" selection-end-line="13" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/viewControllers/MainApplication.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="199">
-          <caret line="30" column="49" selection-start-line="30" selection-start-column="49" selection-end-line="30" selection-end-column="49" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/viewControllers/NavigationController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="493">
-          <caret line="59" column="58" selection-start-line="59" selection-start-column="58" selection-end-line="59" selection-end-column="58" />
-          <folding>
-            <element signature="e#2001#2002#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/views/appViews/UserRequestsFeedView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="122" column="53" selection-start-line="122" selection-start-column="53" selection-end-line="122" selection-end-column="53" />
           <folding />
         </state>
       </provider>
@@ -1845,49 +1630,219 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/viewControllers/interfaces/TableView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="9" column="26" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/models/RequestToContribute.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="32" column="0" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
+        <state relative-caret-position="514">
+          <caret line="63" column="19" selection-start-line="63" selection-start-column="19" selection-end-line="63" selection-end-column="19" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#844#845#0" expanded="true" />
-            <element signature="e#894#895#0" expanded="true" />
+            <element signature="e#868#869#0" expanded="true" />
+            <element signature="e#918#919#0" expanded="true" />
+            <element signature="e#1099#1100#0" expanded="true" />
+            <element signature="e#1143#1144#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/utils/WebService/socketio/SocketEvent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" column="89" selection-start-line="12" selection-start-column="49" selection-end-line="12" selection-end-column="89" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/utils/WebService/socketio/SocketManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="269">
+          <caret line="100" column="132" selection-start-line="100" selection-start-column="132" selection-end-line="100" selection-end-column="132" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/models/CurrentUser.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="814">
-          <caret line="89" column="27" selection-start-line="89" selection-start-column="27" selection-end-line="89" selection-end-column="27" />
+        <state relative-caret-position="138">
+          <caret line="34" column="0" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/viewControllers/HomeFeedViewController.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/viewControllers/interfaces/ViewController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1039">
-          <caret line="235" column="28" selection-start-line="235" selection-start-column="28" selection-end-line="235" selection-end-column="28" />
+        <state relative-caret-position="75">
+          <caret line="5" column="17" selection-start-line="5" selection-start-column="17" selection-end-line="5" selection-end-column="17" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/viewControllers/RealtimeNotificationController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="643">
+          <caret line="68" column="32" selection-start-line="68" selection-start-column="32" selection-end-line="68" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/viewControllers/interfaces/AppView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="13" column="28" selection-start-line="13" selection-start-column="28" selection-end-line="13" selection-end-column="28" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/viewControllers/interfaces/AppViewController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="10" selection-start-line="9" selection-start-column="10" selection-end-line="9" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/viewControllers/NavigationController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="600">
+          <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
+          <folding>
+            <element signature="e#1938#1939#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/views/subviews/NavBarView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="377">
+          <caret line="121" column="4" selection-start-line="121" selection-start-column="4" selection-end-line="131" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/views/appViews/HomeFeedView.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-56">
-          <caret line="71" column="0" selection-start-line="71" selection-start-column="0" selection-end-line="71" selection-end-column="0" />
+        <state relative-caret-position="90">
+          <caret line="118" column="29" selection-start-line="118" selection-start-column="29" selection-end-line="118" selection-end-column="29" />
+          <folding>
+            <element signature="e#4612#4613#0" expanded="true" />
+            <element signature="e#4657#4658#0" expanded="true" />
+            <element signature="e#4997#4998#0" expanded="true" />
+            <element signature="e#5048#5049#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/models/Publication.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="277">
+          <caret line="123" column="43" selection-start-line="123" selection-start-column="19" selection-end-line="123" selection-end-column="43" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#2037#2038#0" expanded="true" />
+            <element signature="e#2064#2065#0" expanded="true" />
+            <element signature="e#2093#2094#0" expanded="true" />
+            <element signature="e#2118#2119#0" expanded="true" />
+            <element signature="e#2156#2157#0" expanded="true" />
+            <element signature="e#2190#2191#0" expanded="true" />
+            <element signature="e#2220#2221#0" expanded="true" />
+            <element signature="e#2246#2247#0" expanded="true" />
+            <element signature="e#2281#2282#0" expanded="true" />
+            <element signature="e#2312#2313#0" expanded="true" />
+            <element signature="e#2354#2355#0" expanded="true" />
+            <element signature="e#2392#2393#0" expanded="true" />
+            <element signature="e#2438#2439#0" expanded="true" />
+            <element signature="e#2480#2481#0" expanded="true" />
+            <element signature="e#2528#2529#0" expanded="true" />
+            <element signature="e#2571#2572#0" expanded="true" />
+            <element signature="e#2611#2612#0" expanded="true" />
+            <element signature="e#2650#2651#0" expanded="true" />
+            <element signature="e#2703#2704#0" expanded="true" />
+            <element signature="e#2755#2756#0" expanded="true" />
+            <element signature="e#2809#2810#0" expanded="true" />
+            <element signature="e#2862#2863#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/views/subviews/PublicationContributeButtonCellRenderer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="169">
+          <caret line="59" column="33" selection-start-line="59" selection-start-column="33" selection-end-line="59" selection-end-column="33" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/views/subviews/RequestStatusButtonCellRenderer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="313">
+          <caret line="57" column="9" selection-start-line="57" selection-start-column="9" selection-end-line="57" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/views/subviews/RealTimeNotificationView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="379">
+          <caret line="127" column="58" selection-start-line="127" selection-start-column="58" selection-end-line="127" selection-end-column="58" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/viewControllers/MainApplication.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="855">
+          <caret line="66" column="62" selection-start-line="66" selection-start-column="62" selection-end-line="66" selection-end-column="62" />
+          <folding>
+            <element signature="e#2120#2121#0" expanded="true" />
+            <element signature="e#2189#2190#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/views/appViews/UserProfileView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="525">
+          <caret line="52" column="83" selection-start-line="52" selection-start-column="83" selection-end-line="52" selection-end-column="83" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/viewControllers/HomeFeedViewController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="176" column="36" selection-start-line="176" selection-start-column="36" selection-end-line="181" selection-end-column="17" />
+          <folding>
+            <element signature="e#6317#6566#0" expanded="true" />
+            <element signature="e#6565#6566#0" expanded="true" />
+            <element signature="e#7765#7987#0" expanded="true" />
+            <element signature="e#7986#7987#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/viewControllers/UserProfileViewController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="454">
-          <caret line="87" column="8" selection-start-line="87" selection-start-column="8" selection-end-line="88" selection-end-column="40" />
-          <folding />
+        <state relative-caret-position="649">
+          <caret line="153" column="26" selection-start-line="153" selection-start-column="26" selection-end-line="153" selection-end-column="37" />
+          <folding>
+            <element signature="e#4406#4655#0" expanded="true" />
+            <element signature="e#4654#4655#0" expanded="true" />
+            <element signature="e#5718#5940#0" expanded="true" />
+            <element signature="e#5939#5940#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

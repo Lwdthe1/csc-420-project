@@ -5,6 +5,7 @@ import models.RequestToContribute;
 import viewControllers.UserProfileViewController;
 import viewControllers.interfaces.AppView;
 import viewControllers.interfaces.AppViewController;
+import viewControllers.interfaces.TableView;
 import views.subviews.*;
 
 import javax.swing.*;
@@ -12,7 +13,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
-public class UserRequestsFeedView implements AppView {
+public class UserProfileView implements AppView, TableView {
     private final UserProfileViewController viewController;
     private int width;
     private int height;
@@ -20,7 +21,7 @@ public class UserRequestsFeedView implements AppView {
     private JTable table;
     private RealTimeNotificationView realTimeNotificationView;
 
-    public UserRequestsFeedView(UserProfileViewController viewController, int width, int height) {
+    public UserProfileView(UserProfileViewController viewController, int width, int height) {
         this.viewController = viewController;
         this.width = width;
         this.height = height;
@@ -49,7 +50,7 @@ public class UserRequestsFeedView implements AppView {
     public void createAndShow() {
         this.contentPane = new JPanel(new BorderLayout());
         this.contentPane.setSize(new Dimension(this.contentPane.getWidth(), this.contentPane.getHeight()));
-        realTimeNotificationView = new RealTimeNotificationView(contentPane.getWidth());
+        realTimeNotificationView = new RealTimeNotificationView(this.viewController);
         addComponentsToPane();
     }
 
@@ -131,16 +132,24 @@ public class UserRequestsFeedView implements AppView {
         return realTimeNotificationView;
     }
 
+    @Override
+    public Boolean isVisibleView() {
+        return this.contentPane.isVisible();
+    }
+
     public JPanel getContentPane() {
         return contentPane;
     }
 
     public void onContributeRequestSuccess(int row, int column) {
+        refreshTableCell(row, column);
+    }
+
+    public void refreshTableCell(int row, int column) {
         ((AbstractTableModel) table.getModel()).fireTableCellUpdated(row, column);
     }
 
     public void refreshTable() {
-        table.repaint();// faster than
-        ((AbstractTableModel) table.getModel()).fireTableDataChanged();
+        table.repaint();// faster than ((AbstractTableModel) table.getModel()).fireTableDataChanged();
     }
 }
