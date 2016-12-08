@@ -11,6 +11,9 @@ import utils.WebService.socketio.SocketListener;
 import utils.WebService.socketio.SocketManager;
 import viewControllers.interfaces.AppView;
 import viewControllers.interfaces.AppViewController;
+import viewControllers.interfaces.AuthEvent;
+import viewControllers.interfaces.AuthListener;
+import views.LoggedOutActionListener;
 import views.appViews.HomeFeedView;
 import views.subviews.PublicationContributeButtonCellRenderer;
 
@@ -18,6 +21,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.concurrent.Semaphore;
@@ -28,7 +32,7 @@ import static java.lang.Thread.sleep;
 /**
  * Created by lwdthe1 on 9/5/16.
  */
-public class HomeFeedViewController implements SocketListener, AppViewController {
+public class HomeFeedViewController implements AppViewController, SocketListener, AuthListener {
     private final HomeFeedView view;
     private final MainApplication application;
     private final NavigationController navigationController;
@@ -40,7 +44,6 @@ public class HomeFeedViewController implements SocketListener, AppViewController
 
     public HomeFeedViewController(MainApplication application) {
         this.application = application;
-        this.navigationController = new NavigationController(application);
         //acquire the lock here before starting load
         try {
             setupViewWhileLoadingSemaphore.acquire();
@@ -51,9 +54,11 @@ public class HomeFeedViewController implements SocketListener, AppViewController
         publicationsService = PublicationsService.sharedInstance;
         loadFeed();
         this.view = new HomeFeedView(this, application.getMainFrame().getWidth(), application.getMainFrame().getHeight());
+        this.navigationController = new NavigationController(application);
         setupView();
         setupViewWhileLoadingSemaphore.release();
         startSocketIO();
+        registerForAuthEvents();
     }
 
     @Override
@@ -68,6 +73,12 @@ public class HomeFeedViewController implements SocketListener, AppViewController
 
     public void setupView() {
         this.view.createAndShow();
+        view.getLoginButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
     }
 
     @Override
@@ -77,6 +88,7 @@ public class HomeFeedViewController implements SocketListener, AppViewController
 
     @Override
     public void viewWillAppear() {
+        navigationController.toggleLoggedin();
         if (publications != null && !publications.isEmpty()) {
             view.refreshTable();
         }
@@ -191,6 +203,25 @@ public class HomeFeedViewController implements SocketListener, AppViewController
     }
 
     @Override
+    public void onEvent(AuthEvent event) {
+        System.out.println("received event in HomeFeedViewController");
+        switch(event) {
+            case LOGGED_IN:
+                view.removeLoggedOutPanel();
+                break;
+            case LOGGED_OUT:
+                //navigationController.setProfileButtonActionListenerToLogin();
+                break;
+        }
+    }
+
+    @Override
+    public void registerForAuthEvents() {
+        CurrentUser.sharedInstance.listen(AuthEvent.LOGGED_IN, this);
+        CurrentUser.sharedInstance.listen(AuthEvent.LOGGED_OUT, this);
+    }
+
+    @Override
     public void registerForEvents() {
         socketManger.listen(SocketEvent.CHAT_MESSAGE, this);
         socketManger.listen(SocketEvent.NOTIFICATION_REQUEST_TO_CONTRIBUTE_DECISION, this);
@@ -205,11 +236,16 @@ public class HomeFeedViewController implements SocketListener, AppViewController
     public void publicationContributeCellClicked(Publication publication, int row, int column) {
         PublicationContributeButtonCellRenderer homeFeedTableCell = publication.getHomeFeedTableCell();
         JButton contributeButton = homeFeedTableCell.contributeButton;
-        if (contributeButton.getText() == "Contribute") {
-            PublicationsService.sharedInstance.requestToContributeById(publication.getId());
+        if(CurrentUser.sharedInstance.getIsLoggedIn()){
+            if (contributeButton.getText() == "Contribute") {
+                PublicationsService.sharedInstance.requestToContributeById(publication.getId());
+            } else {
+                PublicationsService.sharedInstance.retractRequestToContributeById(publication.getId());
+            }
         } else {
-            PublicationsService.sharedInstance.retractRequestToContributeById(publication.getId());
+            JOptionPane.showMessageDialog(null, "Please log in first", "Please Login", JOptionPane.PLAIN_MESSAGE);
         }
+
         view.onContributeRequestSuccess(row, column);
     }
 }

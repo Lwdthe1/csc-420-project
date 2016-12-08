@@ -12,4 +12,5 @@ public interface AppView extends View {
     JPanel getContentPane();
     RealTimeNotificationView getRealTimeNotificationView();
     Boolean isVisibleView();
+
 }

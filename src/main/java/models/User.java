@@ -1,5 +1,6 @@
 package models;
 
+import org.json.JSONObject;
 import utils.AppUtils;
 import utils.ImageUtils;
 
@@ -9,6 +10,7 @@ import java.awt.image.BufferedImage;
  * Created by lwdthe1 on 12/4/16.
  */
 public class User {
+    private String id;
     private String username;
     private String imageUrl;
     private BufferedImage image;
@@ -17,6 +19,14 @@ public class User {
         this.username = username;
         this.imageUrl = imageUrl;
     }
+
+    public User(JSONObject json){
+        this.imageUrl = json.getString("imageUrl");
+        this.id= json.getString("_id");
+        this.username = json.getString("userId");
+    }
+
+    public String getId(){return id != null ? id : "";}
 
     public String getUsername() {
         return this.username;

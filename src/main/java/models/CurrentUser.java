@@ -1,10 +1,17 @@
 package models;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import org.apache.http.HttpException;
 import utils.PublicationsService;
 import utils.WebService.RestCaller;
+import viewControllers.interfaces.AuthEvent;
+import viewControllers.interfaces.AuthListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Semaphore;
 
 /**
@@ -16,6 +23,8 @@ public class CurrentUser {
     private ArrayList<RequestToContribute> originalRequestsToContribute;
     private HashMap<String, RequestToContribute> publicationRequestsMap = new HashMap<>();
     private Semaphore loadRequestsToContributeLock = new Semaphore(1);
+
+    private ConcurrentHashMap<AuthEvent, LinkedList<AuthListener>> eventListenersMap = new ConcurrentHashMap<>();
 
     private CurrentUser() {
 
@@ -29,10 +38,34 @@ public class CurrentUser {
         return user != null;
     }
 
-    public RestCallResult attemptLogin(String username, String password) {
+    public UserRestCallResult attemptLogin(String username, String password) {
         //resultData should include the following
-        RestCallResult resultData = new RestCallResult(false, "wrong password.");
-        return resultData;
+        try {
+            UserRestCallResult result =  RestCaller.sharedInstance.loginUser(username,password);
+            if(result.getSuccess()){
+                this.user = result.getUser();
+                notifyAuthListeners(AuthEvent.LOGGED_IN);
+            }
+            return result;
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (HttpException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private void notifyAuthListeners(AuthEvent event) {
+        LinkedList<AuthListener> eventListeners = eventListenersMap.get(event);
+        if (eventListeners != null) {
+            eventListeners = (LinkedList<AuthListener>) eventListeners.clone();
+            for (AuthListener listener: eventListeners) {
+                System.out.println("notifiying listeners");
+                listener.onEvent(event);
+            }
+        }
     }
 
     public String getId() {
@@ -40,8 +73,11 @@ public class CurrentUser {
     }
 
     public String getUsername() {
-        //TODO(andres) replace testUser0 with empty string after you implement login.
-        return user != null ? user.getUsername() : "LincolnWDaniel";
+        return user != null ? user.getUsername() : "";
+    }
+
+    public void logout(){
+        this.user = null;
     }
 
     private void loadRequestsToContribute() {
@@ -99,5 +135,10 @@ public class CurrentUser {
 
     public boolean hasRequestsToContribute() {
         return originalRequestsToContribute != null &&  !originalRequestsToContribute.isEmpty();
+    }
+
+    public void listen(AuthEvent event, AuthListener listener) {
+        eventListenersMap.putIfAbsent(event, new LinkedList<AuthListener>());
+        eventListenersMap.get(event).add(listener);
     }
 }

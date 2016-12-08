@@ -1,11 +1,14 @@
 package viewControllers;
 
+import models.CurrentUser;
+import utils.ImageUtils;
 import utils.WebService.socketio.SocketManager;
-import viewControllers.interfaces.AppViewController;
-import viewControllers.interfaces.View;
-import viewControllers.interfaces.ViewController;
+import viewControllers.interfaces.*;
+import views.LoggedOutActionListener;
 import views.subviews.NavBarView;
 
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
@@ -16,10 +19,11 @@ import static java.lang.Thread.sleep;
 /**
  * Created by lwdthe1 on 9/5/16.
  */
-public class NavigationController implements ViewController {
+public class NavigationController implements ViewController, AuthListener {
     private final NavBarView view;
     private final MainApplication application;
     private HashMap<String, AppViewController> viewControllersMap = new HashMap<>();
+    private final int MAX_PROFILE_ICON_SIZE = 35;
 
     private SocketManager socketManger;
 
@@ -28,6 +32,7 @@ public class NavigationController implements ViewController {
         this.view = new NavBarView(application.getMainFrame().getWidth());
         setupView();
         setActionListeners();
+        registerForAuthEvents();
     }
 
     @Override
@@ -47,7 +52,16 @@ public class NavigationController implements ViewController {
                     moveTo(viewController);
             }
         });
+        addProfileButtonActionListener();
+    }
 
+    public void addProfileButtonActionListener(){
+        if(!CurrentUser.sharedInstance.getIsLoggedIn()){
+            view.getProfileButton().addActionListener(new LoggedOutActionListener());
+        }
+    }
+
+    public void setProfileButtonActionListenerToMove(){
         view.getProfileButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -57,8 +71,45 @@ public class NavigationController implements ViewController {
         });
     }
 
+    public void setProfileButtonActionListenerToLogout(){
+        view.getProfileButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int option = JOptionPane.showConfirmDialog(null, "Logout?", "logout", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                if (option == JOptionPane.OK_OPTION) {
+                    CurrentUser.sharedInstance.logout();
+                    moveTo(application.getHomeFeedViewController());
+                }
+            }
+        });
+    }
+
+    public void toggleLoggedin(){
+        view.toggleLoggedStatus();
+    }
+
     public void moveTo(AppViewController viewController) {
         this.application.setVisibleView(viewController);
+    }
+
+    @Override
+    public void onEvent(AuthEvent event) {
+        switch(event) {
+            case LOGGED_IN:
+                resetProfileButtonActionListeners();
+                setProfileButtonActionListenerToMove();
+                toggleLoggedin();
+                break;
+            case LOGGED_OUT:
+                toggleLoggedin();
+                break;
+        }
+    }
+
+    @Override
+    public void registerForAuthEvents() {
+        CurrentUser.sharedInstance.listen(AuthEvent.LOGGED_IN, this);
+        CurrentUser.sharedInstance.listen(AuthEvent.LOGGED_OUT, this);
     }
 
     private enum ViewControllerKey {
@@ -84,5 +135,11 @@ public class NavigationController implements ViewController {
             }
         }
         return null;
+    }
+
+    public void resetProfileButtonActionListeners(){
+        for( ActionListener al : view.getProfileButton().getActionListeners() ) {
+            view.getProfileButton().removeActionListener( al );
+        }
     }
 }
