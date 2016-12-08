@@ -87,7 +87,6 @@ public class PublicationsService {
             }
             return success;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             return false;
         }
     }
