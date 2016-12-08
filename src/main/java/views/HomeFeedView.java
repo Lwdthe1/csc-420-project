@@ -18,6 +18,7 @@ public class HomeFeedView implements AppView {
     private JTable table;
     private NavBarView navBarView;
     private RealTimeNotificationView realTimeNotificationView;
+    private LoggedOutActionListener loggedOuatAL;
 
     public HomeFeedView(HomeFeedViewController homeFeedViewController, int width, int height) {
         this.homeFeedViewController = homeFeedViewController;
@@ -43,7 +44,8 @@ public class HomeFeedView implements AppView {
         this.contentPane = new JPanel(new BorderLayout());
         this.contentPane.setSize(new Dimension(this.contentPane.getWidth(), this.contentPane.getHeight()));
 
-        navBarView = new NavBarView(contentPane.getWidth());
+        loggedOuatAL = new LoggedOutActionListener(this);
+        navBarView = new NavBarView(contentPane.getWidth(), loggedOuatAL);
         realTimeNotificationView = new RealTimeNotificationView(contentPane.getWidth());
 
         addComponentsToPane();

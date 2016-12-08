@@ -9,6 +9,7 @@ import net.miginfocom.swing.MigLayout;
 import org.apache.http.HttpException;
 import utils.ImageUtils;
 import utils.WebService.RestCaller;
+import views.LoggedOutActionListener;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -40,15 +41,21 @@ public class NavBarView {
             "Password:", password
     };
 
+    // settings
     JCheckBox instantMessageCB = new JCheckBox();
     JCheckBox statusRequestCB = new JCheckBox();
     JPanel instantMessagePanel = new JPanel();
     JPanel statusRequestPanel = new JPanel();
-    private ActionListener loggeinActionListener;
+
+    private ActionListener loggedInActionListener;
     private ActionListener loggedOutActionListener;
 
 
-    public NavBarView(int frameWidth) {
+    public NavBarView(int frameWidth, LoggedOutActionListener loggedOutActionListener) {
+
+        loggedOutActionListener.setNavBarView(this);
+        this.loggedOutActionListener = loggedOutActionListener;
+
         navBarPanel = new JPanel();
         setNavBarPanel(frameWidth);
         mediumIconImgLabel = new JLabel();
@@ -125,46 +132,14 @@ public class NavBarView {
     }
 
     private void setActionListeners(){
-        loggeinActionListener = new ActionListener() {
+        loggedInActionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int option = JOptionPane.showConfirmDialog(null, "Logout?", "logout", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
                 if (option == JOptionPane.OK_OPTION) {
                     CurrentUser.sharedInstance.logout();
-                    profileButton.setIcon(new ImageIcon("Images/Profile.png", null));
                     toggleLoggedStatus();
                 }
-            }
-        };
-
-        loggedOutActionListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int option = JOptionPane.showConfirmDialog(null, loginObjects, "Login", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-                if (option == JOptionPane.OK_OPTION) {
-                    String userName = username.getText().trim();
-                    String pass = NavBarView.this.password.getText().trim();
-
-                    if (userName.isEmpty() || pass.isEmpty()) {
-                        JOptionPane.showMessageDialog(null, "all fields must be filled", "Login failed", JOptionPane.PLAIN_MESSAGE);
-
-                    } else {
-                        UserRestCallResult result = CurrentUser.sharedInstance.attemptLogin(userName, pass);
-
-                        if (result.getSuccess()) {
-                            String imageUrl = CurrentUser.sharedInstance.getUser().getImageUrl();
-                            Image resizedImage =
-                                    ImageUtils.loadImage(imageUrl).getScaledInstance(MAX_PROFILE_ICON_SIZE, MAX_PROFILE_ICON_SIZE, Image.SCALE_FAST);
-                            ImageIcon icon = new ImageIcon(resizedImage);
-                            profileButton.setIcon(icon);
-                            toggleLoggedStatus();
-                        } else {
-                            JOptionPane.showMessageDialog(null, result.getErrorMessage(), "Login failed", JOptionPane.PLAIN_MESSAGE);
-                        }
-                    }
-                }
-                username.setText("");
-                password.setText("");
             }
         };
 
@@ -246,8 +221,18 @@ public class NavBarView {
     public void toggleLoggedStatus(){
         settingsButton.setEnabled(!settingsButton.isEnabled());
         settingsButton.setVisible(!settingsButton.isVisible());
-        profileButton.removeActionListener(!CurrentUser.sharedInstance.getIsLoggedIn() ? loggeinActionListener : loggedOutActionListener);
-        profileButton.addActionListener(CurrentUser.sharedInstance.getIsLoggedIn() ? loggeinActionListener : loggedOutActionListener);
+        boolean isLoggedIn = CurrentUser.sharedInstance.getIsLoggedIn();
+        profileButton.removeActionListener(!isLoggedIn ? loggedInActionListener : loggedOutActionListener);
+        profileButton.addActionListener(isLoggedIn ? loggedInActionListener : loggedOutActionListener);
+        if(isLoggedIn){
+            String imageUrl = CurrentUser.sharedInstance.getUser().getImageUrl();
+            Image resizedImage =
+                    ImageUtils.loadImage(imageUrl).getScaledInstance(MAX_PROFILE_ICON_SIZE, MAX_PROFILE_ICON_SIZE, Image.SCALE_FAST);
+            ImageIcon icon = new ImageIcon(resizedImage);
+            profileButton.setIcon(icon);
+        } else {
+            profileButton.setIcon(new ImageIcon("Images/Profile.png", null));
+        }
     }
 
 }
