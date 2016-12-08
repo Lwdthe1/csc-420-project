@@ -45,7 +45,7 @@ public class PublicationImageCellRenderer extends JPanel implements TableCellRen
         imageButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println(PublicationsService.sharedInstance.requestToContributeById(pub.getId(), "user1"));
+                System.out.println(PublicationsService.sharedInstance.requestToContributeById(pub.getId()));
             }
         });
 

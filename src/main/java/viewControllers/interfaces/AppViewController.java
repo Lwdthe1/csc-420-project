@@ -10,4 +10,6 @@ public interface AppViewController extends ViewController {
     AppView getView();
     void setupView();
     void transitionTo(AppViewController appViewController);
+
+    void viewWillAppear();
 }

@@ -3,6 +3,7 @@ package utils;
 import models.CurrentUser;
 import models.Publication;
 import models.RequestToContribute;
+import org.json.JSONObject;
 import utils.WebService.RestCaller;
 
 import java.util.ArrayList;
@@ -68,20 +69,22 @@ public class PublicationsService {
         }
     }
 
-    public Boolean requestToContributeById(String publicationId, String userId) {
+    public Boolean requestToContributeById(String publicationId) {
         try {
-            Boolean success = RestCaller.sharedInstance.requestToContributeToPublicationById(publicationId, userId);
-            getById(publicationId).setCurrentUserRequested(success);
+            Boolean success = RestCaller.sharedInstance.requestToContributeToPublicationById(publicationId);
+            CurrentUser.sharedInstance.addRequestToContribute(new RequestToContribute(publicationId));
             return success;
         } catch (Exception e) {
             return false;
         }
     }
 
-    public Boolean retractRequestToContributeById(String publicationId, String userId) {
+    public Boolean retractRequestToContributeById(String publicationId) {
         try {
-            Boolean success = RestCaller.sharedInstance.retractRequestToContributeToPublicationById(publicationId, userId);
-            getById(publicationId).setCurrentUserRetractedRequested(success);
+            Boolean success = RestCaller.sharedInstance.retractRequestToContributeToPublicationById(publicationId);
+            if (success) {
+                CurrentUser.sharedInstance.removeRequestToContribute(publicationId);
+            }
             return success;
         } catch (Exception e) {
             System.out.println(e.getMessage());

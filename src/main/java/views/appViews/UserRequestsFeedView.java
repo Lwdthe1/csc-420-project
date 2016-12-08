@@ -2,10 +2,9 @@ package views.appViews;
 
 import models.Publication;
 import models.RequestToContribute;
-import viewControllers.UserRequestsFeedViewController;
+import viewControllers.UserProfileViewController;
 import viewControllers.interfaces.AppView;
 import viewControllers.interfaces.AppViewController;
-import viewControllers.interfaces.ViewController;
 import views.subviews.*;
 
 import javax.swing.*;
@@ -14,14 +13,14 @@ import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
 public class UserRequestsFeedView implements AppView {
-    private final UserRequestsFeedViewController viewController;
+    private final UserProfileViewController viewController;
     private int width;
     private int height;
     private JPanel contentPane;
     private JTable table;
     private RealTimeNotificationView realTimeNotificationView;
 
-    public UserRequestsFeedView(UserRequestsFeedViewController viewController, int width, int height) {
+    public UserRequestsFeedView(UserProfileViewController viewController, int width, int height) {
         this.viewController = viewController;
         this.width = width;
         this.height = height;
@@ -140,7 +139,8 @@ public class UserRequestsFeedView implements AppView {
         ((AbstractTableModel) table.getModel()).fireTableCellUpdated(row, column);
     }
 
-    public void refreshTable(int row) {
-        table.repaint();// faster than ((AbstractTableModel) table.getModel()).fireTableDataChanged()
+    public void refreshTable() {
+        table.repaint();// faster than
+        ((AbstractTableModel) table.getModel()).fireTableDataChanged();
     }
 }

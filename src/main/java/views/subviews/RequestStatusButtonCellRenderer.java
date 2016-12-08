@@ -2,6 +2,7 @@ package views.subviews;
 
 import models.Publication;
 import models.RequestToContribute;
+import utils.TextUtils;
 
 import javax.swing.*;
 import javax.swing.event.CellEditorListener;
@@ -21,18 +22,6 @@ public class RequestStatusButtonCellRenderer extends JPanel implements TableCell
     private static Insets TOP_5_LEFT_PAD_15 = new Insets(5,15, 0, 0);
     public JButton contributeButton;
     public JLabel statusLabel;
-
-    private static final String DESCRIPTIVE_TEXT_STYLE = "color: #4c4c4c\n" +
-            "    font-size: 9px;\n" +
-            "    font-family: -apple-system,BlinkMacSystemFont,\"Segoe UI\",Roboto,Oxygen,Ubuntu,Cantarell,\"Open Sans\",\"Helvetica Neue\",sans-serif;\n" +
-            "    letter-spacing: 0;\n" +
-            "    font-weight: 300;\n" +
-            "    font-style: normal;\n" +
-            "    text-rendering: optimizeLegibility;\n" +
-            "    -webkit-font-smoothing: antialiased;\n" +
-            "    -moz-osx-font-smoothing: grayscale;\n" +
-            "    -moz-font-feature-settings: \"liga\" on;\n" +
-            "    text-decoration: none !important;\n word-wrap: break-word; ";
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -81,7 +70,7 @@ public class RequestStatusButtonCellRenderer extends JPanel implements TableCell
         } else {
             text = "Pending";
         }
-        String descriptionHTML = format("<html><body><p style='%s'>%s</p></body></html>", DESCRIPTIVE_TEXT_STYLE, text);
+        String descriptionHTML = format("<html><body><p style='%s'>%s</p></body></html>", TextUtils.META_TEXT_STYLE, text);
         statusLabel = new JLabel(descriptionHTML);
         this.add(statusLabel, constraints);
     }
