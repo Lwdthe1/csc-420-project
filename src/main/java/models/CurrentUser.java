@@ -78,13 +78,15 @@ public class CurrentUser {
     }
 
     public void removeRequestToContribute(String publicationId) {
-        int i = 0;
+        int indexToRemoveAt = 0;
         for (RequestToContribute request: originalRequestsToContribute) {
             if (request.getPublicationId() == publicationId) {
-                originalRequestsToContribute.remove(i);
-                i++;
+                break;
             }
+            indexToRemoveAt++;
         }
+        //remove after to avoid concurrent modification exception
+        originalRequestsToContribute.remove(indexToRemoveAt);
         publicationRequestsMap.remove(publicationId);
         Publication publication = PublicationsService.sharedInstance.getById(publicationId);
         publication.setCurrentUserRequested(false);

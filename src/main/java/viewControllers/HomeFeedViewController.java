@@ -77,8 +77,9 @@ public class HomeFeedViewController implements SocketListener, AppViewController
 
     @Override
     public void viewWillAppear() {
-        view.refreshTable();
-        System.out.println("View WILL APPEAR");
+        if (publications != null && !publications.isEmpty()) {
+            view.refreshTable();
+        }
     }
 
     private void loadFeed() {
