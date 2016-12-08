@@ -8,16 +8,19 @@ import org.json.JSONObject;
 import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Semaphore;
 
 /**
  * Created by lwdthe1 on 12/4/16.
  */
 public class SocketManager {
+    public static SocketManager sharedInstance = new SocketManager();
     private Socket socket;
     private String host = "http://lcontacts.herokuapp.com";
     private ConcurrentHashMap<String, LinkedList<SocketListener>> eventListenersMap = new ConcurrentHashMap<>();
+    private Semaphore notifyListenersLock = new Semaphore(1);
 
-    public SocketManager() {
+    private SocketManager() {
     }
 
     public void setupAndConnect() {
@@ -93,12 +96,17 @@ public class SocketManager {
 
     private void notifyListeners(SocketEvent event, JSONObject obj) {
         JSONObject payload = obj.has("payload") && obj.get("payload") instanceof JSONObject ? (JSONObject) obj.get("payload") : null;
-        LinkedList<SocketListener> eventListeners = eventListenersMap.get(event.getValue());
-        if (eventListeners != null) {
-            for (SocketListener listener: eventListeners) {
-                listener.onEvent(event, payload);
-                listener.onEvent(event.getValue(), payload);
+        try {
+            notifyListenersLock.acquire();
+            LinkedList<SocketListener> eventListeners = (LinkedList<SocketListener>) eventListenersMap.get(event.getValue()).clone();
+            if (eventListeners != null) {
+                for (SocketListener listener: eventListeners) {
+                    listener.onEvent(event, payload);
+                }
             }
+            notifyListenersLock.release();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }

@@ -108,10 +108,10 @@ public class RestCaller
         return resultJson == "true";
     }
 
-    public Boolean requestToContributeToPublicationById(String publicationId, String userId) throws URISyntaxException, IOException, HttpException {
+    public Boolean requestToContributeToPublicationById(String publicationId) throws URISyntaxException, IOException, HttpException {
         // Create a new HttpClient and Get Sequence number
         HttpClient httpClient = new DefaultHttpClient();
-        String restUri = REST_API_URL + format("fake/user/%s/pub/%s/contribute", userId, publicationId);
+        String restUri = REST_API_URL + format("fake/user/%s/pub/%s/contribute", CurrentUser.sharedInstance.getId(), publicationId);
 
         HttpPost httpPost = new HttpPost(restUri);
 
@@ -120,10 +120,10 @@ public class RestCaller
         return true;
     }
 
-    public Boolean retractRequestToContributeToPublicationById(String publicationId, String userId) throws URISyntaxException, IOException, HttpException {
+    public Boolean retractRequestToContributeToPublicationById(String publicationId) throws URISyntaxException, IOException, HttpException {
         // Create a new HttpClient and Get Sequence number
         HttpClient httpClient = new DefaultHttpClient();
-        String restUri = REST_API_URL + format("fake/pubs/contribute/%s/%s", publicationId, userId);
+        String restUri = REST_API_URL + format("fake/pubs/contribute/%s/%s", publicationId, CurrentUser.sharedInstance.getId());
 
         HttpDelete httpDelete = new HttpDelete(restUri);
 

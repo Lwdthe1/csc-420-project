@@ -3,12 +3,14 @@ package views.subviews;
 import javax.swing.*;
 
 import models.CurrentUser;
-import models.UserRestCallResult;
 import models.UserSettingsRestCallResult;
 import net.miginfocom.swing.MigLayout;
 import org.apache.http.HttpException;
 import utils.ImageUtils;
 import utils.WebService.RestCaller;
+import viewControllers.NavigationController;
+import viewControllers.interfaces.View;
+import viewControllers.interfaces.ViewController;
 import views.LoggedOutActionListener;
 
 import java.awt.*;
@@ -20,17 +22,10 @@ import java.net.URISyntaxException;
 /**
  * Created by keithmartin on 10/23/16.
  */
-public class NavBarView {
+public class NavBarView implements View {
+    private NavigationController viewController;
 
     private final int MAX_PROFILE_ICON_SIZE = 35;
-
-    private JPanel navBarPanel;
-    private JLabel mediumIconImgLabel;
-    private JLabel superMeditorLabel;
-    private JButton publicationsTabButton;
-    private JButton notificationsButton;
-    private JButton profileButton;
-    private JButton settingsButton;
 
     // login
     JTextField username = new JTextField();
@@ -47,57 +42,38 @@ public class NavBarView {
     JPanel instantMessagePanel = new JPanel();
     JPanel statusRequestPanel = new JPanel();
 
-    private ActionListener loggedInActionListener;
-    private ActionListener loggedOutActionListener;
+    private LoggedOutActionListener loggedOutActionListener;
 
 
-    public NavBarView(int frameWidth, LoggedOutActionListener loggedOutActionListener) {
+    private  JPanel contentPane;
+    private  JLabel mediumIconImgLabel;
+    private  JLabel superMeditorLabel;
+    private  JButton publicationsTabButton;
+    private JButton settingsButton;
 
-        loggedOutActionListener.setNavBarView(this);
-        this.loggedOutActionListener = loggedOutActionListener;
+    private JButton profileButton;
+    private int width;
+    private final int height;
 
-        navBarPanel = new JPanel();
-        setNavBarPanel(frameWidth);
-        mediumIconImgLabel = new JLabel();
-        setMediumIconImgLabel();
-        superMeditorLabel = new JLabel();
-        setSuperMeditorLabel();
-        publicationsTabButton = new JButton();
-        setPublicationsTabButton();
-        notificationsButton = new JButton();
-        setNotificationsButton();
-        profileButton = new JButton();
-        setProfileButton();
-        settingsButton = new JButton();
-        setSettingsButton();
-        setUpSettingPanels();
-        setActionListeners();
-        setLayout();
-        addComponents();
+    public NavBarView(int frameWidth) {
+        this.width = frameWidth;
+        this.height = 300;
     }
 
-    private void initSettings(){
-        try {
-            RestCaller.sharedInstance.getCurrentUserSettings();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (HttpException e) {
-            e.printStackTrace();
-        }
-    }
-    private  void setNavBarPanel(int frameWidth) {
-        navBarPanel.setSize(new Dimension(frameWidth, 300));
-        navBarPanel.setBackground(Color.white);
+    private  void setupContentPane() {
+        contentPane = new JPanel();
+        contentPane.setSize(new Dimension(this.width, height));
+        contentPane.setBackground(Color.white);
     }
 
     private void setMediumIconImgLabel() {
+        mediumIconImgLabel = new JLabel();
         mediumIconImgLabel.setSize(new Dimension(100, 100));
         mediumIconImgLabel.setIcon(new ImageIcon("Images/SuperMeditorLogo.png", null));
     }
 
     private void setSuperMeditorLabel() {
+        superMeditorLabel = new JLabel();
         superMeditorLabel.setSize(new Dimension(100, 100));
         superMeditorLabel.setText("SuperMeditor");
         superMeditorLabel.setFont(new Font("Helvetica", Font.BOLD, 20));
@@ -105,19 +81,15 @@ public class NavBarView {
     }
 
     private void setPublicationsTabButton() {
+        publicationsTabButton = new JButton();
         publicationsTabButton.setSize(new Dimension(100, 100));
         publicationsTabButton.setText("Publications");
         publicationsTabButton.setForeground(Color.gray);
         publicationsTabButton.setBorderPainted(false);
     }
 
-    private void setNotificationsButton() {
-        notificationsButton.setMaximumSize(new Dimension(MAX_PROFILE_ICON_SIZE, MAX_PROFILE_ICON_SIZE));
-        notificationsButton.setIcon(new ImageIcon("Images/Notifications.png", null));
-        notificationsButton.setBorderPainted(false);
-    }
-
     private void setSettingsButton() {
+        settingsButton = new JButton();
         settingsButton.setSize(new Dimension(100, 100));
         settingsButton.setIcon(new ImageIcon("Images/settings_icon.png", null));
         settingsButton.setBorderPainted(false);
@@ -126,25 +98,14 @@ public class NavBarView {
     }
 
     private void setProfileButton() {
+        profileButton = new JButton();
         profileButton.setMaximumSize(new Dimension(100, 100));
+        profileButton.setIcon(new ImageIcon("Images/Profile.png", null));
         profileButton.setBorderPainted(false);
         profileButton.setIcon(new ImageIcon("Images/Profile.png", null));
     }
 
     private void setActionListeners(){
-        loggedInActionListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int option = JOptionPane.showConfirmDialog(null, "Logout?", "logout", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-                if (option == JOptionPane.OK_OPTION) {
-                    CurrentUser.sharedInstance.logout();
-                    toggleLoggedStatus();
-                }
-            }
-        };
-
-        profileButton.addActionListener(loggedOutActionListener);
-
         settingsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -164,7 +125,6 @@ public class NavBarView {
                         if(statusRequest != userSettingsRestCallResult.getStatusRequest()){
                             RestCaller.sharedInstance.updateCurrentUserSettings(UserSettingsRestCallResult.contribution_request_decision,statusRequest);
                         }
-
                     }
                 } catch (URISyntaxException e1) {
                     e1.printStackTrace();
@@ -180,23 +140,19 @@ public class NavBarView {
     }
 
     private void setLayout() {
-        navBarPanel.setLayout(new MigLayout("", // Layout Constraints
-                "[][][][][]440[]", // Column constraints with default align
+        contentPane.setLayout(new MigLayout("", // Layout Constraints
+                "[][][][]440[]", // Column constraints with default align
                 "")); // Row constraints
     }
 
     private void addComponents() {
-        navBarPanel.add(mediumIconImgLabel, "cell 0 0");
-        navBarPanel.add(superMeditorLabel, "cell 1 0");
-        navBarPanel.add(publicationsTabButton, "cell 2 0");
-        navBarPanel.add(notificationsButton, "cell 3 0");
-        navBarPanel.add(settingsButton, "cell 4 0");
-        navBarPanel.add(profileButton);
+        contentPane.add(mediumIconImgLabel, "cell 0 0");
+        contentPane.add(superMeditorLabel, "cell 1 0");
+        contentPane.add(publicationsTabButton, "cell 2 0");
+        contentPane.add(settingsButton, "cell 3 0");
+        contentPane.add(profileButton, "pushx, growx");
     }
 
-    public JPanel getContainer() {
-        return navBarPanel;
-    }
 
     public JButton getPublicationsTabButton() {
         return publicationsTabButton;
@@ -219,11 +175,9 @@ public class NavBarView {
     }
 
     public void toggleLoggedStatus(){
-        settingsButton.setEnabled(!settingsButton.isEnabled());
-        settingsButton.setVisible(!settingsButton.isVisible());
         boolean isLoggedIn = CurrentUser.sharedInstance.getIsLoggedIn();
-        profileButton.removeActionListener(!isLoggedIn ? loggedInActionListener : loggedOutActionListener);
-        profileButton.addActionListener(isLoggedIn ? loggedInActionListener : loggedOutActionListener);
+        settingsButton.setEnabled(isLoggedIn);
+        settingsButton.setVisible(isLoggedIn);
         if(isLoggedIn){
             String imageUrl = CurrentUser.sharedInstance.getUser().getImageUrl();
             Image resizedImage =
@@ -235,4 +189,54 @@ public class NavBarView {
         }
     }
 
+    public JButton getProfileButton() {
+        return profileButton;
+    }
+
+    @Override
+    public int getWidth() {
+        return this.width;
+    }
+
+    @Override
+    public int getHeight() {
+        return this.height;
+    }
+
+    @Override
+    public void createAndShow() {
+        setupContentPane();
+        setMediumIconImgLabel();
+        setSuperMeditorLabel();
+        setPublicationsTabButton();
+        setProfileButton();
+        setSettingsButton();
+        setLayout();
+        addComponents();
+        setButtonHoverListeners();
+        setUpSettingPanels();
+        setActionListeners();
+    }
+
+    @Override
+    public ViewController getViewController() {
+        return this.viewController;
+    }
+
+    @Override
+    public JPanel getContentPane() {
+        return this.contentPane;
+    }
+
+    private void setButtonHoverListeners() {
+        publicationsTabButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                publicationsTabButton.setForeground(Color.BLACK);
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                publicationsTabButton.setForeground(Color.GRAY);
+            }
+        });
+    }
 }

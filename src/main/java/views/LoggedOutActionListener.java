@@ -2,6 +2,8 @@ package views;
 
 import models.CurrentUser;
 import models.UserRestCallResult;
+import org.omg.CORBA.Current;
+import views.appViews.HomeFeedView;
 import views.subviews.NavBarView;
 
 import javax.swing.*;
@@ -12,9 +14,6 @@ import java.awt.event.ActionListener;
  * Created by Andres on 12/8/16.
  */
 public class LoggedOutActionListener implements ActionListener {
-
-    private final HomeFeedView homeFeedView;
-    private NavBarView navBarView;
     JTextField username = new JTextField();
     JTextField password = new JPasswordField();
 
@@ -23,14 +22,9 @@ public class LoggedOutActionListener implements ActionListener {
             "Password:", password
     };
 
-    public LoggedOutActionListener(HomeFeedView homeFeedView) {
-        this.navBarView =null;
-        this.homeFeedView = homeFeedView;
+    public LoggedOutActionListener() {
     }
 
-    public void setNavBarView(NavBarView navBarView) {
-        this.navBarView = navBarView;
-    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -43,11 +37,7 @@ public class LoggedOutActionListener implements ActionListener {
                 JOptionPane.showMessageDialog(null, "all fields must be filled", "Login failed", JOptionPane.PLAIN_MESSAGE);
             } else {
                 UserRestCallResult result = CurrentUser.sharedInstance.attemptLogin(userName, pass);
-
-                if (result.getSuccess()) {
-                    navBarView.toggleLoggedStatus();
-                    homeFeedView.removeLoggedOutPanel();
-                } else {
+                if (!result.getSuccess()) {
                     JOptionPane.showMessageDialog(null, result.getErrorMessage(), "Login failed", JOptionPane.PLAIN_MESSAGE);
                 }
             }

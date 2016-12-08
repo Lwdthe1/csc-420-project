@@ -139,7 +139,6 @@ public class Publication {
         if (virtuals.containsKey("currentUserRetractedRequest")) {
             return (Boolean) virtuals.get("currentUserRetractedRequest");
         }
-        System.out.println("EREHEHEHEHEHH");
         return false;
     }
 
@@ -156,7 +155,6 @@ public class Publication {
     }
 
     public void setCurrentUserRetractedRequested(Boolean val) {
-        System.out.println("setCurrentUserRetractedRequested:" + val);
         if (val != null) {
             this.setCurrentUserRequested(!val);
         }
