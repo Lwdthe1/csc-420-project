@@ -41,12 +41,12 @@ public class LoggedOutActionListener implements ActionListener {
 
             if (userName.isEmpty() || pass.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "all fields must be filled", "Login failed", JOptionPane.PLAIN_MESSAGE);
-
             } else {
                 UserRestCallResult result = CurrentUser.sharedInstance.attemptLogin(userName, pass);
 
                 if (result.getSuccess()) {
                     navBarView.toggleLoggedStatus();
+                    homeFeedView.removeLoggedOutPanel();
                 } else {
                     JOptionPane.showMessageDialog(null, result.getErrorMessage(), "Login failed", JOptionPane.PLAIN_MESSAGE);
                 }

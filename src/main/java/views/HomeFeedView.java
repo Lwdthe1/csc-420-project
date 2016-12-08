@@ -19,6 +19,8 @@ public class HomeFeedView implements AppView {
     private NavBarView navBarView;
     private RealTimeNotificationView realTimeNotificationView;
     private LoggedOutActionListener loggedOuatAL;
+    private JPanel loggedOutPanel;
+    private JPanel contentPanel;
 
     public HomeFeedView(HomeFeedViewController homeFeedViewController, int width, int height) {
         this.homeFeedViewController = homeFeedViewController;
@@ -47,7 +49,7 @@ public class HomeFeedView implements AppView {
         loggedOuatAL = new LoggedOutActionListener(this);
         navBarView = new NavBarView(contentPane.getWidth(), loggedOuatAL);
         realTimeNotificationView = new RealTimeNotificationView(contentPane.getWidth());
-
+        setUpLoggedOutPanel();
         addComponentsToPane();
     }
 
@@ -57,11 +59,35 @@ public class HomeFeedView implements AppView {
         contentPane.add(realTimeNotificationView.getContainer(), BorderLayout.SOUTH);
     }
 
-    private void createAndAddScrollableTable() {
-        JPanel panel = new JPanel();
-        contentPane.add(panel, BorderLayout.CENTER);
+    public void setUpLoggedOutPanel(){
+        loggedOutPanel = new LoggedOutPanel();
+        loggedOutPanel.setLayout(new BoxLayout(loggedOutPanel, BoxLayout.Y_AXIS));
+        JLabel title = new JLabel("<html>"+ "<p style=\"text-align:center;\">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<font color='white'> A community of Medium editors.</font></p>" +"</html>");
+        title.setFont(new Font(title.getName(), Font.PLAIN, 40));
+        title.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JLabel subtitle = new JLabel("<html>"+ "<p style=\"text-align:center;\"><font color='white'>A community of Medium editors — Meditors — who need writers who need editors.</font></p>" +"</html>");
+        subtitle.setFont(new Font(title.getName(), Font.PLAIN, 30));
+        subtitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+        subtitle.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        JLabel subscript = new JLabel("<html>"+"<p style=\"text-align:center;\"><font color='white'>Signup to advertise and request to contribute to publications or join the chat with fellow contributors.</font></p>" + "</html>");
+        subscript.setFont(new Font(title.getName(), Font.PLAIN, 20));
+        subscript.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        subscript.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JButton login = new JButton("get started");
+        login.setAlignmentX(Component.CENTER_ALIGNMENT);
+        login.addActionListener(loggedOuatAL);
+        loggedOutPanel.add(title);
+        loggedOutPanel.add(subtitle);
+        loggedOutPanel.add(subscript);
+        loggedOutPanel.add(login);
+        loggedOutPanel.setPreferredSize(new Dimension(width,280));
+    }
 
-        panel.setSize(new Dimension(width, height));
+    private void createAndAddScrollableTable() {
+        contentPanel = new JPanel();
+        contentPanel.setSize(new Dimension(width, height));
+        contentPane.add(contentPanel);
 
         table = new JTable(){
             public TableCellRenderer getCellRenderer(int row, int column ) {
@@ -95,10 +121,10 @@ public class HomeFeedView implements AppView {
 
 
         table.setRowHeight(100);
-
+        contentPanel.add(loggedOutPanel);
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setPreferredSize(new Dimension(panel.getWidth(), panel.getHeight()));
-        panel.add(scrollPane);
+        scrollPane.setPreferredSize(new Dimension(contentPanel.getWidth(), contentPanel.getHeight()));
+        contentPanel.add(scrollPane);
     }
 
     private void registerPublicationContributeCellClicked(int row, int column) {
@@ -134,5 +160,9 @@ public class HomeFeedView implements AppView {
 
     public void refreshTable(int row) {
         table.repaint();// faster than ((AbstractTableModel) table.getModel()).fireTableDataChanged()
+    }
+
+    public void removeLoggedOutPanel(){
+        contentPanel.remove(loggedOutPanel);
     }
 }

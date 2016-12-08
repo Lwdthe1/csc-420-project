@@ -231,11 +231,16 @@ public class HomeFeedViewController implements SocketListener, AppViewController
     public void publicationContributeCellClicked(Publication publication, int row, int column) {
         PublicationContributeButtonCellRenderer homeFeedTableCell = publication.getHomeFeedTableCell();
         JButton contributeButton = homeFeedTableCell.contributeButton;
-        if (contributeButton.getText() == "Contribute") {
-            PublicationsService.sharedInstance.requestToContributeById(publication.getId(), "testUser0");
+        if(CurrentUser.sharedInstance.getIsLoggedIn()){
+            if (contributeButton.getText() == "Contribute") {
+                PublicationsService.sharedInstance.requestToContributeById(publication.getId(), CurrentUser.sharedInstance.getId());
+            } else {
+                PublicationsService.sharedInstance.retractRequestToContributeById(publication.getId(), CurrentUser.sharedInstance.getId());
+            }
         } else {
-            PublicationsService.sharedInstance.retractRequestToContributeById(publication.getId(), "testUser0");
+            JOptionPane.showMessageDialog(null, "Please log in first", "Please Login", JOptionPane.PLAIN_MESSAGE);
         }
+
         view.onContributeRequestSuccess(row, column);
     }
 }
