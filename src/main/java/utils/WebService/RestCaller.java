@@ -7,6 +7,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
@@ -157,24 +158,45 @@ public class RestCaller
         return resultData;
     }
 
-    public Boolean getCurrentUserSettings() throws URISyntaxException, IOException, HttpException {
-        HttpClient httpClient = new DefaultHttpClient();
-        String restUri = REST_API_URL + format("fake/user/%s/settings", CurrentUser.sharedInstance.getId());
-        HttpGet httpGet = new HttpGet(restUri);
-        HttpResponse response = httpClient.execute(httpGet);
+    public UserSettingsRestCallResult getCurrentUserSettings() throws URISyntaxException, IOException, HttpException {
+        UserSettingsRestCallResult userSettingsRestCallResult;
+        if(CurrentUser.sharedInstance.getIsLoggedIn()){
+            userSettingsRestCallResult = new UserSettingsRestCallResult();
+            HttpClient httpClient = new DefaultHttpClient();
+            String restUri = REST_API_URL + format("fake/user/%s/settings", CurrentUser.sharedInstance.getId());
+            HttpGet httpGet = new HttpGet(restUri);
+            HttpResponse response = httpClient.execute(httpGet);
 
-        String resultJson = EntityUtils.toString(response.getEntity());
-        JSONObject resultJsonObject = new JSONObject(resultJson);
+            String resultJson = EntityUtils.toString(response.getEntity());
+            JSONObject resultJsonObject = new JSONObject(resultJson);
+            JSONArray settings = resultJsonObject.getJSONArray("settings");
 
+            if (settings.length() > 0) {
+                boolean instantMessageBool = false;
+                boolean requestDecisionBool = false;
+                userSettingsRestCallResult = new UserSettingsRestCallResult(instantMessageBool, requestDecisionBool);
+                for(Object object: settings){
+                    JSONObject obj = (JSONObject) object;
+                    if(obj.getString("key").equals(UserSettingsRestCallResult.new_message_notification_instant)){
+                        userSettingsRestCallResult.setInstantMessage(obj.getBoolean("value"));
+                    } else if(obj.getString("key").equals(UserSettingsRestCallResult.contribution_request_decision)){
+                        userSettingsRestCallResult.setStatusRequest(obj.getBoolean("value"));
+                    }
+                }
+            }
 
-        if (resultJsonObject.has("settings")) {
-            JSONArray jsonRequests = resultJsonObject.getJSONArray("settings");
-            System.out.println(jsonRequests);
         } else {
-            System.out.println(resultJson);
-            System.out.println("returned json did not contain settings JSON: " + resultJsonObject.toString());
+            userSettingsRestCallResult =  new UserSettingsRestCallResult();
         }
+        return userSettingsRestCallResult;
+    }
 
+    public boolean updateCurrentUserSettings(String key, boolean value) throws URISyntaxException, IOException, HttpException {
+        HttpClient httpClient = new DefaultHttpClient();
+        String restUri = REST_API_URL + format("fake/user/%s/setting/%s/%s",CurrentUser.sharedInstance.getId(),key,value);
+        HttpPut httpPut = new HttpPut(restUri);
+        HttpResponse response = httpClient.execute(httpPut);
+        System.out.println(response.getEntity());
         return false;
     }
 }

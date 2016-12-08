@@ -4,6 +4,7 @@ import javax.swing.*;
 
 import models.CurrentUser;
 import models.UserRestCallResult;
+import models.UserSettingsRestCallResult;
 import net.miginfocom.swing.MigLayout;
 import org.apache.http.HttpException;
 import utils.ImageUtils;
@@ -43,6 +44,8 @@ public class NavBarView {
     JCheckBox statusRequestCB = new JCheckBox();
     JPanel instantMessagePanel = new JPanel();
     JPanel statusRequestPanel = new JPanel();
+    private ActionListener loggeinActionListener;
+    private ActionListener loggedOutActionListener;
 
 
     public NavBarView(int frameWidth) {
@@ -60,11 +63,10 @@ public class NavBarView {
         setProfileButton();
         settingsButton = new JButton();
         setSettingsButton();
+        setUpSettingPanels();
         setActionListeners();
         setLayout();
         addComponents();
-        //initSettings();
-        System.out.println("curentuserloggedin: " + CurrentUser.sharedInstance.getIsLoggedIn());
     }
 
     private void initSettings(){
@@ -112,16 +114,30 @@ public class NavBarView {
         settingsButton.setSize(new Dimension(100, 100));
         settingsButton.setIcon(new ImageIcon("Images/settings_icon.png", null));
         settingsButton.setBorderPainted(false);
+        settingsButton.setEnabled(false);
+        settingsButton.setVisible(false);
     }
 
     private void setProfileButton() {
         profileButton.setMaximumSize(new Dimension(100, 100));
-        profileButton.setIcon(new ImageIcon("Images/Profile.png", null));
         profileButton.setBorderPainted(false);
+        profileButton.setIcon(new ImageIcon("Images/Profile.png", null));
     }
 
     private void setActionListeners(){
-        profileButton.addActionListener(new ActionListener() {
+        loggeinActionListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int option = JOptionPane.showConfirmDialog(null, "Logout?", "logout", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                if (option == JOptionPane.OK_OPTION) {
+                    CurrentUser.sharedInstance.logout();
+                    profileButton.setIcon(new ImageIcon("Images/Profile.png", null));
+                    toggleLoggedStatus();
+                }
+            }
+        };
+
+        loggedOutActionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int option = JOptionPane.showConfirmDialog(null, loginObjects, "Login", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
@@ -129,42 +145,58 @@ public class NavBarView {
                     String userName = username.getText().trim();
                     String pass = NavBarView.this.password.getText().trim();
 
-                    if (userName.isEmpty() || pass.isEmpty()){
-                        JOptionPane.showMessageDialog(null, "all fields must be filled" , "Login failed", JOptionPane.PLAIN_MESSAGE);
+                    if (userName.isEmpty() || pass.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "all fields must be filled", "Login failed", JOptionPane.PLAIN_MESSAGE);
 
                     } else {
                         UserRestCallResult result = CurrentUser.sharedInstance.attemptLogin(userName, pass);
 
-                        if (result.getSuccess()){
+                        if (result.getSuccess()) {
                             String imageUrl = CurrentUser.sharedInstance.getUser().getImageUrl();
                             Image resizedImage =
                                     ImageUtils.loadImage(imageUrl).getScaledInstance(MAX_PROFILE_ICON_SIZE, MAX_PROFILE_ICON_SIZE, Image.SCALE_FAST);
                             ImageIcon icon = new ImageIcon(resizedImage);
                             profileButton.setIcon(icon);
-                            profileButton.removeActionListener(this);
+                            toggleLoggedStatus();
                         } else {
-                            JOptionPane.showMessageDialog(null, result.getErrorMessage() , "Login failed", JOptionPane.PLAIN_MESSAGE);
+                            JOptionPane.showMessageDialog(null, result.getErrorMessage(), "Login failed", JOptionPane.PLAIN_MESSAGE);
                         }
                     }
                 }
                 username.setText("");
                 password.setText("");
             }
-        });
+        };
+
+        profileButton.addActionListener(loggedOutActionListener);
 
         settingsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Boolean instantMessageOld = instantMessageCB.isSelected();
-                Boolean statusRequestOld = statusRequestCB.isSelected();
+                try {
+                    UserSettingsRestCallResult userSettingsRestCallResult = RestCaller.sharedInstance.getCurrentUserSettings();
+                    instantMessageCB.setSelected(userSettingsRestCallResult.getInstantMessage());
+                    statusRequestCB.setSelected(userSettingsRestCallResult.getStatusRequest());
+                    int option = JOptionPane.showConfirmDialog(null, getSettingsObjects(), "Settings", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                    if (option == JOptionPane.OK_OPTION) {
+                        Boolean instantMessage = instantMessageCB.isSelected();
+                        Boolean statusRequest = statusRequestCB.isSelected();
 
-                int option = JOptionPane.showConfirmDialog(null, getSettingsObjects(), "Settings", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-                if (option == JOptionPane.OK_OPTION) {
-                    Boolean instantMessage = instantMessageCB.isSelected();
-                    Boolean statusRequest = statusRequestCB.isSelected();
-                } else {
-                    instantMessageCB.setSelected(instantMessageOld);
-                    statusRequestCB.setSelected(statusRequestOld);
+                        if(instantMessage != userSettingsRestCallResult.getInstantMessage()){
+                            RestCaller.sharedInstance.updateCurrentUserSettings(UserSettingsRestCallResult.new_message_notification_instant,instantMessage);
+                        }
+
+                        if(statusRequest != userSettingsRestCallResult.getStatusRequest()){
+                            RestCaller.sharedInstance.updateCurrentUserSettings(UserSettingsRestCallResult.contribution_request_decision,statusRequest);
+                        }
+
+                    }
+                } catch (URISyntaxException e1) {
+                    e1.printStackTrace();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                } catch (HttpException e1) {
+                    e1.printStackTrace();
                 }
             }
 
@@ -196,7 +228,6 @@ public class NavBarView {
     }
 
     public Object[] getSettingsObjects(){
-        setUpSettingPanels();
         Object[] objects = new Object[2];
         objects[0] = instantMessagePanel;
         objects[1] = statusRequestPanel;
@@ -210,6 +241,13 @@ public class NavBarView {
         statusRequestPanel.setLayout(new BoxLayout(statusRequestPanel,BoxLayout.LINE_AXIS));
         statusRequestPanel.add(new JLabel("Status of Your Requests to Contribute"));
         statusRequestPanel.add(statusRequestCB);
+    }
+
+    public void toggleLoggedStatus(){
+        settingsButton.setEnabled(!settingsButton.isEnabled());
+        settingsButton.setVisible(!settingsButton.isVisible());
+        profileButton.removeActionListener(!CurrentUser.sharedInstance.getIsLoggedIn() ? loggeinActionListener : loggedOutActionListener);
+        profileButton.addActionListener(CurrentUser.sharedInstance.getIsLoggedIn() ? loggeinActionListener : loggedOutActionListener);
     }
 
 }

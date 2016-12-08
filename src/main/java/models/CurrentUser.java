@@ -52,7 +52,11 @@ public class CurrentUser {
     }
 
     public String getUsername() {
-        return user != null ? user.getUsername() : "";
+        return user != null ? user.getUsername() : "aramosfa";
+    }
+
+    public void logout(){
+        this.user = null;
     }
 
     public void loadRequestsToContribute() {
