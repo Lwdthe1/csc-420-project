@@ -50,7 +50,9 @@ public class PublicationTextCellRenderer extends JPanel implements TableCellRend
             metaInfoText = pub.getContributorUsername() + " · " + "Requested " + pub.getPubIdTotalContributionRequests() + " times" + " · " + "viewed " + pub.getPubIdTotalVisits() + " times";
         } else if (value instanceof ChatMessage) {
             chatMessage = (ChatMessage) value;
-            nameLabelText = chatMessage.getUserName();
+            if (chatMessage.getUserName() != null) nameLabelText = chatMessage.getUserName();
+            else nameLabelText = chatMessage.getUserId();
+
             descriptionLabelText = chatMessage.getText();
             metaInfoText = chatMessage.getContributorRole() + " " + chatMessage.getTimeAgo();;
         }

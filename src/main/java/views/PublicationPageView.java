@@ -6,6 +6,7 @@ import viewControllers.interfaces.AppView;
 import viewControllers.PublicationPageViewController;
 import viewControllers.interfaces.AppViewController;
 import views.subviews.PublicationChatView;
+import views.subviews.RealTimeNotificationView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -58,6 +59,7 @@ public class PublicationPageView implements AppView {
 
     private PublicationPageViewController publicationPageViewController;
 
+    private RealTimeNotificationView realTimeNotificationView;
 
     public PublicationPageView(PublicationPageViewController publicationPageViewController, int width, int height) {
         this.width = width;
@@ -92,6 +94,8 @@ public class PublicationPageView implements AppView {
         constraints.fill = GridBagConstraints.HORIZONTAL;
 
         Publication pub = publicationPageViewController.getPublication();
+        realTimeNotificationView = new RealTimeNotificationView(this.getWidth());
+
         addComponentsToPane(constraints, pub);
     }
 
@@ -213,6 +217,18 @@ public class PublicationPageView implements AppView {
 
     public JTable getTable() { return publicationChatView.getTable(); }
 
-    public void refreshTable() { }
+    public void refreshTable() { publicationChatView.refreshTable(); }
+
+    public JButton getSendMessageButton() {
+        return publicationChatView.getSendMessageButton();
+    }
+
+    public JTextArea getChatTextArea() {
+        return publicationChatView.getChatTextArea();
+    }
+
+    public RealTimeNotificationView getRealTimeNotificationView() {
+        return realTimeNotificationView;
+    }
 
 }

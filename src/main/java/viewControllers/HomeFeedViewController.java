@@ -151,9 +151,9 @@ public class HomeFeedViewController implements SocketListener, AppViewController
     }
 
     private void startSocketIO() {
-        this.socketManger = new SocketManager();
-        socketManger.listen(SocketEvent.CONNECTED, this);
-        socketManger.setupAndConnect();
+        //this.socketManger = new SocketManager();
+        //socketManger.listen(SocketEvent.CONNECTED, this);
+        //socketManger.setupAndConnect();
     }
 
     @Override
@@ -238,5 +238,9 @@ public class HomeFeedViewController implements SocketListener, AppViewController
             PublicationsService.sharedInstance.retractRequestToContributeById(publication.getId());
         }
         view.onContributeRequestSuccess(row, column);
+    }
+
+    public PublicationsService getPublicationsService() {
+        return publicationsService;
     }
 }

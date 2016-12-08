@@ -18,6 +18,9 @@ public class PublicationChatView  {
     private JPanel contentPane;
     private JTable table;
     private JScrollPane scrollPane;
+    private JButton sendMessageButton;
+    private JTextArea chatTextArea;
+
 
     public PublicationChatView(int width, int height) {
         this.width = width;
@@ -80,20 +83,14 @@ public class PublicationChatView  {
     }
 
     private void addChatTextArea() {
-        JTextArea chatTextArea = new JTextArea();
+        chatTextArea = new JTextArea();
         chatTextArea.setLineWrap(true);
         JScrollPane chatTextScrollingArea = new JScrollPane(chatTextArea);
         contentPane.add(chatTextScrollingArea, "cell 0 1, growx, growy");
     }
 
     private void addSendMessageButton() {
-        JButton sendMessageButton = new JButton("Send");
-        sendMessageButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
+        sendMessageButton = new JButton("Send");
         contentPane.add(sendMessageButton, "cell 1 1");
     }
 
@@ -105,5 +102,13 @@ public class PublicationChatView  {
 
     public void refreshTable() {
         table.repaint();
+    }
+
+    public JButton getSendMessageButton() {
+        return sendMessageButton;
+    }
+
+    public JTextArea getChatTextArea() {
+        return chatTextArea;
     }
 }

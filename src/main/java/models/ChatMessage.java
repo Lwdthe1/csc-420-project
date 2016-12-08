@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * Created by lwdthe1 on 12/4/16.
@@ -25,10 +26,11 @@ public class ChatMessage {
     private PrettyTime prettyTime = new PrettyTime();
 
     public ChatMessage(JSONObject payload) {
+        if (payload.has("message")) payload = (JSONObject) payload.get("message");
         this.publicationId = payload.getString("publicationId");
         this.userId = payload.getString("userId");
         this.text = payload.getString("text");
-        this.userName = payload.getString("username");
+        if (payload.has("username")) this.userName = payload.getString("username");
         if (payload.has("contributorRole")) {
             this.contributorRole = payload.getString("contributorRole").substring(0, 1).toUpperCase() + payload.getString("contributorRole").substring(1);
         } else {
@@ -51,6 +53,7 @@ public class ChatMessage {
             createdDate = createdDate.replace("Z", "");
             String dateStr = createdDate;
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.US);
+            simpleDateFormat.setTimeZone(TimeZone.getTimeZone("America/New_York"));
             Date createdDateStamp = simpleDateFormat.parse(dateStr);
             return prettyTime.format(createdDateStamp);
         } catch (ParseException e) {
