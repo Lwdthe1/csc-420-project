@@ -20,6 +20,8 @@ import java.util.concurrent.Semaphore;
 public class CurrentUser {
     public static CurrentUser sharedInstance = new CurrentUser();
     private User user;
+    private boolean instantNotificationsSetting = false;
+    private boolean requestDecisionSetting = false;
     private ArrayList<RequestToContribute> originalRequestsToContribute;
     private HashMap<String, RequestToContribute> publicationRequestsMap = new HashMap<>();
     private Semaphore loadRequestsToContributeLock = new Semaphore(1);
@@ -140,5 +142,18 @@ public class CurrentUser {
     public void listen(AuthEvent event, AuthListener listener) {
         eventListenersMap.putIfAbsent(event, new LinkedList<AuthListener>());
         eventListenersMap.get(event).add(listener);
+    }
+
+    public void updateSettings(boolean instantNotifications, boolean requestDecisionSetting) {
+        this.instantNotificationsSetting = instantNotifications;
+        this.requestDecisionSetting = requestDecisionSetting;
+    }
+
+    public boolean getInstantNotificationsSetting() {
+        return instantNotificationsSetting;
+    }
+
+    public boolean getRequestDecisionSetting() {
+        return requestDecisionSetting;
     }
 }

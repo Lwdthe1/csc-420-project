@@ -111,6 +111,7 @@ public class NavBarView implements View {
             public void actionPerformed(ActionEvent e) {
                 try {
                     UserSettingsRestCallResult userSettingsRestCallResult = RestCaller.sharedInstance.getCurrentUserSettings();
+                    CurrentUser.sharedInstance.updateSettings(userSettingsRestCallResult.getInstantMessage(), userSettingsRestCallResult.getStatusRequest());
                     instantMessageCB.setSelected(userSettingsRestCallResult.getInstantMessage());
                     statusRequestCB.setSelected(userSettingsRestCallResult.getStatusRequest());
                     int option = JOptionPane.showConfirmDialog(null, getSettingsObjects(), "Settings", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);

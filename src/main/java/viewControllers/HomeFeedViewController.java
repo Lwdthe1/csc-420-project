@@ -21,7 +21,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.concurrent.Semaphore;
@@ -151,10 +150,13 @@ public class HomeFeedViewController implements AppViewController, SocketListener
     public void onEvent(SocketEvent event, JSONObject payload) {
         switch(event) {
             case CHAT_MESSAGE:
-                updateRealtimeNotificationWithNewChatMessage(payload);
+                if(CurrentUser.sharedInstance.getInstantNotificationsSetting()){
+                    updateRealtimeNotificationWithNewChatMessage(payload);
+                }
                 break;
             case NOTIFICATION_REQUEST_TO_CONTRIBUTE_DECISION:
-                updateRealtimeNotificationWithNewRequestDecision(payload);
+                    updateRealtimeNotificationWithNewRequestDecision(payload);
+
                 break;
         }
     }
@@ -189,17 +191,19 @@ public class HomeFeedViewController implements AppViewController, SocketListener
         view.refreshTable();
 
         String title = requestApproved? "Request Approved" : "Request Denied";
-        view.getRealTimeNotificationView().updateNotification(title,
-                format("Your request to contribute to %s was %s",
-                        requestPub.getName(),
-                        requestApproved ? "approved." : "denied."),
-                requestPub.getImage(), new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        //TODO(keith) move to publication's page
+        if(CurrentUser.sharedInstance.getRequestDecisionSetting()) {
+            view.getRealTimeNotificationView().updateNotification(title,
+                    format("Your request to contribute to %s was %s",
+                            requestPub.getName(),
+                            requestApproved ? "approved." : "denied."),
+                    requestPub.getImage(), new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            //TODO(keith) move to publication's page
+                        }
                     }
-                }
-        );
+            );
+        }
     }
 
     @Override
@@ -243,7 +247,7 @@ public class HomeFeedViewController implements AppViewController, SocketListener
                 PublicationsService.sharedInstance.retractRequestToContributeById(publication.getId());
             }
         } else {
-            JOptionPane.showMessageDialog(null, "Please log in first", "Please Login", JOptionPane.PLAIN_MESSAGE);
+            new LoggedOutActionListener().actionPerformed(null);
         }
 
         view.onContributeRequestSuccess(row, column);
