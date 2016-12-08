@@ -65,7 +65,7 @@ public class PublicationPageView implements AppView {
         this.width = width;
         this.height = height;
         this.publicationPageViewController = publicationPageViewController;
-        this.publicationChatView = new PublicationChatView(width, height);
+        this.publicationChatView = new PublicationChatView(publicationPageViewController.getPublication().getImage(), width, height);
     }
 
     @Override
@@ -230,6 +230,8 @@ public class PublicationPageView implements AppView {
     public RealTimeNotificationView getRealTimeNotificationView() {
         return realTimeNotificationView;
     }
+
+    public JScrollPane getScrollPane() { return publicationChatView.getScrollPane(); }
 
     @Override
     public Boolean isVisibleView() {

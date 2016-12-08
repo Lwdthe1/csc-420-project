@@ -116,6 +116,11 @@ public class PublicationPageViewController implements SocketListener, viewContro
             setupViewWhileLoadingSemaphore.acquire();
             setupChatMessagesTable(chatMessages);
 
+            //Set table to latest message
+            //JScrollBar vertical = view.getScrollPane().getVerticalScrollBar();
+            //vertical.setValue(vertical.getMaximum());
+
+            //Check if user can chat
 //            if (!publication.currentUserIsContributor()) {
 //                System.out.println("NOT CONTRIBUTOR");
 //                view.getSendMessageButton().setEnabled(false);

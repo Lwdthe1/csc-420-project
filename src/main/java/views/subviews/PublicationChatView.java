@@ -4,10 +4,8 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
+import java.awt.*;
+import java.awt.event.*;
 
 /**
  * Created by keithmartin on 12/6/16.
@@ -20,11 +18,13 @@ public class PublicationChatView  {
     private JScrollPane scrollPane;
     private JButton sendMessageButton;
     private JTextArea chatTextArea;
+    private JLabel currentUserImageLabel;
+    private Image userImage;
 
-
-    public PublicationChatView(int width, int height) {
+    public PublicationChatView(Image userImage, int width, int height) {
         this.width = width;
         this.height = height;
+        this.userImage = userImage;
         createAndShow();
     }
 
@@ -46,6 +46,7 @@ public class PublicationChatView  {
 
     public void addComponentsToPane() {
         createAndAddScrollableTable();
+        addCurrentUserImage();
         addChatTextArea();
         addSendMessageButton();
     }
@@ -69,36 +70,37 @@ public class PublicationChatView  {
         table.setRowHeight(100);
 
         scrollPane = new JScrollPane(table);
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-                                                   public void run() {
-                                                       JScrollBar bar = scrollPane.getVerticalScrollBar();
-                                                       bar.setValue(bar.getMaximum());
-                                                   }
-                                               }
-        );
-//        scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
-//            public void adjustmentValueChanged(AdjustmentEvent e) {
-//                e.getAdjustable().setValue(e.getAdjustable().getMaximum());
-//            }
-//        });
-        contentPane.add(scrollPane, "cell 0 0, growx, growy");
+        table.addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                int lastIndex = table.getRowCount() - 1;
+                table.changeSelection(lastIndex, 0, false, false);
+            }
+        });
+        contentPane.add(scrollPane, "span 3, wrap");
     }
 
     private void addCurrentUserImage() {
         //TODO: Will add once I get the current user class merged.
-        //JLabel currentUserImage = new JLabel()
+        currentUserImageLabel = new JLabel();
+        Dimension dimensions = new Dimension(30, 30);
+        currentUserImageLabel.setSize(dimensions);
+        currentUserImageLabel.setIcon(new ImageIcon(userImage.getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
+        currentUserImageLabel.setBorder(BorderFactory.createEmptyBorder());
+
+        contentPane.add(currentUserImageLabel, "cell 0 1");
+
     }
 
     private void addChatTextArea() {
         chatTextArea = new JTextArea();
         chatTextArea.setLineWrap(true);
         JScrollPane chatTextScrollingArea = new JScrollPane(chatTextArea);
-        contentPane.add(chatTextScrollingArea, "cell 0 1, growx, growy");
+        contentPane.add(chatTextScrollingArea, "cell 1 1, growx, growy");
     }
 
     private void addSendMessageButton() {
         sendMessageButton = new JButton("Send");
-        contentPane.add(sendMessageButton, "cell 1 1");
+        contentPane.add(sendMessageButton, "cell 2 1");
     }
 
     public JPanel getContentPane() {

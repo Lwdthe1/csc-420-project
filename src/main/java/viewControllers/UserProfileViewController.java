@@ -137,7 +137,6 @@ public class UserProfileViewController implements SocketListener, AppViewControl
 
     private void updateRealtimeNotificationWithRequestDecision(JSONObject payload) {
         RequestDecisionNotification requestDecisionNotification = new RequestDecisionNotification(payload);
-        System.out.printf("\nReceived requestDecisionNotification: %s\n", requestDecisionNotification);
         final Publication requestPub = publicationsService.getById(requestDecisionNotification.getPublicationId());
         if (requestPub == null) return;
 
@@ -170,7 +169,6 @@ public class UserProfileViewController implements SocketListener, AppViewControl
     }
 
     public void publicationImageButtonClicked(Publication publication) {
-        System.out.printf("%s image button clicked.", publication.getName());
         PublicationPageViewController publicationPageViewController = new PublicationPageViewController(this, publication);
         navigationController.moveTo(publicationPageViewController);
     }
