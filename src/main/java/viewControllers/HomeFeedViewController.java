@@ -49,7 +49,7 @@ public class HomeFeedViewController implements SocketListener, AppViewController
         }
 
         publicationsService = PublicationsService.sharedInstance;
-        loadCurrentUserRequestsToContribute();
+        loadFeed();
         this.view = new HomeFeedView(this, application.getMainFrame().getWidth(), application.getMainFrame().getHeight());
         setupView();
         setupViewWhileLoadingSemaphore.release();
@@ -98,23 +98,6 @@ public class HomeFeedViewController implements SocketListener, AppViewController
         worker.execute();
     }
 
-
-    private void loadCurrentUserRequestsToContribute() {
-        SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>() {
-            @Override
-            protected Boolean doInBackground() throws Exception {
-                PublicationsService.sharedInstance.loadAll();
-                return true;
-            }
-
-            // Can safely update the GUI from this method.
-            protected void done() {
-                loadFeed();
-            }
-        };
-        worker.execute();
-    }
-
     private void showPublications() {
         try {
             //acquire the lock to assure the view is ready
@@ -127,7 +110,6 @@ public class HomeFeedViewController implements SocketListener, AppViewController
                 }
             });
             setupPublicationsTable(publications);
-            sendChatMessage(format("Just wanted y'all to know I'm viewing %d publications that are looking for Writers", publications.size()));
         } catch (InterruptedException e) {
             System.out.printf("\nCouldn't show publications because: %s", e.getMessage());
             e.printStackTrace();
@@ -156,9 +138,6 @@ public class HomeFeedViewController implements SocketListener, AppViewController
     @Override
     public void onEvent(SocketEvent event, JSONObject payload) {
         switch(event) {
-            case NUM_CLIENTS:
-                System.out.printf("\nNumber of active clients: %d\n", payload.get("value"));
-                break;
             case CHAT_MESSAGE:
                 updateRealtimeNotificationWithNewChatMessage(payload);
                 break;
@@ -212,24 +191,9 @@ public class HomeFeedViewController implements SocketListener, AppViewController
     }
 
     @Override
-    public void onEvent(String event, JSONObject obj) {
-
-    }
-
-    @Override
     public void registerForEvents() {
-        socketManger.listen(SocketEvent.NUM_CLIENTS, this);
         socketManger.listen(SocketEvent.CHAT_MESSAGE, this);
         socketManger.listen(SocketEvent.NOTIFICATION_REQUEST_TO_CONTRIBUTE_DECISION, this);
-        sendChatMessage("Hey, World! I've registered to hear everything you have to say.");
-    }
-
-    private void sendChatMessage(String message) {
-        socketManger.emit(SocketEvent.CHAT_MESSAGE, ChatMessage.createJSONPayload("eb297ea1161a", "LincolnWDaniel", message));
-    }
-
-    public void publicationContributeCellClicked(Publication index) {
-
     }
 
     public void publicationImageButtonClicked(Publication publication) {

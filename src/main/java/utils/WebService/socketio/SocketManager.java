@@ -92,11 +92,11 @@ public class SocketManager {
         JSONObject payload = obj.has("payload") && obj.get("payload") instanceof JSONObject ? (JSONObject) obj.get("payload") : null;
         try {
             notifyListenersLock.acquire();
-            LinkedList<SocketListener> eventListeners = (LinkedList<SocketListener>) eventListenersMap.get(event.getValue()).clone();
+            LinkedList<SocketListener> eventListeners = eventListenersMap.get(event.getValue());
             if (eventListeners != null) {
+                eventListeners = (LinkedList<SocketListener>) eventListeners.clone();
                 for (SocketListener listener: eventListeners) {
                     listener.onEvent(event, payload);
-                    listener.onEvent(event.getValue(), payload);
                 }
             }
             notifyListenersLock.release();

@@ -57,7 +57,7 @@ public class PublicationTextCellRenderer extends JPanel implements TableCellRend
         String descriptionHTML = format("<html><body><p style='%s'>%s</p></body></html>", TextUtils.DESCRIPTIVE_TEXT_STYLE, description);
 
         JLabel descriptionLabel = new JLabel(descriptionHTML);
-        descriptionLabel.setMinimumSize(new Dimension(100, 50));
+        //descriptionLabel.setMinimumSize(new Dimension(100, 45));
         constraints.weightx = 0.7;
         constraints.gridx = 0;
         constraints.gridy = 1;
@@ -71,7 +71,7 @@ public class PublicationTextCellRenderer extends JPanel implements TableCellRend
 
         JLabel metaInfoLabel = new JLabel(metaInfoHTML);
         constraints.gridx = 0;
-        constraints.gridy = 3;
+        constraints.gridy = 2;
         constraints.insets = TOP_5_LEFT_PAD_20;
         this.add(metaInfoLabel, constraints);
     }

@@ -52,7 +52,7 @@ public class PublicationsService {
      */
     public ArrayList<Publication> getAll() {
         if (publications == null || publications.isEmpty()) {
-            fetchPublications();
+            loadAll();
         }
         return publications;
     }

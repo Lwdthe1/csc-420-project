@@ -5,6 +5,7 @@ import utils.WebService.RestCaller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.Semaphore;
 
 /**
  * Created by lwdthe1 on 12/6/16.
@@ -14,6 +15,7 @@ public class CurrentUser {
     private User user;
     private ArrayList<RequestToContribute> originalRequestsToContribute;
     private HashMap<String, RequestToContribute> publicationRequestsMap = new HashMap<>();
+    private Semaphore loadRequestsToContributeLock = new Semaphore(1);
 
     private CurrentUser() {
 
@@ -44,6 +46,7 @@ public class CurrentUser {
 
     private void loadRequestsToContribute() {
         try {
+            loadRequestsToContributeLock.acquire();
             this.originalRequestsToContribute = (ArrayList<RequestToContribute>) RestCaller.sharedInstance.getCurrentUserRequests();
             for (RequestToContribute request: originalRequestsToContribute) {
                 publicationRequestsMap.put(request.getPublicationId(), request);
@@ -51,6 +54,7 @@ public class CurrentUser {
         } catch (Exception e) {
             //it's safe to ignore this.
         }
+        loadRequestsToContributeLock.release();
     }
 
     public ArrayList<RequestToContribute> getRequestsToContribute() {

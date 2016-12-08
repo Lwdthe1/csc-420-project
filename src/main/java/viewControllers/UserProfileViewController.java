@@ -158,11 +158,6 @@ public class UserProfileViewController implements SocketListener, AppViewControl
     }
 
     @Override
-    public void onEvent(String event, JSONObject obj) {
-
-    }
-
-    @Override
     public void registerForEvents() {
         socketManger.listen(SocketEvent.CHAT_MESSAGE, this);
         socketManger.listen(SocketEvent.NOTIFICATION_REQUEST_TO_CONTRIBUTE_DECISION, this);
