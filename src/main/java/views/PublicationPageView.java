@@ -71,13 +71,11 @@ public class PublicationPageView implements AppView {
      * event dispatch thread.
      */
     public void createAndShow() {
-        this.contentPane = new JPanel(new BorderLayout());
-        System.out.println(width);
-        System.out.println(height);
+        this.contentPane = new JPanel();
         this.contentPane.setSize(new Dimension(width, height));
+        this.contentPane.setBackground(Color.white);
         GridBagLayout gridbagLayout = new GridBagLayout();
         this.contentPane.setLayout(gridbagLayout);
-        this.contentPane.setBackground(Color.white);
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.HORIZONTAL;
@@ -87,16 +85,16 @@ public class PublicationPageView implements AppView {
     }
 
     private void addComponentsToPane(GridBagConstraints constraints, Publication pub) {
-        //addNameLabel(constraints, pub);
-//        addAboutLabel(constraints);
-//        addDescriptionLabel(constraints, pub);
-//        addLogoLabel(constraints, pub);
-//        addStatsLabel(constraints);
-//        addRequestedStatsLabel(constraints, pub);
-//        addViewedStatsLabel(constraints, pub);
-//        addRelationLabel(constraints);
-//        addRelationDescriptionLabel(constraints);
-//        addContributerLabel(constraints, pub);
+        addNameLabel(constraints, pub);
+        addAboutLabel(constraints);
+        addDescriptionLabel(constraints, pub);
+        addLogoLabel(constraints, pub);
+        addStatsLabel(constraints);
+        addRequestedStatsLabel(constraints, pub);
+        addViewedStatsLabel(constraints, pub);
+        addRelationLabel(constraints);
+        addRelationDescriptionLabel(constraints);
+        addContributerLabel(constraints, pub);
         addChatTable(constraints);
     }
 
@@ -185,7 +183,11 @@ public class PublicationPageView implements AppView {
     }
 
     private void addChatTable(GridBagConstraints constraints) {
-        constraints.insets = new Insets(0, 0, 0, 0);
+        constraints.weightx = 1.0;
+        constraints.weighty = 1.0;
+        constraints.gridwidth = 2;
+        constraints.fill = GridBagConstraints.BOTH;
+        //constraints.gridy = 8;
         this.contentPane.add(publicationChatView.getContentPane(), constraints);
     }
 

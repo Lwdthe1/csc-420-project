@@ -96,8 +96,8 @@ public class PublicationPageViewController implements SocketListener, AppViewCon
         model.addColumn("", chatMessages.toArray());
         //model.addColumn("", chatMessages.toArray());
 
-         view.getTable().getColumnModel().getColumn(1).setPreferredWidth(400);
-         view.getTable().setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+        view.getTable().getColumnModel().getColumn(1).setPreferredWidth(400);
+        view.getTable().setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
     }
 
     private void setButtonHoverListeners() {

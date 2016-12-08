@@ -72,7 +72,6 @@ public class PublicationsService {
 
     public ArrayList<ChatMessage> getChatMessages(String publicationId) {
         try {
-            System.out.println("GETTING CHAT MESSAGES");
             return (ArrayList<ChatMessage>) RestCaller.sharedInstance.getChatMessages(publicationId);
             //return (ArrayList<ChatMessage>) RestCaller.sharedInstance.getChatMessages();
         } catch (HttpException e) {
