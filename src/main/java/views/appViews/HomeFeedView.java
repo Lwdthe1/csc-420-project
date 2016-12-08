@@ -155,10 +155,15 @@ public class HomeFeedView implements AppView, TableView {
     }
 
     private void handlePublicationImageButtonClick(int row, int column) {
-        Object value = table.getValueAt(row, column);
-        if (value instanceof Publication) {
-            appViewController.publicationImageButtonClicked((Publication) value);
+        try {
+            Object value = table.getValueAt(row, column);
+            if (value instanceof Publication) {
+                appViewController.publicationImageButtonClicked((Publication) value);
+            }
+        } catch (Exception ex) {
+
         }
+
     }
 
     public RealTimeNotificationView getRealTimeNotificationView() {

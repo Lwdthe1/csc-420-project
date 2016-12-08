@@ -21,9 +21,6 @@ public class NavigationController implements ViewController, AuthListener {
     private final NavBarView view;
     private final MainApplication application;
     private HashMap<String, AppViewController> viewControllersMap = new HashMap<>();
-    private final int MAX_PROFILE_ICON_SIZE = 35;
-
-    private SocketManager socketManger;
 
     public NavigationController(MainApplication application) {
         this.application = application;
@@ -36,11 +33,6 @@ public class NavigationController implements ViewController, AuthListener {
     @Override
     public View getView() {
         return view;
-    }
-
-    public View getNewView() {
-        NavBarView newView = new NavBarView(application.getMainFrame().getWidth());
-        return newView;
     }
 
     public void setupView() {
