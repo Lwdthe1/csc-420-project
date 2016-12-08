@@ -67,16 +67,17 @@ public class NavBarView implements View {
     }
 
     private void setLayout() {
-        contentPane.setLayout(new MigLayout("", // Layout Constraints
-                "[][][][]460[]", // Column constraints with default align
-                "")); // Row constraints
+        contentPane.setLayout(new MigLayout(// Layout Constraints
+                "",
+                "[][][]500[]", // Column constraints
+                "[]20[]")); // Row constraints // Row constraints
     }
 
     private void addComponents() {
         contentPane.add(mediumIconImgLabel, "cell 0 0");
         contentPane.add(superMeditorLabel, "cell 1 0");
         contentPane.add(publicationsTabButton, "cell 2 0");
-        contentPane.add(profileButton, "cell 3 0");
+        contentPane.add(profileButton, "pushx, growx");
     }
 
     public JButton getPublicationsTabButton() {

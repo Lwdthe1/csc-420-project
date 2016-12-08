@@ -40,14 +40,14 @@ public class PublicationChatView  {
      */
     public void createAndShow() {
         this.contentPane = new JPanel();
-        this.contentPane.setLayout(new MigLayout());
+        this.contentPane.setLayout(new MigLayout("", "[][]", "[][]"));
         this.contentPane.setBackground(Color.white);
         addComponentsToPane();
     }
 
     public void addComponentsToPane() {
         createAndAddScrollableTable();
-        addCurrentUserImage();
+        //addCurrentUserImage();
         addChatTextArea();
         addSendMessageButton();
     }
@@ -70,18 +70,18 @@ public class PublicationChatView  {
 
         table.setRowHeight(100);
 
-        scrollPane = new JScrollPane(table) ;
+        scrollPane = new JScrollPane(table);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(100);
         table.addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
                 int lastIndex = table.getRowCount() - 1;
                 table.changeSelection(lastIndex, 0, false, false);
             }
         });
-        contentPane.add(scrollPane, "span 3");
+        contentPane.add(scrollPane, "cell 0 0,span 3, pushx, growx");
     }
 
     private void addCurrentUserImage() {
-        //TODO: Will add once I get the current user class merged.
         currentUserImageLabel = new JLabel();
         Dimension dimensions = new Dimension(30, 30);
         currentUserImageLabel.setSize(dimensions);
@@ -96,12 +96,12 @@ public class PublicationChatView  {
         chatTextArea = new JTextArea();
         chatTextArea.setLineWrap(true);
         JScrollPane chatTextScrollingArea = new JScrollPane(chatTextArea);
-        contentPane.add(chatTextScrollingArea, "cell 1 1, grow");
+        contentPane.add(chatTextScrollingArea, "cell 0 1, pushx, growx");
     }
 
     private void addSendMessageButton() {
         sendMessageButton = new JButton("Send");
-        contentPane.add(sendMessageButton, "cell 3 1");
+        contentPane.add(sendMessageButton, "cell 1 1");
     }
 
     public JPanel getContentPane() {

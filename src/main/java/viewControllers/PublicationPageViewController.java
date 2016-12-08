@@ -14,6 +14,7 @@ import views.PublicationPageView;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
@@ -146,8 +147,9 @@ public class PublicationPageViewController implements SocketListener, viewContro
         view.getTable().setModel(model);
         model.addColumn("", chatMessages.toArray());
         model.addColumn("", chatMessages.toArray());
-
+        view.getTable().getColumnModel().getColumn(0).setPreferredWidth(100);
         view.getTable().getColumnModel().getColumn(1).setPreferredWidth(400);
+        view.getScrollPane().setPreferredSize(new Dimension(view.getTable().getSize()));
         view.getTable().setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
     }
 
