@@ -70,6 +70,7 @@ public class HomeFeedViewController implements SocketListener, viewControllers.i
         this.view.createAndShow();
     }
 
+    @Override
     public void transitionTo(viewControllers.interfaces.AppViewController appViewController) {
         this.getNavigationController().moveTo(appViewController);
     }

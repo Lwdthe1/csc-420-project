@@ -41,6 +41,7 @@ public class PublicationChatView  {
     public void createAndShow() {
         this.contentPane = new JPanel();
         this.contentPane.setLayout(new MigLayout());
+        this.contentPane.setBackground(Color.white);
         addComponentsToPane();
     }
 
@@ -69,14 +70,14 @@ public class PublicationChatView  {
 
         table.setRowHeight(100);
 
-        scrollPane = new JScrollPane(table);
+        scrollPane = new JScrollPane(table) ;
         table.addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
                 int lastIndex = table.getRowCount() - 1;
                 table.changeSelection(lastIndex, 0, false, false);
             }
         });
-        contentPane.add(scrollPane, "span 3, wrap");
+        contentPane.add(scrollPane, "span 3");
     }
 
     private void addCurrentUserImage() {
@@ -95,12 +96,12 @@ public class PublicationChatView  {
         chatTextArea = new JTextArea();
         chatTextArea.setLineWrap(true);
         JScrollPane chatTextScrollingArea = new JScrollPane(chatTextArea);
-        contentPane.add(chatTextScrollingArea, "cell 1 1, growx, growy");
+        contentPane.add(chatTextScrollingArea, "cell 1 1, grow");
     }
 
     private void addSendMessageButton() {
         sendMessageButton = new JButton("Send");
-        contentPane.add(sendMessageButton, "cell 2 1");
+        contentPane.add(sendMessageButton, "cell 3 1");
     }
 
     public JPanel getContentPane() {

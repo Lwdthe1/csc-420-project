@@ -12,24 +12,14 @@ import javax.swing.*;
 import java.awt.*;
 
 import static java.lang.String.format;
+import static utils.TextUtils.DESCRIPTIVE_PUB_TEXT_STYLE;
+import static utils.TextUtils.FEED_PUBLICATION_NAME_STYLE;
+import static utils.TextUtils.SUBTITLE_TEXT_STYLE;
 
 /**
  * Created by keithmartin on 12/5/16.
  */
 public class PublicationPageView implements AppView {
-
-    private static final String FEED_PUBLICATION_NAME_STYLE = "color: #1abc9c;\n" +
-            "    font-size: 10px;\n" +
-            "    font-family: -apple-system,BlinkMacSystemFont,\"Segoe UI\",Roboto,Oxygen,Ubuntu,Cantarell,\"Open Sans\",\"Helvetica Neue\",sans-serif;\n" +
-            "    letter-spacing: 0;\n" +
-            "    font-weight: 500;\n" +
-            "    font-style: normal;\n" +
-            "    text-rendering: optimizeLegibility;\n" +
-            "    -webkit-font-smoothing: antialiased;\n" +
-            "    -moz-osx-font-smoothing: grayscale;\n" +
-            "    -moz-font-feature-settings: \"liga\" on;\n" +
-            "    text-decoration: none !important;\n" +
-            "    cursor: pointer !important;";
 
     private JLabel nameLabel;
     private JLabel aboutLabel;
@@ -123,7 +113,8 @@ public class PublicationPageView implements AppView {
     }
 
     private void addAboutLabel(GridBagConstraints constraints) {
-        aboutLabel = new JLabel("About");
+        String about = format("<html><body><p style='%s'>%s</p></body></html>", SUBTITLE_TEXT_STYLE, "ABOUT");
+        aboutLabel = new JLabel(about);
         constraints.gridx = 1;
         constraints.gridy = 1;
         constraints.insets = TOP_10_LEFT_PAD_20;
@@ -131,7 +122,8 @@ public class PublicationPageView implements AppView {
     }
 
     private void addDescriptionLabel(GridBagConstraints constraints, Publication pub) {
-        descriptionLabel = new JLabel(pub.getDescription());
+        String description = format("<html><body><p style='%s'>%s</p></body></html>", DESCRIPTIVE_PUB_TEXT_STYLE, pub.getDescription());
+        descriptionLabel = new JLabel(description);
         constraints.gridx = 1;
         constraints.gridy = 2;
         constraints.insets = TOP_5_LEFT_PAD_20;
@@ -150,7 +142,8 @@ public class PublicationPageView implements AppView {
     }
 
     private void addStatsLabel(GridBagConstraints constraints) {
-        statsLabel = new JLabel("Stats");
+        String stats = format("<html><body><p style='%s'>%s</p></body></html>", SUBTITLE_TEXT_STYLE, "STATS");
+        statsLabel = new JLabel(stats);
         constraints.gridx = 1;
         constraints.gridy = 3;
         constraints.insets = TOP_20_LEFT_PAD_20;
@@ -158,7 +151,8 @@ public class PublicationPageView implements AppView {
     }
 
     private void addRequestedStatsLabel(GridBagConstraints constraints, Publication pub) {
-        requestedStatsLabel = new JLabel("Requested " + pub.getPubIdTotalContributionRequests() + " times.");
+        String requestedStats = format("<html><body><p style='%s'>%s</p></body></html>", DESCRIPTIVE_PUB_TEXT_STYLE, "Requested " + pub.getPubIdTotalContributionRequests() + " times.");
+        requestedStatsLabel = new JLabel(requestedStats);
         constraints.gridx = 1;
         constraints.gridy = 4;
         constraints.insets = TOP_5_LEFT_PAD_20;
@@ -166,7 +160,8 @@ public class PublicationPageView implements AppView {
     }
 
     private void addViewedStatsLabel(GridBagConstraints constraints, Publication pub) {
-        viewedStatsLabel = new JLabel("Viewed " + pub.getPubIdTotalVisits() + " times. " + pub.getPubIdTotalVisitsByCurrentUser() + " by you.");
+        String viewedStats = format("<html><body><p style='%s'>%s</p></body></html>", DESCRIPTIVE_PUB_TEXT_STYLE, "Viewed " + pub.getPubIdTotalVisits() + " times. " + pub.getPubIdTotalVisitsByCurrentUser() + " by you.");
+        viewedStatsLabel = new JLabel(viewedStats);
         constraints.gridx = 1;
         constraints.gridy = 5;
         constraints.insets = TOP_5_LEFT_PAD_20;
@@ -174,7 +169,8 @@ public class PublicationPageView implements AppView {
     }
 
     private void addRelationLabel(GridBagConstraints constraints) {
-        relationLabel = new JLabel("Relation");
+        String relation = format("<html><body><p style='%s'>%s</p></body></html>", SUBTITLE_TEXT_STYLE, "RELATION");
+        relationLabel = new JLabel(relation);
         constraints.gridx = 0;
         constraints.gridy = 6;
         constraints.insets = TOP_30_LEFT_PAD_20;
@@ -182,7 +178,8 @@ public class PublicationPageView implements AppView {
     }
 
     private void addRelationDescriptionLabel(GridBagConstraints constraints) {
-        relationDescriptionLabel = new JLabel("Your relationship with this publication.");
+        String relationDescription = format("<html><body><p style='%s'>%s</p></body></html>", DESCRIPTIVE_PUB_TEXT_STYLE, "Your relationship with this publication.");
+        relationDescriptionLabel = new JLabel(relationDescription);
         constraints.gridx = 1;
         constraints.gridy = 6;
         constraints.insets = TOP_30_LEFT_PAD_20;
@@ -190,7 +187,8 @@ public class PublicationPageView implements AppView {
     }
 
     private void addContributerLabel(GridBagConstraints constraints, Publication pub) {
-        contributorLabel = new JLabel(pub.getContributorRole());
+        String contributorRole = format("<html><body><p style='%s'>%s</p></body></html>", DESCRIPTIVE_PUB_TEXT_STYLE, pub.getContributorRole());
+        contributorLabel = new JLabel(contributorRole);
         constraints.gridx = 1;
         constraints.gridy = 7;
         constraints.insets = TOP_5_LEFT_PAD_20;
@@ -202,7 +200,7 @@ public class PublicationPageView implements AppView {
         constraints.weighty = 1.0;
         constraints.gridwidth = 2;
         constraints.fill = GridBagConstraints.BOTH;
-        //constraints.gridy = 8;
+        constraints.gridy = 8;
         this.contentPane.add(publicationChatView.getContentPane(), constraints);
     }
 
