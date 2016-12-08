@@ -1,7 +1,10 @@
 package models;
 
+import org.apache.http.HttpException;
 import utils.WebService.RestCaller;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -26,10 +29,22 @@ public class CurrentUser {
         return user != null;
     }
 
-    public RestCallResult attemptLogin(String username, String password) {
+    public UserRestCallResult attemptLogin(String username, String password) {
         //resultData should include the following
-        RestCallResult resultData = new RestCallResult(false, "wrong password.");
-        return resultData;
+        try {
+            UserRestCallResult result =  RestCaller.sharedInstance.loginUser(username,password);
+            if(result.getSuccess()){
+                this.user = result.getUser();
+            }
+            return result;
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (HttpException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public String getId() {
@@ -37,8 +52,7 @@ public class CurrentUser {
     }
 
     public String getUsername() {
-        //TODO(andres) replace testUser0 with empty string after you implement login.
-        return user != null ? user.getUsername() : "testUser0";
+        return user != null ? user.getUsername() : "";
     }
 
     public void loadRequestsToContribute() {

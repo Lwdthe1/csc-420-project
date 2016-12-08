@@ -1,8 +1,6 @@
 package utils.WebService;
 
-import models.CurrentUser;
-import models.Publication;
-import models.RequestToContribute;
+import models.*;
 import org.apache.http.HttpException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -131,5 +129,52 @@ public class RestCaller
         HttpResponse response = httpClient.execute(httpDelete);
         //if null, the server ended the request successfully.
         return response.getEntity() == null;
+    }
+
+    public UserRestCallResult loginUser(String userName, String password) throws URISyntaxException, IOException, HttpException {
+        // Create a new HttpClient and Get Sequence number
+        UserRestCallResult resultData;
+        HttpClient httpClient = new DefaultHttpClient();
+        String restUri = REST_API_URL + format("fake/medium/login/%s/%s", userName, password);
+
+        HttpPost httpPost = new HttpPost(restUri);
+
+        HttpResponse response = httpClient.execute(httpPost);
+        //if null, the server ended the request successfully
+
+        String resultJson = EntityUtils.toString(response.getEntity());
+        JSONObject resultJsonObject = new JSONObject(resultJson);
+        System.out.println(resultJsonObject);
+        if (resultJsonObject.has("password")) {
+            User user = new User(resultJsonObject);
+            resultData = new UserRestCallResult(user);
+        } else if (resultJsonObject.has("error")) {
+            resultData = new UserRestCallResult(resultJsonObject.getString("error"));
+        } else {
+            resultData = new UserRestCallResult("Unknown error.");
+        }
+
+        return resultData;
+    }
+
+    public Boolean getCurrentUserSettings() throws URISyntaxException, IOException, HttpException {
+        HttpClient httpClient = new DefaultHttpClient();
+        String restUri = REST_API_URL + format("fake/user/%s/settings", CurrentUser.sharedInstance.getId());
+        HttpGet httpGet = new HttpGet(restUri);
+        HttpResponse response = httpClient.execute(httpGet);
+
+        String resultJson = EntityUtils.toString(response.getEntity());
+        JSONObject resultJsonObject = new JSONObject(resultJson);
+
+
+        if (resultJsonObject.has("settings")) {
+            JSONArray jsonRequests = resultJsonObject.getJSONArray("settings");
+            System.out.println(jsonRequests);
+        } else {
+            System.out.println(resultJson);
+            System.out.println("returned json did not contain settings JSON: " + resultJsonObject.toString());
+        }
+
+        return false;
     }
 }

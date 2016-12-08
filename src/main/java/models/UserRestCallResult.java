@@ -3,13 +3,22 @@ package models;
 /**
  * Created by lwdthe1 on 12/6/16.
  */
-public class RestCallResult {
+public class UserRestCallResult {
     private Boolean success = false;
     private String errorMessage = "";
+    private User user = null;
 
-    public RestCallResult(Boolean success, String errorMessage) {
-        this.success = success;
+    public UserRestCallResult(String errorMessage) {
         this.errorMessage = errorMessage;
+    }
+
+    public UserRestCallResult(User user) {
+        this.user = user;
+        this.success = true;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     public Boolean getSuccess() {
