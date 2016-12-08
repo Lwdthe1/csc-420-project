@@ -4,7 +4,7 @@ import models.Publication;
 import models.RequestToContribute;
 import viewControllers.UserProfileViewController;
 import viewControllers.interfaces.AppView;
-import viewControllers.interfaces.AppViewController;
+import viewControllers.AppViewController;
 import viewControllers.interfaces.TableView;
 import views.subviews.*;
 

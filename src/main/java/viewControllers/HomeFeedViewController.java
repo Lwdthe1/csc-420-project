@@ -10,6 +10,9 @@ import utils.WebService.socketio.SocketEvent;
 import utils.WebService.socketio.SocketListener;
 import utils.WebService.socketio.SocketManager;
 import viewControllers.interfaces.AppView;
+import viewControllers.interfaces.AuthEvent;
+import viewControllers.interfaces.AuthListener;
+import views.LoggedOutActionListener;
 import views.appViews.HomeFeedView;
 import views.subviews.PublicationContributeButtonCellRenderer;
 
@@ -27,7 +30,7 @@ import static java.lang.Thread.sleep;
 /**
  * Created by lwdthe1 on 9/5/16.
  */
-public class HomeFeedViewController implements SocketListener, viewControllers.interfaces.AppViewController {
+public class HomeFeedViewController implements AppViewController, SocketListener, AuthListener {
     private final HomeFeedView view;
     private final MainApplication application;
     private final NavigationController navigationController;
@@ -40,7 +43,6 @@ public class HomeFeedViewController implements SocketListener, viewControllers.i
 
     public HomeFeedViewController(MainApplication application) {
         this.application = application;
-        this.navigationController = new NavigationController(application);
         //acquire the lock here before starting load
         try {
             setupViewWhileLoadingSemaphore.acquire();
@@ -49,11 +51,13 @@ public class HomeFeedViewController implements SocketListener, viewControllers.i
         }
 
         publicationsService = PublicationsService.sharedInstance;
-        loadCurrentUserRequestsToContribute();
+        loadFeed();
         this.view = new HomeFeedView(this, application.getMainFrame().getWidth(), application.getMainFrame().getHeight());
+        this.navigationController = new NavigationController(application);
         setupView();
         setupViewWhileLoadingSemaphore.release();
         startSocketIO();
+        registerForAuthEvents();
     }
 
     @Override
@@ -68,17 +72,25 @@ public class HomeFeedViewController implements SocketListener, viewControllers.i
 
     public void setupView() {
         this.view.createAndShow();
+        view.getLoginButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
     }
 
     @Override
-    public void transitionTo(viewControllers.interfaces.AppViewController appViewController) {
+    public void transitionTo(AppViewController appViewController) {
         this.getNavigationController().moveTo(appViewController);
     }
 
     @Override
     public void viewWillAppear() {
-        view.refreshTable();
-        System.out.println("View WILL APPEAR");
+        navigationController.toggleLoggedin();
+        if (publications != null && !publications.isEmpty()) {
+            view.refreshTable();
+        }
     }
 
     private void loadFeed() {
@@ -97,23 +109,6 @@ public class HomeFeedViewController implements SocketListener, viewControllers.i
         worker.execute();
     }
 
-
-    private void loadCurrentUserRequestsToContribute() {
-        SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>() {
-            @Override
-            protected Boolean doInBackground() throws Exception {
-                PublicationsService.sharedInstance.loadAll();
-                return true;
-            }
-
-            // Can safely update the GUI from this method.
-            protected void done() {
-                loadFeed();
-            }
-        };
-        worker.execute();
-    }
-
     private void showPublications() {
         try {
             //acquire the lock to assure the view is ready
@@ -126,7 +121,6 @@ public class HomeFeedViewController implements SocketListener, viewControllers.i
                 }
             });
             setupPublicationsTable(publications);
-            sendChatMessage(format("Just wanted y'all to know I'm viewing %d publications that are looking for Writers", publications.size()));
         } catch (InterruptedException e) {
             System.out.printf("\nCouldn't show publications because: %s", e.getMessage());
             e.printStackTrace();
@@ -155,14 +149,14 @@ public class HomeFeedViewController implements SocketListener, viewControllers.i
     @Override
     public void onEvent(SocketEvent event, JSONObject payload) {
         switch(event) {
-            case NUM_CLIENTS:
-                System.out.printf("\nNumber of active clients: %d\n", payload.get("value"));
-                break;
             case CHAT_MESSAGE:
-                updateRealtimeNotificationWithNewChatMessage(payload);
+                if(CurrentUser.sharedInstance.getInstantNotificationsSetting()){
+                    updateRealtimeNotificationWithNewChatMessage(payload);
+                }
                 break;
             case NOTIFICATION_REQUEST_TO_CONTRIBUTE_DECISION:
-                updateRealtimeNotificationWithNewRequestDecision(payload);
+                    updateRealtimeNotificationWithNewRequestDecision(payload);
+
                 break;
         }
     }
@@ -177,7 +171,7 @@ public class HomeFeedViewController implements SocketListener, viewControllers.i
                 chatPub.getImage(), new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        PublicationPageViewController publicationPageViewController = new PublicationPageViewController(getSelf(), chatPub);
+                        PublicationPageViewController publicationPageViewController = new PublicationPageViewController(application, getSelf(), chatPub);
                         navigationController.moveTo(publicationPageViewController);
                     }
                 }
@@ -198,54 +192,67 @@ public class HomeFeedViewController implements SocketListener, viewControllers.i
         view.refreshTable();
 
         String title = requestApproved? "Request Approved" : "Request Denied";
-        view.getRealTimeNotificationView().updateNotification(title,
-                format("Your request to contribute to %s was %s",
-                        requestPub.getName(),
-                        requestApproved ? "approved." : "denied."),
-                requestPub.getImage(), new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        PublicationPageViewController publicationPageViewController = new PublicationPageViewController(getSelf(), requestPub);
-                        navigationController.moveTo(publicationPageViewController);
+        if(CurrentUser.sharedInstance.getRequestDecisionSetting()) {
+            view.getRealTimeNotificationView().updateNotification(title,
+                    format("Your request to contribute to %s was %s",
+                            requestPub.getName(),
+                            requestApproved ? "approved." : "denied."),
+                    requestPub.getImage(), new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            PublicationPageViewController publicationPageViewController = new PublicationPageViewController(application, getSelf(), requestPub);
+                            navigationController.moveTo(publicationPageViewController);
+                        }
+
                     }
-                }
-        );
+            );
+        }
     }
 
     @Override
-    public void onEvent(String event, JSONObject obj) {
+    public void onEvent(AuthEvent event) {
+        System.out.println("received event in HomeFeedViewController");
+        switch(event) {
+            case LOGGED_IN:
+                view.removeLoggedOutPanel();
+                break;
+            case LOGGED_OUT:
+                //navigationController.setProfileButtonActionListenerToLogin();
+                break;
+        }
+    }
 
+    @Override
+    public void registerForAuthEvents() {
+        CurrentUser.sharedInstance.listen(AuthEvent.LOGGED_IN, this);
+        CurrentUser.sharedInstance.listen(AuthEvent.LOGGED_OUT, this);
     }
 
     @Override
     public void registerForEvents() {
-        socketManger.listen(SocketEvent.NUM_CLIENTS, this);
         socketManger.listen(SocketEvent.CHAT_MESSAGE, this);
         socketManger.listen(SocketEvent.NOTIFICATION_REQUEST_TO_CONTRIBUTE_DECISION, this);
-        sendChatMessage("Hey, World! I've registered to hear everything you have to say.");
-    }
-
-    private void sendChatMessage(String message) {
-        socketManger.emit(SocketEvent.CHAT_MESSAGE, ChatMessage.createJSONPayload("eb297ea1161a", "LincolnWDaniel", message));
-    }
-
-    public void publicationContributeCellClicked(Publication index) {
-
     }
 
     public void publicationImageButtonClicked(Publication publication) {
-        PublicationPageViewController publicationPageViewController = new PublicationPageViewController(this, publication);
+        PublicationPageViewController publicationPageViewController = new PublicationPageViewController(application, getSelf(), publication);
         navigationController.moveTo(publicationPageViewController);
+
     }
 
     public void publicationContributeCellClicked(Publication publication, int row, int column) {
         PublicationContributeButtonCellRenderer homeFeedTableCell = publication.getHomeFeedTableCell();
         JButton contributeButton = homeFeedTableCell.contributeButton;
-        if (contributeButton.getText() == "Contribute") {
-            PublicationsService.sharedInstance.requestToContributeById(publication.getId());
+        if(CurrentUser.sharedInstance.getIsLoggedIn()){
+            if (contributeButton.getText() == "Contribute") {
+                PublicationsService.sharedInstance.requestToContributeById(publication.getId());
+            } else {
+                PublicationsService.sharedInstance.retractRequestToContributeById(publication.getId());
+            }
         } else {
-            PublicationsService.sharedInstance.retractRequestToContributeById(publication.getId());
+            new LoggedOutActionListener().actionPerformed(null);
         }
+
         view.onContributeRequestSuccess(row, column);
     }
 

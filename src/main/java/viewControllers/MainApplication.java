@@ -1,9 +1,6 @@
 package viewControllers;
 
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import viewControllers.interfaces.AppView;
-import viewControllers.interfaces.AppViewController;
-import viewControllers.interfaces.ViewController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,6 +14,7 @@ public class MainApplication {
     private JScrollPane currentVisibleScrollView;
     private HomeFeedViewController homeFeedViewController;
     private UserProfileViewController userProfileController;
+    private PublicationPageViewController publicationPageViewController;
 
     public MainApplication() {
         this.mainFrame = new JFrame("SuperSwingMeditor");

@@ -57,7 +57,7 @@ public class PublicationsService {
      */
     public ArrayList<Publication> getAll() {
         if (publications == null || publications.isEmpty()) {
-            fetchPublications();
+            loadAll();
         }
         return publications;
     }
@@ -106,7 +106,6 @@ public class PublicationsService {
             }
             return success;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             return false;
         }
     }

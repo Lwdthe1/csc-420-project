@@ -17,11 +17,9 @@ import static utils.TextUtils.FEED_PUBLICATION_NAME_STYLE;
  * Created by Andres on 10/23/16.
  */
 public class PublicationTextCellRenderer extends JPanel implements TableCellRenderer {
-    private static Insets LEFT_PAD_15 = new Insets(0,15, 0, 0);
     private static Insets LEFT_PAD_20 = new Insets(0,20, 0, 0);
-    private static Insets RIGHT_PAD_15 = new Insets(0,0, 0, 15);
     private static Insets TOP_5_LEFT_PAD_20 = new Insets(5,20, 0, 0);
-    private static final Insets TOP_PAD_5 = new Insets(5, 0, 0, 0);
+
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {

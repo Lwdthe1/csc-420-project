@@ -1,10 +1,9 @@
 package views;
 
 import models.Publication;
-import models.User;
 import viewControllers.interfaces.AppView;
 import viewControllers.PublicationPageViewController;
-import viewControllers.interfaces.AppViewController;
+import viewControllers.AppViewController;
 import views.subviews.PublicationChatView;
 import views.subviews.RealTimeNotificationView;
 

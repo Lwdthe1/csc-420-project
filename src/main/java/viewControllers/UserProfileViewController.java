@@ -7,7 +7,8 @@ import utils.WebService.socketio.SocketEvent;
 import utils.WebService.socketio.SocketListener;
 import utils.WebService.socketio.SocketManager;
 import viewControllers.interfaces.AppView;
-import viewControllers.interfaces.AppViewController;
+import viewControllers.interfaces.AuthEvent;
+import viewControllers.interfaces.AuthListener;
 import views.appViews.UserProfileView;
 import views.subviews.RequestStatusButtonCellRenderer;
 
@@ -24,7 +25,7 @@ import static java.lang.Thread.sleep;
 /**
  * Created by lwdthe1 on 9/5/16.
  */
-public class UserProfileViewController implements SocketListener, AppViewController {
+public class UserProfileViewController implements AuthListener, SocketListener, AppViewController {
     private final MainApplication application;
     private NavigationController navigationController;
     private final UserProfileView view;
@@ -33,12 +34,12 @@ public class UserProfileViewController implements SocketListener, AppViewControl
     private PublicationsService publicationsService;
     private ArrayList<RequestToContribute> publicationRequests;
 
-    public UserProfileViewController(MainApplication application) {
+    public UserProfileViewController(final MainApplication application) {
         this.application = application;
         this.navigationController = new NavigationController(application);
-
+        navigationController.setProfileButtonActionListenerToLogout();
+        navigationController.toggleLoggedin();
         publicationsService = PublicationsService.sharedInstance;
-
         this.view = new UserProfileView(this, application.getMainFrame().getWidth(), application.getMainFrame().getHeight());
         setupView();
         showPublicationRequests();
@@ -110,7 +111,9 @@ public class UserProfileViewController implements SocketListener, AppViewControl
             case DISCONNECTED:
                 break;
             case CHAT_MESSAGE:
-                updateRealtimeNotificationWithNewChatMessage(payload);
+                if(CurrentUser.sharedInstance.getInstantNotificationsSetting()){
+                    updateRealtimeNotificationWithNewChatMessage(payload);
+                }
                 break;
             case NOTIFICATION_REQUEST_TO_CONTRIBUTE_DECISION:
                 updateRealtimeNotificationWithRequestDecision(payload);
@@ -128,7 +131,7 @@ public class UserProfileViewController implements SocketListener, AppViewControl
                 chatPub.getImage(), new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        PublicationPageViewController publicationPageViewController = new PublicationPageViewController(getSelf(), chatPub);
+                        PublicationPageViewController publicationPageViewController = new PublicationPageViewController(application, getSelf(), chatPub);
                         navigationController.moveTo(publicationPageViewController);
                     }
                 }
@@ -151,15 +154,23 @@ public class UserProfileViewController implements SocketListener, AppViewControl
                 requestPub.getImage(), new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        PublicationPageViewController publicationPageViewController = new PublicationPageViewController(getSelf(), requestPub);
-                        navigationController.moveTo(publicationPageViewController);}
+                        PublicationPageViewController publicationPageViewController = new PublicationPageViewController(application, getSelf(), requestPub);
+                        navigationController.moveTo(publicationPageViewController);
+                    }
                 }
+
         );
     }
 
     @Override
-    public void onEvent(String event, JSONObject obj) {
+    public void onEvent(AuthEvent event) {
+        //TODO(keith or andres) do something here
+    }
 
+    @Override
+    public void registerForAuthEvents() {
+        CurrentUser.sharedInstance.listen(AuthEvent.LOGGED_IN, this);
+        CurrentUser.sharedInstance.listen(AuthEvent.LOGGED_OUT, this);
     }
 
     @Override
@@ -169,8 +180,9 @@ public class UserProfileViewController implements SocketListener, AppViewControl
     }
 
     public void publicationImageButtonClicked(Publication publication) {
-        PublicationPageViewController publicationPageViewController = new PublicationPageViewController(this, publication);
+        PublicationPageViewController publicationPageViewController = new PublicationPageViewController(application, getSelf(), publication);
         navigationController.moveTo(publicationPageViewController);
+
     }
 
     public void publicationContributeCellClicked(RequestToContribute requestToContribute, int row, int column) {

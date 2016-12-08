@@ -1,5 +1,6 @@
 package viewControllers.interfaces;
 
+import viewControllers.AppViewController;
 import views.subviews.RealTimeNotificationView;
 
 import javax.swing.*;
@@ -12,4 +13,5 @@ public interface AppView extends View {
     JPanel getContentPane();
     RealTimeNotificationView getRealTimeNotificationView();
     Boolean isVisibleView();
+
 }

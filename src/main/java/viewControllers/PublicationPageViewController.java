@@ -10,7 +10,6 @@ import utils.WebService.socketio.SocketEvent;
 import utils.WebService.socketio.SocketListener;
 import utils.WebService.socketio.SocketManager;
 import viewControllers.interfaces.AppView;
-import viewControllers.interfaces.AppViewController;
 import views.PublicationPageView;
 
 import javax.swing.*;
@@ -26,10 +25,11 @@ import static java.lang.Thread.sleep;
 /**
  * Created by keithmartin on 12/5/16.
  */
-public class PublicationPageViewController implements SocketListener, viewControllers.interfaces.AppViewController {
-    private final PublicationPageView view;
-    private final AppViewController appViewController;
-    private final NavigationController navigationController;
+public class PublicationPageViewController implements SocketListener, AppViewController {
+    private PublicationPageView view;
+    private AppViewController appViewController;
+    private NavigationController navigationController;
+    private MainApplication application;
 
     private SocketManager socketManger;
     private Semaphore setupViewWhileLoadingSemaphore = new Semaphore(1);
@@ -37,7 +37,8 @@ public class PublicationPageViewController implements SocketListener, viewContro
     private ArrayList<ChatMessage> chatMessages;
     private PublicationsService publicationsService;
 
-    public PublicationPageViewController(AppViewController appViewController, Publication publication) {
+    public PublicationPageViewController(MainApplication application, AppViewController appViewController, Publication publication) {
+        this.application = application;
         this.appViewController = appViewController;
         this.navigationController = appViewController.getNavigationController();
         this.publication = publication;
@@ -84,7 +85,7 @@ public class PublicationPageViewController implements SocketListener, viewContro
     }
 
     @Override
-    public void transitionTo(viewControllers.interfaces.AppViewController appViewController) {
+    public void transitionTo(AppViewController appViewController) {
 
     }
 
@@ -184,7 +185,7 @@ public class PublicationPageViewController implements SocketListener, viewContro
                             chatPub.getImage(), new ActionListener() {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {
-                                    PublicationPageViewController publicationPageViewController = new PublicationPageViewController(appViewController, chatPub);
+                                    PublicationPageViewController publicationPageViewController = new PublicationPageViewController(application, getSelf(), chatPub);
                                     navigationController.moveTo(publicationPageViewController);
                                 }
                             }
@@ -207,7 +208,7 @@ public class PublicationPageViewController implements SocketListener, viewContro
                             requestPub.getImage(), new ActionListener() {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {
-                                    PublicationPageViewController publicationPageViewController = new PublicationPageViewController(appViewController, requestPub);
+                                    PublicationPageViewController publicationPageViewController = new PublicationPageViewController(application, getSelf(), requestPub);
                                     navigationController.moveTo(publicationPageViewController);
                                 }
                             }
@@ -215,11 +216,6 @@ public class PublicationPageViewController implements SocketListener, viewContro
                 }
                 break;
         }
-    }
-
-    @Override
-    public void onEvent(String event, JSONObject obj) {
-
     }
 
     @Override
@@ -232,5 +228,9 @@ public class PublicationPageViewController implements SocketListener, viewContro
 
     private void sendChatMessage(String message) {
         socketManger.emit(SocketEvent.CHAT_MESSAGE, ChatMessage.createJSONPayload(publication.getId(), CurrentUser.sharedInstance.getUsername(), message));
+    }
+
+    public AppViewController getSelf() {
+        return this;
     }
 }
