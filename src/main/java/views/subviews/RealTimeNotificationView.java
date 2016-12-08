@@ -4,7 +4,7 @@ import javax.swing.*;
 import net.miginfocom.swing.MigLayout;
 import utils.ImageUtils;
 import utils.TimeUtils;
-import viewControllers.interfaces.AppViewController;
+import viewControllers.AppViewController;
 import viewControllers.interfaces.View;
 import viewControllers.interfaces.ViewController;
 

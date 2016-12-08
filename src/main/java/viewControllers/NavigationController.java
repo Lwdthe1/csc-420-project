@@ -1,14 +1,12 @@
 package viewControllers;
 
 import models.CurrentUser;
-import utils.ImageUtils;
 import utils.WebService.socketio.SocketManager;
 import viewControllers.interfaces.*;
 import views.LoggedOutActionListener;
 import views.subviews.NavBarView;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
@@ -40,6 +38,11 @@ public class NavigationController implements ViewController, AuthListener {
         return view;
     }
 
+    public View getNewView() {
+        NavBarView newView = new NavBarView(application.getMainFrame().getWidth());
+        return newView;
+    }
+
     public void setupView() {
         this.view.createAndShow();
     }
@@ -49,7 +52,7 @@ public class NavigationController implements ViewController, AuthListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 HomeFeedViewController viewController = (HomeFeedViewController) getViewController(ViewControllerKey.PUBLICATIONS);
-                    moveTo(viewController);
+                moveTo(viewController);
             }
         });
         addProfileButtonActionListener();

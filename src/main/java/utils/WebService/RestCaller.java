@@ -65,6 +65,30 @@ public class RestCaller
         return publications;
     }
 
+    public List<ChatMessage> getChatMessages(String publicationId) throws URISyntaxException, HttpException, IOException {
+        // Create a new HttpClient and Get Sequence number
+        HttpClient httpClient = new DefaultHttpClient();
+        String restUri = REST_API_URL + "chat/" + publicationId + "/" +CurrentUser.sharedInstance.getUsername();
+
+        HttpGet httpGet = new HttpGet(restUri);
+        HttpResponse response = httpClient.execute(httpGet);
+
+        String resultJson = EntityUtils.toString(response.getEntity());
+        List<ChatMessage> chatMessages = new ArrayList<>();
+        JSONObject resultJsonObject = new JSONObject(resultJson);
+        if (resultJsonObject.has("messages")) {
+            JSONArray jsonChatMessages = resultJsonObject.getJSONArray("messages");
+            System.out.println(jsonChatMessages);
+            for (int i = 0; i < jsonChatMessages.length(); i++) {
+                chatMessages.add(new ChatMessage(jsonChatMessages.getJSONObject(i)));
+            }
+        } else {
+            System.out.println("returned json did not contain publications JSON: " + resultJsonObject.toString());
+        }
+        System.out.println(chatMessages.size());
+        return chatMessages;
+    }
+
     public List<RequestToContribute> getCurrentUserRequests() throws URISyntaxException, HttpException, IOException {
         // Create a new HttpClient and Get Sequence number
         HttpClient httpClient = new DefaultHttpClient();

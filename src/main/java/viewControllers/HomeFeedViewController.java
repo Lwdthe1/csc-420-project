@@ -10,7 +10,6 @@ import utils.WebService.socketio.SocketEvent;
 import utils.WebService.socketio.SocketListener;
 import utils.WebService.socketio.SocketManager;
 import viewControllers.interfaces.AppView;
-import viewControllers.interfaces.AppViewController;
 import viewControllers.interfaces.AuthEvent;
 import viewControllers.interfaces.AuthListener;
 import views.LoggedOutActionListener;
@@ -35,6 +34,7 @@ public class HomeFeedViewController implements AppViewController, SocketListener
     private final HomeFeedView view;
     private final MainApplication application;
     private final NavigationController navigationController;
+
 
     private SocketManager socketManger;
     private Semaphore setupViewWhileLoadingSemaphore = new Semaphore(1);
@@ -163,7 +163,7 @@ public class HomeFeedViewController implements AppViewController, SocketListener
 
     private void updateRealtimeNotificationWithNewChatMessage(JSONObject payload) {
         ChatMessage chatMessage = new ChatMessage(payload);
-        Publication chatPub = publicationsService.getById(chatMessage.getPublicationId());
+        final Publication chatPub = publicationsService.getById(chatMessage.getPublicationId());
         if (chatPub == null) return;
 
         view.getRealTimeNotificationView().updateNotification("New Contributor Message",
@@ -171,7 +171,8 @@ public class HomeFeedViewController implements AppViewController, SocketListener
                 chatPub.getImage(), new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        //TODO(keith) move to publication's page and show most recent chat.
+                        PublicationPageViewController publicationPageViewController = new PublicationPageViewController(application, getSelf(), chatPub);
+                        navigationController.moveTo(publicationPageViewController);
                     }
                 }
         );
@@ -180,7 +181,7 @@ public class HomeFeedViewController implements AppViewController, SocketListener
     private void updateRealtimeNotificationWithNewRequestDecision(JSONObject payload) {
         RequestDecisionNotification requestDecisionNotification = new RequestDecisionNotification(payload);
         System.out.printf("\nReceived requestDecisionNotification: %s\n", requestDecisionNotification);
-        Publication requestPub = publicationsService.getById(requestDecisionNotification.getPublicationId());
+        final Publication requestPub = publicationsService.getById(requestDecisionNotification.getPublicationId());
         if (requestPub == null) return;
 
 
@@ -199,8 +200,10 @@ public class HomeFeedViewController implements AppViewController, SocketListener
                     requestPub.getImage(), new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            //TODO(keith) move to publication's page
+                            PublicationPageViewController publicationPageViewController = new PublicationPageViewController(application, getSelf(), requestPub);
+                            navigationController.moveTo(publicationPageViewController);
                         }
+
                     }
             );
         }
@@ -232,9 +235,9 @@ public class HomeFeedViewController implements AppViewController, SocketListener
     }
 
     public void publicationImageButtonClicked(Publication publication) {
-        System.out.printf("%s image button clicked.", publication.getName());
-        //TODO(keith) move to publication page.
-        //navigationController.moveTo();
+        PublicationPageViewController publicationPageViewController = new PublicationPageViewController(application, getSelf(), publication);
+        navigationController.moveTo(publicationPageViewController);
+
     }
 
     public void publicationContributeCellClicked(Publication publication, int row, int column) {
@@ -252,4 +255,14 @@ public class HomeFeedViewController implements AppViewController, SocketListener
 
         view.onContributeRequestSuccess(row, column);
     }
+
+    public PublicationsService getPublicationsService() {
+        return publicationsService;
+    }
+
+    public SocketManager getSocketManger() {
+        return socketManger;
+    }
+
+    public HomeFeedViewController getSelf() { return this; }
 }

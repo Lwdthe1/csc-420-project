@@ -1,6 +1,8 @@
 package views.subviews;
 
+import models.ChatMessage;
 import models.Publication;
+import models.User;
 import models.RequestToContribute;
 import utils.PublicationsService;
 
@@ -21,35 +23,36 @@ public class PublicationImageCellRenderer extends JPanel implements TableCellRen
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         this.setLayout(new BorderLayout());
         this.setBackground(Color.white);
+        boolean east = true;
 
-        Publication pub = null;
+        Image buttonImage = null;
         if (value instanceof Publication) {
-            pub = (Publication) value;
+            buttonImage = ((Publication) value).getImage();
         } else if (value instanceof RequestToContribute) {
-            pub = ((RequestToContribute) value).getPublication();
+            buttonImage = ((RequestToContribute) value).getPublication().getImage();
+        } else if (value instanceof ChatMessage) {
+            east = false;
+            buttonImage = ((ChatMessage) value).getImage();
         }
 
-        if (pub != null) {
-            addContributeButton(pub);
+        if (buttonImage != null) {
+            addImageButton(buttonImage, east);
         }
         return this;
     }
 
-    private void addContributeButton(final Publication pub) {
+    private void addImageButton(Image buttonImage, boolean east) {
         JButton imageButton = new JButton();
-        Dimension dimensions = new Dimension(30, 30);
+        Dimension dimensions = new Dimension(60, 60);
         imageButton.setSize(dimensions);
-        imageButton.setIcon(new ImageIcon(pub.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
+        imageButton.setIcon(new ImageIcon(buttonImage.getScaledInstance(60, 60, Image.SCALE_SMOOTH)));
         imageButton.setBorder(BorderFactory.createEmptyBorder());
 
-        imageButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println(PublicationsService.sharedInstance.requestToContributeById(pub.getId()));
-            }
-        });
-
         this.enableInputMethods(true);
-        this.add(imageButton, BorderLayout.EAST);
+        if (east) {
+            this.add(imageButton, BorderLayout.EAST);
+        } else {
+            this.add(imageButton, BorderLayout.WEST);
+        }
     }
 }

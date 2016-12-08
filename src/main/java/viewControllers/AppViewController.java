@@ -1,6 +1,7 @@
-package viewControllers.interfaces;
+package viewControllers;
 
-import viewControllers.NavigationController;
+import viewControllers.interfaces.AppView;
+import viewControllers.interfaces.ViewController;
 
 /**
  * Created by lwdthe1 on 12/5/16.

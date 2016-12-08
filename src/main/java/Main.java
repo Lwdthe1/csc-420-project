@@ -1,4 +1,3 @@
-import viewControllers.HomeFeedViewController;
 import viewControllers.MainApplication;
 
 /**

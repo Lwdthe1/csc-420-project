@@ -1,5 +1,6 @@
 package viewControllers.interfaces;
 
+import viewControllers.AppViewController;
 import views.subviews.RealTimeNotificationView;
 
 import javax.swing.*;

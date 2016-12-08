@@ -3,7 +3,7 @@ package views.appViews;
 import models.Publication;
 import viewControllers.interfaces.AppView;
 import viewControllers.HomeFeedViewController;
-import viewControllers.interfaces.AppViewController;
+import viewControllers.AppViewController;
 import viewControllers.interfaces.TableView;
 import views.LoggedOutActionListener;
 import views.subviews.*;
