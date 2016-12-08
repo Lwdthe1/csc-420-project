@@ -41,7 +41,7 @@ public class CurrentUser {
         return user != null ? user.getUsername() : "testUser0";
     }
 
-    public void loadRequestsToContribute() {
+    private void loadRequestsToContribute() {
         try {
             this.originalRequestsToContribute = (ArrayList<RequestToContribute>) RestCaller.sharedInstance.getCurrentUserRequests();
             for (RequestToContribute request: originalRequestsToContribute) {
@@ -52,7 +52,20 @@ public class CurrentUser {
         }
     }
 
+    public ArrayList<RequestToContribute> getRequestsToContribute() {
+        if (originalRequestsToContribute == null) {
+            loadRequestsToContribute();
+        }
+        return originalRequestsToContribute;
+    }
+
     public RequestToContribute getRequestToContributeByPubId(String publicationId) {
-        return publicationRequestsMap.get(publicationId);
+        return getRequestsToContributePubIdsMap().get(publicationId);
+    }
+
+    public HashMap<String, RequestToContribute> getRequestsToContributePubIdsMap() {
+        //make sure we've loaded the requests from the server
+        getRequestsToContribute();
+        return publicationRequestsMap;
     }
 }

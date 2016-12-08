@@ -1,6 +1,7 @@
 package views.subviews;
 
 import models.Publication;
+import models.RequestToContribute;
 import utils.PublicationsService;
 
 import javax.swing.*;
@@ -21,8 +22,14 @@ public class PublicationImageCellRenderer extends JPanel implements TableCellRen
         this.setLayout(new BorderLayout());
         this.setBackground(Color.white);
 
-        if (value instanceof  Publication) {
-            Publication pub = (Publication) value;
+        Publication pub = null;
+        if (value instanceof Publication) {
+            pub = (Publication) value;
+        } else if (value instanceof RequestToContribute) {
+            pub = ((RequestToContribute) value).getPublication();
+        }
+
+        if (pub != null) {
             addContributeButton(pub);
         }
         return this;
