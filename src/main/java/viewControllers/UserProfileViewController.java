@@ -9,15 +9,13 @@ import utils.WebService.socketio.SocketManager;
 import viewControllers.interfaces.AppView;
 import viewControllers.interfaces.AppViewController;
 import views.appViews.UserRequestsFeedView;
-import views.subviews.NavBarView;
 import views.subviews.RequestStatusButtonCellRenderer;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.concurrent.Semaphore;
+import java.util.Currency;
 
 import static java.lang.String.format;
 import static java.lang.Thread.sleep;
@@ -25,7 +23,7 @@ import static java.lang.Thread.sleep;
 /**
  * Created by lwdthe1 on 9/5/16.
  */
-public class UserRequestsFeedViewController implements SocketListener, AppViewController {
+public class UserProfileViewController implements SocketListener, AppViewController {
     private final MainApplication application;
     private NavigationController navigationController;
     private final UserRequestsFeedView view;
@@ -34,7 +32,7 @@ public class UserRequestsFeedViewController implements SocketListener, AppViewCo
     private PublicationsService publicationsService;
     private ArrayList<RequestToContribute> publicationRequests;
 
-    public UserRequestsFeedViewController(MainApplication application) {
+    public UserProfileViewController(MainApplication application) {
         this.application = application;
         this.navigationController = new NavigationController(application);
 
@@ -63,6 +61,14 @@ public class UserRequestsFeedViewController implements SocketListener, AppViewCo
     @Override
     public void transitionTo(AppViewController appViewController) {
 
+    }
+
+    @Override
+    public void viewWillAppear() {
+        if (CurrentUser.sharedInstance.hasRequestsToContribute()) {
+            setupPublicationsTable(CurrentUser.sharedInstance.getRequestsToContribute());
+            view.refreshTable();
+        }
     }
 
     private void showPublicationRequests() {
@@ -163,9 +169,9 @@ public class UserRequestsFeedViewController implements SocketListener, AppViewCo
         RequestStatusButtonCellRenderer feedTableCell = requestToContribute.getFeedTableCell();
         JButton contributeButton = feedTableCell.contributeButton;
         if (contributeButton.getText() == "Contribute") {
-            PublicationsService.sharedInstance.requestToContributeById(requestToContribute.getPublication().getId(), "LincolnWDaniel");
+            PublicationsService.sharedInstance.requestToContributeById(requestToContribute.getPublication().getId());
         } else {
-            PublicationsService.sharedInstance.retractRequestToContributeById(requestToContribute.getPublication().getId(), "LincolnWDaniel");
+            PublicationsService.sharedInstance.retractRequestToContributeById(requestToContribute.getPublication().getId());
         }
         view.onContributeRequestSuccess(row, column);
     }
