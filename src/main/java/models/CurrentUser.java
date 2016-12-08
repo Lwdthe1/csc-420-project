@@ -1,5 +1,6 @@
 package models;
 
+import utils.PublicationsService;
 import utils.WebService.RestCaller;
 
 import java.util.ArrayList;
@@ -67,5 +68,30 @@ public class CurrentUser {
         //make sure we've loaded the requests from the server
         getRequestsToContribute();
         return publicationRequestsMap;
+    }
+
+    public void addRequestToContribute(RequestToContribute requestToContribute) {
+        Publication publication = PublicationsService.sharedInstance.getById(requestToContribute.getPublicationId());
+        publication.setCurrentUserRequested(true);
+        originalRequestsToContribute.add(requestToContribute);
+        publicationRequestsMap.put(requestToContribute.getPublicationId(), requestToContribute);
+    }
+
+    public void removeRequestToContribute(String publicationId) {
+        int i = 0;
+        for (RequestToContribute request: originalRequestsToContribute) {
+            if (request.getPublicationId() == publicationId) {
+                originalRequestsToContribute.remove(i);
+                i++;
+            }
+        }
+        publicationRequestsMap.remove(publicationId);
+        Publication publication = PublicationsService.sharedInstance.getById(publicationId);
+        publication.setCurrentUserRequested(false);
+        publication.setCurrentUserRetractedRequested(true);
+    }
+
+    public boolean hasRequestsToContribute() {
+        return originalRequestsToContribute != null &&  !originalRequestsToContribute.isEmpty();
     }
 }

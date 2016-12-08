@@ -67,6 +67,11 @@ public class PublicationPageViewController implements SocketListener, AppViewCon
 
     }
 
+    @Override
+    public void viewWillAppear() {
+
+    }
+
     public Publication getPublication() {
         return publication;
     }

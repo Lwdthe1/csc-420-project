@@ -80,6 +80,12 @@ public class HomeFeedViewController implements SocketListener, AppViewController
         this.getNavigationController().moveTo(appViewController);
     }
 
+    @Override
+    public void viewWillAppear() {
+        view.refreshTable();
+        System.out.println("View WILL APPEAR");
+    }
+
     private void loadFeed() {
         SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>() {
             @Override
@@ -112,9 +118,6 @@ public class HomeFeedViewController implements SocketListener, AppViewController
         };
         worker.execute();
     }
-
-
-
 
     private void showPublications() {
         try {
@@ -230,9 +233,9 @@ public class HomeFeedViewController implements SocketListener, AppViewController
         PublicationContributeButtonCellRenderer homeFeedTableCell = publication.getHomeFeedTableCell();
         JButton contributeButton = homeFeedTableCell.contributeButton;
         if (contributeButton.getText() == "Contribute") {
-            PublicationsService.sharedInstance.requestToContributeById(publication.getId(), "LincolnWDaniel");
+            PublicationsService.sharedInstance.requestToContributeById(publication.getId());
         } else {
-            PublicationsService.sharedInstance.retractRequestToContributeById(publication.getId(), "LincolnWDaniel");
+            PublicationsService.sharedInstance.retractRequestToContributeById(publication.getId());
         }
         view.onContributeRequestSuccess(row, column);
     }

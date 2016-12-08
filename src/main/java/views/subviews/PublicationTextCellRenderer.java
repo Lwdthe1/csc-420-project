@@ -3,52 +3,20 @@ package views.subviews;
 import models.ChatMessage;
 import models.Publication;
 import models.RequestToContribute;
+import utils.TextUtils;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
 import static java.lang.String.format;
+import static utils.TextUtils.DESCRIPTIVE_TEXT_STYLE;
+import static utils.TextUtils.FEED_PUBLICATION_NAME_STYLE;
 
 /**
  * Created by Andres on 10/23/16.
  */
 public class PublicationTextCellRenderer extends JPanel implements TableCellRenderer {
-    private static final String FEED_PUBLICATION_NAME_STYLE = "color: #1abc9c;\n" +
-            "    font-size: 10px;\n" +
-            "    font-family: -apple-system,BlinkMacSystemFont,\"Segoe UI\",Roboto,Oxygen,Ubuntu,Cantarell,\"Open Sans\",\"Helvetica Neue\",sans-serif;\n" +
-            "    letter-spacing: 0;\n" +
-            "    font-weight: 500;\n" +
-            "    font-style: normal;\n" +
-            "    text-rendering: optimizeLegibility;\n" +
-            "    -webkit-font-smoothing: antialiased;\n" +
-            "    -moz-osx-font-smoothing: grayscale;\n" +
-            "    -moz-font-feature-settings: \"liga\" on;\n" +
-            "    text-decoration: none !important;\n" +
-            "    cursor: pointer !important;";
-    private static final String DESCRIPTIVE_TEXT_STYLE = "color: #4c4c4c\n" +
-            "    font-size: 9px;\n" +
-            "    font-family: -apple-system,BlinkMacSystemFont,\"Segoe UI\",Roboto,Oxygen,Ubuntu,Cantarell,\"Open Sans\",\"Helvetica Neue\",sans-serif;\n" +
-            "    letter-spacing: 0;\n" +
-            "    font-weight: 300;\n" +
-            "    font-style: normal;\n" +
-            "    text-rendering: optimizeLegibility;\n" +
-            "    -webkit-font-smoothing: antialiased;\n" +
-            "    -moz-osx-font-smoothing: grayscale;\n" +
-            "    -moz-font-feature-settings: \"liga\" on;\n" +
-            "    text-decoration: none !important;\n word-wrap: break-word; ";
-    private static final String META_TEXT_STYLE = "color: #7f7f7f\n" +
-            "    font-size: 6px;\n" +
-            "    font-family: -apple-system,BlinkMacSystemFont,\"Segoe UI\",Roboto,Oxygen,Ubuntu,Cantarell,\"Open Sans\",\"Helvetica Neue\",sans-serif;\n" +
-            "    letter-spacing: 0;\n" +
-            "    font-weight: 200;\n" +
-            "    font-style: normal;\n" +
-            "    text-rendering: optimizeLegibility;\n" +
-            "    -webkit-font-smoothing: antialiased;\n" +
-            "    -moz-osx-font-smoothing: grayscale;\n" +
-            "    -moz-font-feature-settings: \"liga\" on;\n" +
-            "    text-decoration: none !important;\n";
-
     private static Insets LEFT_PAD_15 = new Insets(0,15, 0, 0);
     private static Insets LEFT_PAD_20 = new Insets(0,20, 0, 0);
     private static Insets RIGHT_PAD_15 = new Insets(0,0, 0, 15);
@@ -92,7 +60,9 @@ public class PublicationTextCellRenderer extends JPanel implements TableCellRend
             addDescriptionLabel(constraints, descriptionLabelText);
             addMetaInfoLabel(constraints, metaInfoText);
         } else if (chatMessage != null) {
-
+            addNameLabel(constraints, nameLabelText);
+            addDescriptionLabel(constraints, descriptionLabelText);
+            addMetaInfoLabel(constraints, metaInfoText);
         }
 
         return this;

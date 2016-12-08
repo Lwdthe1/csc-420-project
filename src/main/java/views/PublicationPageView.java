@@ -213,4 +213,6 @@ public class PublicationPageView implements AppView {
 
     public JTable getTable() { return publicationChatView.getTable(); }
 
+    public void refreshTable() { }
+
 }

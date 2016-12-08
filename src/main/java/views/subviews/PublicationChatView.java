@@ -1,13 +1,9 @@
 package views.subviews;
 
 import net.miginfocom.swing.MigLayout;
-import viewControllers.AppView;
-import viewControllers.HomeFeedViewController;
-import viewControllers.PublicationPageViewController;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
@@ -16,7 +12,7 @@ import java.awt.event.AdjustmentListener;
 /**
  * Created by keithmartin on 12/6/16.
  */
-public class PublicationChatView implements AppView {
+public class PublicationChatView  {
     private int width;
     private int height;
     private JPanel contentPane;
@@ -70,11 +66,11 @@ public class PublicationChatView implements AppView {
         table.setRowHeight(100);
 
         scrollPane = new JScrollPane(table);
-        scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
-            public void adjustmentValueChanged(AdjustmentEvent e) {
-                e.getAdjustable().setValue(e.getAdjustable().getMaximum());
-            }
-        });
+//        scrollPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
+//            public void adjustmentValueChanged(AdjustmentEvent e) {
+//                e.getAdjustable().setValue(e.getAdjustable().getMaximum());
+//            }
+//        });
         contentPane.add(scrollPane, "cell 0 0, growx, growy");
     }
 
@@ -106,4 +102,8 @@ public class PublicationChatView implements AppView {
     }
 
     public JScrollPane getScrollPane() { return scrollPane; }
+
+    public void refreshTable() {
+        table.repaint();
+    }
 }

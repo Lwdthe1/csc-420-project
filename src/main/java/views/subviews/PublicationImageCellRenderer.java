@@ -40,13 +40,13 @@ public class PublicationImageCellRenderer extends JPanel implements TableCellRen
     }
 
     private void addImageButton(Image buttonImage) {
-            JButton imageButton = new JButton();
-            Dimension dimensions = new Dimension(30, 30);
-            imageButton.setSize(dimensions);
-            imageButton.setIcon(new ImageIcon(buttonImage.getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
-            imageButton.setBorder(BorderFactory.createEmptyBorder());
+        JButton imageButton = new JButton();
+        Dimension dimensions = new Dimension(30, 30);
+        imageButton.setSize(dimensions);
+        imageButton.setIcon(new ImageIcon(buttonImage.getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
+        imageButton.setBorder(BorderFactory.createEmptyBorder());
 
-            this.enableInputMethods(true);
-            this.add(imageButton, BorderLayout.EAST);
+        this.enableInputMethods(true);
+        this.add(imageButton, BorderLayout.EAST);
     }
 }

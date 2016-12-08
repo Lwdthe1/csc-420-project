@@ -140,7 +140,7 @@ public class HomeFeedView implements AppView {
         ((AbstractTableModel) table.getModel()).fireTableCellUpdated(row, column);
     }
 
-    public void refreshTable(int row) {
+    public void refreshTable() {
         table.repaint();// faster than ((AbstractTableModel) table.getModel()).fireTableDataChanged()
     }
 }

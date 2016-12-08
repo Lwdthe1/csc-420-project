@@ -1,13 +1,11 @@
 package viewControllers;
 
 import utils.WebService.socketio.SocketManager;
-import viewControllers.interfaces.AppView;
 import viewControllers.interfaces.AppViewController;
 import viewControllers.interfaces.View;
 import viewControllers.interfaces.ViewController;
 import views.subviews.NavBarView;
 
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
@@ -53,14 +51,14 @@ public class NavigationController implements ViewController {
         view.getProfileButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                UserRequestsFeedViewController viewController = (UserRequestsFeedViewController) getViewController(ViewControllerKey.PROFILE);
+                UserProfileViewController viewController = (UserProfileViewController) getViewController(ViewControllerKey.PROFILE);
                 moveTo(viewController);
             }
         });
     }
 
     public void moveTo(AppViewController viewController) {
-        this.application.setVisibleView(viewController.getView());
+        this.application.setVisibleView(viewController);
     }
 
     private enum ViewControllerKey {
@@ -80,13 +78,11 @@ public class NavigationController implements ViewController {
         if (!viewControllersMap.containsKey(key.getValue())) {
             switch (key) {
                 case PUBLICATIONS:
-                    viewControllersMap.put(key.getValue(), new HomeFeedViewController(application));
-                    break;
+                    return application.getHomeFeedViewController();
                 case PROFILE:
-                    viewControllersMap.put(key.getValue(), new UserRequestsFeedViewController(application));
-                    break;
+                    return application.getUserProfileViewController();
             }
         }
-        return viewControllersMap.get(key.getValue());
+        return null;
     }
 }
